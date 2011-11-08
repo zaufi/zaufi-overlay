@@ -4,6 +4,8 @@
 
 EAPI=4
 
+inherit eutils
+
 MY_P="${PN}-core-${PV}"
 
 DESCRIPTION="Xapian Probabilistic Information Retrieval library"
