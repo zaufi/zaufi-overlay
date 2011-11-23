@@ -1,0 +1,7 @@
+# Copyright 1999-2011 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+# This file contains descriptions of local USE flags, and the ebuilds which
+# contain them.
+
+dev-libs/xapian:geospatial - Enable unofficial geospatial patch (allow geo.location to be attached to docs and used to search)
