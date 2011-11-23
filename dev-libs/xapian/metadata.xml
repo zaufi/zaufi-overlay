@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+
+<pkgmetadata>
+    <maintainer>
+        <name>Alex Turbov</name>
+        <email>i.zaufi@gmail.com</email>
+    </maintainer>
+    <use>
+        <flag name="geospatial">
+            Enable unofficial geospatial patch (allow geo.location to be attached to docs and used to search)
+        </flag>
+    </use>
+</pkgmetadata>

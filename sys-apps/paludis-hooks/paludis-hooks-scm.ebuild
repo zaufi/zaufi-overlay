@@ -28,7 +28,7 @@ src_unpack() {
 src_install() {
     cmake-utils_src_install
 
-    einfo "Installing hoocks into paludis configuration dir..."
+    einfo "Installing hooks into paludis configuration dir..."
 
     # Create all necessary directories
     dodir ${PALUDIS_CONFIG_DIR}/hooks/ebuild_{compile_{post,pre},configure_{post,pre},install_{post,pre}}
