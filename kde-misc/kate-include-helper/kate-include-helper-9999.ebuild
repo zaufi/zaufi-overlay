@@ -3,14 +3,14 @@
 # $Header: $
 # kate: hl bash;
 
-EAPI="4"
+EAPI=4
 
 KDE_SCM="git"
-EGIT_REPO_URI="git://github.com/zaufi/kate-include-helper-plugin.git"
 inherit kde4-base
 
 DESCRIPTION="Kate Include Helper plugin"
 HOMEPAGE="http://github.com/zaufi/kate-include-helper-plugin"
+EGIT_REPO_URI="git://github.com/zaufi/kate-include-helper-plugin.git"
 
 IUSE=""
 LICENSE="GPL-2"
