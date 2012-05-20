@@ -51,7 +51,7 @@ src_configure() {
 	use debug || myconf="${myconf} --enable-asserts"
 
 	if use geospatial; then
-		epatch ${FILESDIR}/${PV}-geospatial-xapian-core.patch
+		epatch ${FILESDIR}/1.2.7-geospatial-xapian-core.patch
 	fi
 
 	econf $myconf
