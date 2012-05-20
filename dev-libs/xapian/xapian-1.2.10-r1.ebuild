@@ -15,7 +15,7 @@ SRC_URI="http://oligarchy.co.uk/xapian/${PV}/${MY_P}.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="+debug doc static-libs -sse +sse2 +brass +chert +flint +inmemory +remote +geospatial"
+IUSE="debug doc static-libs -sse +sse2 +brass +chert +flint +inmemory +remote +geospatial"
 
 DEPEND=""
 RDEPEND=""
@@ -48,7 +48,7 @@ src_configure() {
 	use inmemory || myconf="${myconf} --disable-backend-inmemory"
 	use remote || myconf="${myconf} --disable-backend-remote"
 
-	use debug || myconf="${myconf} --enable-asserts"
+	use debug && myconf="${myconf} --enable-assertions"
 
 	if use geospatial; then
 		epatch ${FILESDIR}/1.2.7-geospatial-xapian-core.patch
