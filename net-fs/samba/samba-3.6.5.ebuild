@@ -20,7 +20,7 @@ IUSE="acl addns ads +aio avahi caps +client cluster cups debug doc examples fam
 	-talloc swat syslog winbind"
 
 DEPEND="dev-libs/popt
-	talloc? >=sys-libs/talloc-2.0.5
+	talloc? ( >=sys-libs/talloc-2.0.5 )
 	>=sys-libs/tdb-1.2.9
 	virtual/libiconv
 	ads? ( virtual/krb5 sys-fs/e2fsprogs
