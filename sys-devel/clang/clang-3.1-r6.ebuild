@@ -118,6 +118,8 @@ src_configure() {
 		CONF_FLAGS="${CONF_FLAGS} --enable-pic"
 	fi
 
+	# clang prefers clang over gcc, so we may need to force that
+	tc-export CC CXX
 	econf ${CONF_FLAGS}
 }
 
