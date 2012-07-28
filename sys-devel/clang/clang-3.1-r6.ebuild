@@ -19,7 +19,7 @@ SRC_URI="http://llvm.org/releases/${PV}/llvm-${PV}.src.tar.gz
 LICENSE="UoI-NCSA"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~x86 ~amd64-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos"
-IUSE="debug kernel_FreeBSD multitarget +python +static-analyzer test"
+IUSE="debug kernel_FreeBSD multitarget +python static-analyzer test"
 
 DEPEND="static-analyzer? ( dev-lang/perl )"
 RDEPEND="~sys-devel/llvm-${PV}[multitarget=]"
@@ -124,7 +124,7 @@ src_configure() {
 }
 
 src_compile() {
-	emake VERBOSE=1 KEEP_SYMBOLS=1 REQUIRES_RTTI=1 clang-only
+	emake VERBOSE=0 KEEP_SYMBOLS=1 REQUIRES_RTTI=1 clang-only
 }
 
 src_test() {
@@ -168,9 +168,12 @@ src_install() {
 	fi
 
 	if use python; then
-		cd bindings/python/clang
-		insinto "$(python_get_sitedir)"/clang
-		doins cindex.py __init__.py
+		cd ${S}/tools/clang/bindings/python/clang
+		install-cindex() {
+			insinto "$(python_get_sitedir)"/clang
+			doins cindex.py __init__.py
+		}
+		python_execute_function install-cindex
 	fi
 
 	# Fix install_names on Darwin.  The build system is too complicated
