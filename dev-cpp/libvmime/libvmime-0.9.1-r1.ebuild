@@ -4,6 +4,8 @@
 
 EAPI=4
 
+inherit eutils
+
 DESCRIPTION="Library for working with MIME messages and Internet messaging services like IMAP, POP or SMTP"
 HOMEPAGE="http://www.vmime.org"
 SRC_URI="mirror://sourceforge/vmime/${P}.tar.bz2"
