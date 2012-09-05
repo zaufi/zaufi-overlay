@@ -1,0 +1,12 @@
+diff -ub -rub libvmime-0.9.1.origin/vmime/base.hpp libvmime-0.9.1/vmime/base.hpp
+--- libvmime-0.9.1.origin/vmime/base.hpp	2010-02-06 21:12:57.000000000 +0300
++++ libvmime-0.9.1/vmime/base.hpp	2012-09-05 09:24:20.000000000 +0400
+@@ -252,7 +252,7 @@
+ 	template <class X, class Y>
+ 	ref <X> dynamicCast(ref <Y> y)
+ 	{
+-		return y.dynamicCast <X>();
++		return y.template dynamicCast <X>();
+ 	}
+ 
+ } // vmime
