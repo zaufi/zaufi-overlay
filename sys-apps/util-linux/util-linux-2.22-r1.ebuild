@@ -92,7 +92,7 @@ src_configure() {
 		$(use_with slang) \
 		$(use_enable static-libs static) \
 		$(use_with udev) \
-		$(tc-has-tls || echo --disable-tls)
+		$(tc-has-tls || echo --disable-tls) \
 		--enable-chkdupexe=$(usex perl yes no)
 }
 
