@@ -13,7 +13,7 @@ SRC_URI="http://oligarchy.co.uk/xapian/${PV}/${MY_P}.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~mips ~ppc ~ppc64 ~x86"
-IUSE="doc static-libs -sse +sse2 +brass +chert +flint +inmemory +remote"
+IUSE="+debug doc static-libs -sse +sse2 +brass +chert +flint +inmemory +remote"
 
 DEPEND="sys-libs/zlib"
 RDEPEND="${DEPEND}"
