@@ -6,13 +6,15 @@
 EAPI="4"
 
 EHG_REPO_URI="http://bitbucket.org/zaufi/paludis-hooks"
-inherit mercurial cmake-utils
+EGIT_REPO_URI="https://github.com/zaufi/paludis-hooks.git"
+inherit git-2 cmake-utils
 
 DESCRIPTION="My hooks for paludis"
-HOMEPAGE="http://bitbucket.org/zaufi/paludis-hooks"
+HOMEPAGE="https://github.com/zaufi/paludis-hooks"
 
+# TODO Introduce USE flags to select what to install?
 IUSE=""
-LICENSE="GPL-2"
+LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~hppa ~ppc ~sparc ~x86"
 
@@ -36,11 +38,11 @@ src_install() {
 
     # Symlink hooks into configuration dirs
     local auto_patch="/usr/share/paludis/hooks/auto-patch.bash"
-    local symlinks_maintainer="/usr/share/paludis/hooks/symlinks-maintainer.bash"
+    local filesystem_manager="/usr/share/paludis/hooks/filesystem-manager.bash"
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_compile_pre
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_compile_post
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_configure_post
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_configure_pre
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_install_pre
-    dosym ${symlinks_maintainer} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_install_post
+    dosym ${filesystem_manager} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_install_post
 }
