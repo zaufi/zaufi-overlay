@@ -23,10 +23,6 @@ COMMON_DEPEND="sys-apps/paludis"
 DEPEND="${COMMON_DEPEND} dev-util/cmake"
 RDEPEND="${COMMON_DEPEND} dev-libs/libxslt"
 
-src_unpack() {
-    mercurial_src_unpack
-}
-
 src_install() {
     cmake-utils_src_install
 
