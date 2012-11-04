@@ -5,7 +5,6 @@
 
 EAPI="4"
 
-EHG_REPO_URI="http://bitbucket.org/zaufi/paludis-hooks"
 EGIT_REPO_URI="https://github.com/zaufi/paludis-hooks.git"
 inherit git-2 cmake-utils
 
@@ -22,6 +21,10 @@ COMMON_DEPEND="sys-apps/paludis"
 
 DEPEND="${COMMON_DEPEND} dev-util/cmake"
 RDEPEND="${COMMON_DEPEND} dev-libs/libxslt"
+
+src_unpack() {
+    git-2_src_unpack
+}
 
 src_install() {
     cmake-utils_src_install
