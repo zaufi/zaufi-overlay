@@ -33,7 +33,8 @@ src_install() {
 
     # Create all necessary directories
     dodir ${PALUDIS_CONFIG_DIR}/hooks/ebuild_{compile_{post,pre},configure_{post,pre},install_{post,pre}}
-    for i in /var/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre}
+    # Create 'empty' directories for autopatch hook
+    for i in ${D}/var/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre}
     do
         dodir $i
         touch $i/.keep
