@@ -20,7 +20,7 @@ KEYWORDS="~alpha ~amd64 ~hppa ~ppc ~sparc ~x86"
 COMMON_DEPEND="sys-apps/paludis"
 
 DEPEND="${COMMON_DEPEND} dev-util/cmake"
-RDEPEND="${COMMON_DEPEND} dev-libs/libxslt"
+RDEPEND="${COMMON_DEPEND} dev-libs/libxslt dev-libs/libxml2"
 
 src_unpack() {
     git-2_src_unpack
