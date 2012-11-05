@@ -34,11 +34,8 @@ src_install() {
     # Create all necessary directories
     dodir ${PALUDIS_CONFIG_DIR}/hooks/ebuild_{compile_{post,pre},configure_{post,pre},install_{post,pre}}
     # Create 'empty' directories for autopatch hook
-    for i in ${D}/var/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre}
-    do
-        dodir $i
-        touch $i/.keep
-    done
+    dodir /var/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre}
+    touch ${D}/var/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre}
 
     # Symlink hooks into configuration dirs
     local auto_patch="/usr/share/paludis/hooks/auto-patch.bash"
