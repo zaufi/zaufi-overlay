@@ -1,0 +1,36 @@
+# Copyright 2011 Alex Turbov <i.zaufi@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+# kate: hl bash;
+
+EAPI="5"
+
+EGIT_REPO_URI="https://github.com/pfactum/uksmstat.git"
+inherit git-2
+
+DESCRIPTION="Small set of tools to control UKSM"
+HOMEPAGE="https://github.com/pfactum/uksmstat"
+
+# TODO Introduce USE flags to select what to install?
+IUSE=""
+LICENSE="GPL-3"
+SLOT="0"
+KEYWORDS="~amd64 ~x86"
+
+DEPEND=""
+RDEPEND=""
+
+src_unpack() {
+    git-2_src_unpack
+}
+
+pkg_pretend() {
+    if [ ! -d /sys/kernel/mm/ukms ]; then
+        ewarn "This tool have sense only for kernels w/ UKMS patch applied (like pf-sources)"
+    fi
+}
+
+src_install() {
+    dobin uksmstat/uksmstat
+    dosbin uksmctl/uksmctl
+}
