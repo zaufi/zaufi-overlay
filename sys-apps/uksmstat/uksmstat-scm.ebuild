@@ -25,12 +25,14 @@ src_unpack() {
 }
 
 pkg_pretend() {
-    if [ ! -d /sys/kernel/mm/ukms ]; then
-        ewarn "This tool have sense only for kernels w/ UKMS patch applied (like pf-sources)"
+    if [ ! -d /sys/kernel/mm/uksm ]; then
+        ewarn "This tool have sense only for kernels w/ UKSM patch applied (like pf-sources)"
     fi
 }
 
 src_install() {
     dobin uksmstat/uksmstat
     dosbin uksmctl/uksmctl
+    dodoc README.md
+    dodoc COPYING
 }
