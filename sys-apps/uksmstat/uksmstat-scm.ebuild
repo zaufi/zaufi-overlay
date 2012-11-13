@@ -1,5 +1,5 @@
 # Copyright 2011 Alex Turbov <i.zaufi@gmail.com>
-# Distributed under the terms of the GNU General Public License v2
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 # kate: hl bash;
 
@@ -11,7 +11,6 @@ inherit git-2
 DESCRIPTION="Small set of tools to control UKSM"
 HOMEPAGE="https://github.com/pfactum/uksmstat"
 
-# TODO Introduce USE flags to select what to install?
 IUSE=""
 LICENSE="GPL-3"
 SLOT="0"
