@@ -126,11 +126,7 @@ src_configure() {
 }
 
 src_compile() {
-    emake VERBOSE=0 KEEP_SYMBOLS=1 REQUIRES_RTTI=1 clang-only
-    if use doc; then
-        cd "${S}"/tools/clang/docs || die "cd clang/docs failed"
-        emake VERBOSE=0 ENABLE_DOXYGEN=1 BUILD_FOR_WEBSITE=1 doxygen
-    fi
+    emake KEEP_SYMBOLS=1 REQUIRES_RTTI=1 clang-only
 }
 
 src_test() {
