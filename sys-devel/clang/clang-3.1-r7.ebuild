@@ -152,10 +152,13 @@ src_test() {
 
 src_install() {
     cd "${S}"/tools/clang || die "cd clang failed"
+    emake KEEP_SYMBOLS=1 DESTDIR="${D}" install
+    # ATTENTION There is some BUG in a clang Makefiles: doxygened htmls won't
+    # install w/ `make install`...
     if use doc; then
-        dox="ENABLE_DOXYGEN=1 BUILD_FOR_WEBSITE=1"
+        cd "${S}"/tools/clang/docs || die "cd clang/docs failed"
+        emake ENABLE_DOXYGEN=1 BUILD_FOR_WEBSITE=1 install-doxygen
     fi
-    emake KEEP_SYMBOLS=1 DESTDIR="${D}" ${dox} install
 
     if use static-analyzer ; then
         dobin tools/scan-build/ccc-analyzer
