@@ -155,6 +155,8 @@ src_install() {
         cd "${S}"/tools/clang/docs || die "cd clang/docs failed"
         emake ENABLE_DOXYGEN=1 BUILD_FOR_WEBSITE=1 DESTDIR="${D}" install-doxygen
         cd ..
+        # TODO `make install-doxygen` in clang is UGLY! Need to clean *.md5 and *.map
+        # files from installed API documentation!
     fi
 
     if use static-analyzer ; then
@@ -219,5 +221,3 @@ pkg_postinst() {
 pkg_postrm() {
     python_mod_cleanup clang
 }
-
-# kate: replace-tabs true; space-indent true;
