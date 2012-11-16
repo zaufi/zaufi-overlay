@@ -158,6 +158,7 @@ src_install() {
     if use doc; then
         cd "${S}"/tools/clang/docs || die "cd clang/docs failed"
         emake ENABLE_DOXYGEN=1 BUILD_FOR_WEBSITE=1 DESTDIR="${D}" install-doxygen
+        cd ..
     fi
 
     if use static-analyzer ; then
