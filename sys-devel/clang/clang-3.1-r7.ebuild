@@ -21,7 +21,8 @@ SLOT="0"
 KEYWORDS="~amd64 ~arm ~x86 ~amd64-fbsd ~x64-freebsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos"
 IUSE="debug +doc kernel_FreeBSD multitarget +python static-analyzer test"
 
-DEPEND="static-analyzer? ( dev-lang/perl )"
+DEPEND="static-analyzer? ( dev-lang/perl )
+        doc? ( app-doc/doxygen )"
 RDEPEND="~sys-devel/llvm-${PV}[multitarget=]"
 
 S=${WORKDIR}/llvm-${PV}.src
@@ -126,6 +127,10 @@ src_configure() {
 
 src_compile() {
     emake VERBOSE=0 KEEP_SYMBOLS=1 REQUIRES_RTTI=1 clang-only
+    if use doc; then
+        cd "${S}"/tools/clang/doc || die "cd clang failed"
+        emake VERBOSE=0 ENABLE_DOXYGEN=1 BUILD_FOR_WEBSITE=1 doxygen
+    fi
 }
 
 src_test() {
@@ -147,7 +152,10 @@ src_test() {
 
 src_install() {
     cd "${S}"/tools/clang || die "cd clang failed"
-    emake KEEP_SYMBOLS=1 DESTDIR="${D}" install
+    if use doc; then
+        dox="ENABLE_DOXYGEN=1 BUILD_FOR_WEBSITE=1"
+    fi
+    emake KEEP_SYMBOLS=1 DESTDIR="${D}" ${dox} install
 
     if use static-analyzer ; then
         dobin tools/scan-build/ccc-analyzer
