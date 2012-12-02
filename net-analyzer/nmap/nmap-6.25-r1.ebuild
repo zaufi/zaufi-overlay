@@ -32,6 +32,7 @@ NMAP_PYTHON_DEPEND="
 DEPEND="
 	dev-libs/apr
 	dev-libs/libpcre
+	net-libs/libpcap
 	ipv6? ( net-libs/libpcap[ipv6] )
 	gtk? (
 		>=x11-libs/gtk+-2.6:2
