@@ -57,11 +57,10 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-4.75-include.patch
 	epatch "${FILESDIR}"/${PN}-4.75-nolua.patch
-	epatch "${FILESDIR}"/${PN}-5.10_beta1-string.patch
 	epatch "${FILESDIR}"/${PN}-5.21-python.patch
 	epatch "${FILESDIR}"/${PN}-6.01-make.patch
+	epatch "${FILESDIR}"/${PN}-6.25-nolua.patch
 	sed -i \
 		-e 's/-m 755 -s ncat/-m 755 ncat/' \
 		ncat/Makefile.in || die
