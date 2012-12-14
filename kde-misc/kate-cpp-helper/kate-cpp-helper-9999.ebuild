@@ -19,5 +19,5 @@ LICENSE="GPL-2"
 SLOT="4"
 KEYWORDS="~amd64 ~x86"
 
-DEPEND="$(add_kdebase_dep kate)"
+DEPEND="$(add_kdebase_dep kate) >=sys-devel/clang-3.0"
 RDEPEND="${DEPEND}"
