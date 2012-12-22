@@ -19,7 +19,7 @@ SRC_URI="http://llvm.org/releases/${PV}/llvm-${PV}.src.tar.gz
 LICENSE="UoI-NCSA"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~x86 ~amd64-fbsd ~x64-freebsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos"
-IUSE="debug doc kernel_FreeBSD multitarget python +static-analyzer test"
+IUSE="c++0x debug doc kernel_FreeBSD multitarget python +static-analyzer test"
 
 DEPEND="static-analyzer? ( dev-lang/perl )"
 RDEPEND="~sys-devel/llvm-${PV}[multitarget=]"
@@ -94,9 +94,10 @@ src_configure() {
 	local CONF_FLAGS="--enable-shared
 		--with-optimize-option=
 		$(use_enable !debug optimized)
-        $(use_enable debug assertions)
+		$(use_enable debug assertions)
 		$(use_enable debug expensive-checks)
-        $(use_enable doc doxygen)"
+		$(use_enable doc doxygen)
+		$(use_enable c++0x cxx11)"
 
 	# Setup the search path to include the Prefix includes
 	if use prefix ; then
@@ -197,6 +198,11 @@ src_install() {
 
 	# Remove unnecessary headers on FreeBSD, bug #417171
 	use kernel_FreeBSD && rm "${ED}"usr/$(get_libdir)/clang/${PV}/include/{arm_neon,std,float,iso,limits,tgmath,varargs}*.h
+
+	# Remove useless *.md5 and *.map files from doxygen documentation
+	if use doc ; then
+		cd ${D}/usr/share/doc/${PF}/html/doxygen && rm *.md5 *.map
+	fi
 }
 
 pkg_postinst() {
