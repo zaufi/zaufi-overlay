@@ -22,7 +22,7 @@ KEYWORDS="~amd64 ~arm ~x86 ~amd64-fbsd ~x64-freebsd ~amd64-linux ~x86-linux ~ppc
 IUSE="c++0x debug doc kernel_FreeBSD multitarget python +static-analyzer test"
 
 DEPEND="static-analyzer? ( dev-lang/perl )"
-RDEPEND="~sys-devel/llvm-${PV}[multitarget=]"
+RDEPEND="~sys-devel/llvm-${PV}[multitarget=,c++0x=]"
 
 S=${WORKDIR}/llvm-${PV}.src
 
