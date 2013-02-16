@@ -10,7 +10,7 @@ DESCRIPTION="IceGlass KDE icon theme"
 HOMEPAGE="http://kde-look.org/content/show.php?content=121145"
 SRC_URI="http://ompldr.org/vaDk5cg/Iceglass%20${PV}.tar.xz"
 
-LICENSE="Idontknow"
+LICENSE="GPL"
 SLOT="0"
 KEYWORDS="alpha amd64 ia64 ~ppc ~ppc64 sparc x86"
 
