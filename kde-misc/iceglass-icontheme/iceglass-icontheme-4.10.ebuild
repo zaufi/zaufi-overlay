@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 #
 
-EAPI="5"
+EAPI=5
 
 inherit eutils
 
@@ -16,6 +16,13 @@ KEYWORDS="alpha amd64 ia64 ~ppc ~ppc64 sparc x86"
 
 IUSE=""
 
+src_unpack()
+{
+    mkdir -p ${S}
+    cd ${S}
+    default_src_unpack
+}
+
 src_prepare()
 {
     epatch ${FILESDIR}/${PV}-fix-broken-line.patch
@@ -23,6 +30,8 @@ src_prepare()
 
 src_install()
 {
+    einfo "Going to install a lot of icons into ${S}... "
+    einfo "Please be patient or buy SSD, or 15k rpm Ultra-640 SCSI, or ... ;-)"
     insinto /usr/share/icons
-    doins -r "IceGlass 4.10"
+    doins -r "Iceglass ${PV}" || die "doins failed"
 }
