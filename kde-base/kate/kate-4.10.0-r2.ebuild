@@ -22,7 +22,7 @@ RDEPEND="${DEPEND}
     $(add_kdebase_dep katepart)
 "
 
-pkg_prepare() {
+src_prepare() {
     epatch ${FILESDIR}/0001-fixes-for-runtime-errors-w-Python-3.patch
 }
 
