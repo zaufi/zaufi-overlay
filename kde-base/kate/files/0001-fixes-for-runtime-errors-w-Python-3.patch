@@ -1,0 +1,79 @@
+From 66e5de1555a268ee1271cef5f2dac7ba61701f77 Mon Sep 17 00:00:00 2001
+From: Alex Turbov <i.zaufi@gmail.com>
+Date: Mon, 18 Feb 2013 07:56:02 +0400
+Subject: [PATCH] fixes for runtime errors w/ Python 3
+
+---
+ kate/plugins/pate/src/plugins/expand/all.expand    | 40 ++++++++++++++--------
+ .../pate/src/plugins/expand/text_x-c++src.expand   |  2 +-
+ 2 files changed, 27 insertions(+), 15 deletions(-)
+
+diff --git a/kate/plugins/pate/src/plugins/expand/all.expand b/kate/plugins/pate/src/plugins/expand/all.expand
+index 32d20a2..4c53424 100644
+--- a/kate/plugins/pate/src/plugins/expand/all.expand
++++ b/kate/plugins/pate/src/plugins/expand/all.expand
+@@ -1,25 +1,37 @@
+-#!/usr/bin/python
+-# ^ for Python syntax highlighting
++#
++# Expand-functions in this modude mostly for demonstration
++# than for daily use...
++#
++
++try:
++  import builtins as interpreter
++except ImportError:
++  import __builtin__ as interpreter
++
++try:
++    from io import StringIO
++except:
++    from cStringIO import StringIO
+ 
+-import __builtin__
+ import sys
+-from cStringIO import StringIO
+ 
+ def eval(s):
+     # get automatic conversion to unicode or (that failing)
+     # a string representation
+-    return __builtin__.eval(s)
++    return interpreter.eval(s)
+ 
+ def python(s):
+-	# execute a block. sys.stdout is written to the document
+-	old = sys.stdout
+-	io = StringIO()
+-	sys.stdout = io
+-	try:
+-		exec s
+-	finally:
+-		sys.stdout = old
+-	return io.getvalue().strip() # should we always strip?
++    # execute a block. sys.stdout is written to the document
++    old = sys.stdout
++    io = StringIO()
++    sys.stdout = io
++    try:
++        exec(s)
++    finally:
++        sys.stdout = old
++    return io.getvalue().strip() # should we always strip?
+ 
+ def test(s):
+     raise ValueError(s)
++
++# kate: hl python; indent-width 4;
+diff --git a/kate/plugins/pate/src/plugins/expand/text_x-c++src.expand b/kate/plugins/pate/src/plugins/expand/text_x-c++src.expand
+index a8384ba..3794a2a 100644
+--- a/kate/plugins/pate/src/plugins/expand/text_x-c++src.expand
++++ b/kate/plugins/pate/src/plugins/expand/text_x-c++src.expand
+@@ -275,4 +275,4 @@ def sw(expr = None, *caseList):
+ def test(expr):
+     return '{\n\t%{cursor}' + expr + '\n}'
+ 
+-# kate: hl python;
++# kate: hl python; indent-width 4;
+-- 
+1.8.1.2
+
