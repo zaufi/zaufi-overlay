@@ -7,7 +7,7 @@ EAPI=5
 KDE_HANDBOOK="optional"
 KMNAME="kate"
 PYTHON_COMPAT=( python{2_7,3_2} )
-inherit python-single-r1 kde4-meta
+inherit python-single-r1 kde4-meta eutils
 
 DESCRIPTION="Kate is an MDI texteditor."
 KEYWORDS="~amd64 ~arm ~ppc ~x86 ~amd64-linux ~x86-linux"
