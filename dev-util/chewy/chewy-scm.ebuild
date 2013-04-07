@@ -14,13 +14,9 @@ inherit git-2 distutils-r1
 
 DESCRIPTION="CMake Helpers Easy Way sYnchronizer"
 HOMEPAGE="https://github.com/mutanabbi/chewy"
-
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64 x86"
-
 RDEPEND="${PYTHON_DEPS}"
 DEPEND="${RDEPEND}"
-
 IUSE=""
-
