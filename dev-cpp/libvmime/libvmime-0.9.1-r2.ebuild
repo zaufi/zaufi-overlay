@@ -28,7 +28,7 @@ src_prepare() {
 		-e "s|doc/\$(GENERIC_LIBRARY_NAME)|doc/${PF}|" \
 		configure Makefile.in || die "sed failed"
 	epatch ${FILESDIR}/libvmime-0.9.1-missed-template-fix.patch
-	epatch ${FILESFIR}/gnutls-3.13-errors-list-4-libvmime-0.9.1.patch
+	epatch ${FILESDIR}/gnutls-3.13-errors-list-4-libvmime-0.9.1.patch
 }
 
 src_configure() {
