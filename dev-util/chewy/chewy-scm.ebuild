@@ -9,7 +9,7 @@ EAPI=5
 EGIT_REPO_URI="https://github.com/mutanabbi/chewy.git"
 # TODO Fix Python 3.3 support
 # TODO Check for other Python versions
-PYTHON_COMPAT=( python3_2 )
+PYTHON_COMPAT=( python3_{2,3} )
 
 inherit bash-completion-r1 distutils-r1 git-2
 
