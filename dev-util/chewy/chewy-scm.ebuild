@@ -22,7 +22,7 @@ RDEPEND="${PYTHON_DEPS} sys-apps/portage[${PYTHON_USEDEP}]"
 DEPEND="${RDEPEND}"
 IUSE=""
 
-src_install() {
-    default
+python_install_all() {
+    distutils-r1_python_install_all0
     dobashcomp bash_completion.d/${PN}
 }
