@@ -17,12 +17,12 @@ IUSE="debug +plasma +python"
 
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
+# TODO Replace 9999 in dependency from pykde4 w/ 4.11 after KDE SC release
 DEPEND="
 	dev-libs/libxml2
 	dev-libs/libxslt
 	python? (
 		${PYTHON_DEPEND}
-		# TODO Replace 9999 w/ 4.11 after KDE SC release
 		$(add_kdebase_dep pykde4 "${PYTHON_USEDEP}" 9999)
 	)
 "
