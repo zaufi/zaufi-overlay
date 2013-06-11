@@ -1,0 +1,16 @@
+--- CMakeLists.txt.org	2013-06-10 04:25:04.000000000 +0400
++++ CMakeLists.txt	2013-06-11 06:32:22.000000000 +0400
+@@ -48,9 +48,10 @@
+   macro_optional_add_subdirectory (ktexteditor)
+ else()
+   # kdelibs 4.11 is required
+-  if("${KDE_VERSION}" VERSION_LESS 4.10.60)
+-    message(FATAL_ERROR "kdelibs version ${KDE_VERSION}, but 4.11 is required. Set the option BUILD_KTEXTEDITOR to ON to build anyway.")
+-  endif()
++#  if("${KDE_VERSION}" VERSION_LESS 4.10.60)
++#    message(FATAL_ERROR "kdelibs version ${KDE_VERSION}, but 4.11 is required. Set the option BUILD_KTEXTEDITOR to ON to build anyway.")
++#  endif()
++   message("Make sure you have a latest kdelibs version ${KDE_VERSION}!")
+ endif (BUILD_KTEXTEDITOR)
+ 
+ # kate part

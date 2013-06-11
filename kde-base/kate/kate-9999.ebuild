@@ -5,6 +5,7 @@
 EAPI=5
 KDE_HANDBOOK="optional"
 KMNAME="kate"
+KMEXTRA="addons/kate"
 KDE_OVERRIDE_MINIMAL="4.10.4"
 PYTHON_COMPAT=( python{2_7,3_1,3_2,3_3} )
 
@@ -35,6 +36,19 @@ pkg_setup() {
 	kde4-meta_pkg_setup
 }
 
+src_unpack() {
+	if use plasma; then
+		KMEXTRA="${KMEXTRA} addons/plasma"
+	fi
+
+	kde4-meta_src_unpack
+}
+
+src_prepare() {
+	kde4-meta_src_prepare
+	epatch ${FILESDIR}/build-without-kpart.patch
+}
+
 src_configure() {
 	mycmakeargs=(
 		$(cmake-utils_use_build python pate)
@@ -42,15 +56,4 @@ src_configure() {
 	)
 
 	kde4-meta_src_configure
-}
-
-pkg_postinst() {
-	kde4-meta_pkg_postinst
-
-	if ! has_version kde-base/kaddressbook:${SLOT}; then
-		echo
-		elog "File templates plugin requires kde-base/kaddressbook:${SLOT}."
-		elog "Please install it if you plan to use this plugin."
-		echo
-	fi
 }
