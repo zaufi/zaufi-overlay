@@ -22,7 +22,8 @@ DEPEND="
 	dev-libs/libxslt
 	python? (
 		${PYTHON_DEPEND}
-		$(add_kdebase_dep pykde4 "${PYTHON_USEDEP}" 4.9.2-r1)
+		# TODO Replace 9999 w/ 4.11 after KDE SC release
+		$(add_kdebase_dep pykde4 "${PYTHON_USEDEP}" 9999)
 	)
 "
 RDEPEND="${DEPEND}
