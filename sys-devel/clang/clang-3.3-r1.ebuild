@@ -22,7 +22,7 @@ IUSE="c++0x debug doc kernel_FreeBSD multitarget python +static-analyzer test"
 
 DEPEND="static-analyzer? ( dev-lang/perl )
 	${PYTHON_DEPS}"
-RDEPEND="~sys-devel/llvm-${PV}[debug=,multitarget=]
+RDEPEND="~sys-devel/llvm-${PV}[c++0x=,debug=,multitarget=]
 	${PYTHON_DEPS}"
 
 S=${WORKDIR}/llvm-${PV}.src
