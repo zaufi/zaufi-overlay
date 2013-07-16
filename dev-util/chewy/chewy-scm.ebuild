@@ -7,7 +7,6 @@
 EAPI=5
 
 EGIT_REPO_URI="https://github.com/mutanabbi/chewy.git"
-# TODO Fix Python 3.3 support
 # TODO Check for other Python versions
 PYTHON_COMPAT=( python3_{2,3} )
 
@@ -23,6 +22,6 @@ DEPEND="${RDEPEND}"
 IUSE=""
 
 python_install_all() {
-    distutils-r1_python_install_all0
+    distutils-r1_python_install_all
     dobashcomp bash_completion.d/${PN}
 }
