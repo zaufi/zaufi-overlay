@@ -199,6 +199,7 @@ multilib_src_configure() {
 		$(use_enable !debug optimized)
 		$(use_enable debug assertions)
 		$(use_enable debug expensive-checks)
+		$(use_enable doc doxygen)
 		$(use_enable c++0x cxx11)"
 
 	if use clang; then
