@@ -1,6 +1,6 @@
-diff -ub -rub clang-3.3.src.org/docs/Makefile clang-3.3.src/docs/Makefile
---- clang-3.3.src.org/docs/Makefile	2011-05-13 07:29:06.000000000 +0400
-+++ clang-3.3.src/docs/Makefile	2013-08-11 03:41:55.000000000 +0400
+diff -ub -rub b/tools/clang/docs/Makefile a/tools/clang/docs/Makefile
+--- a/tools/clang/docs/Makefile	2011-05-13 07:29:06.000000000 +0400
++++ b/tools/clang/docs/Makefile	2013-08-11 03:41:55.000000000 +0400
 @@ -46,13 +46,12 @@
  # 'make generated BUILD_FOR_WEBSITE=1'
  generated:: doxygen
