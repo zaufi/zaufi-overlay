@@ -8,8 +8,8 @@ inherit eutils
 
 DESCRIPTION="IceGlass KDE icon theme"
 HOMEPAGE="http://kde-look.org/content/show.php?content=121145"
-SRC_URI="https://www.cubby.com/pl/Iceglass-4.10.1.tar.xz/_f32c36fa22dd45c3a02ab33bc19c2ca6"
-#RESTRICT="fetch"
+SRC_URI="Iceglass-4.10.1.tar.xz"
+RESTRICT="fetch"
 
 LICENSE="GPL"
 SLOT="0"
@@ -17,11 +17,11 @@ KEYWORDS="alpha amd64 ia64 ~ppc ~ppc64 sparc x86"
 
 IUSE=""
 
-#pkg_nofetch()
-#{
-#    eerror "Manual fetch required form ${HOMEPAGE}"
-#    eerror "Then move ${SRC_URI} to ${DISTDIR}"
-#}
+pkg_nofetch()
+{
+    eerror "Manual fetch required form ${HOMEPAGE}"
+    eerror "Then move ${SRC_URI} to ${DISTDIR}"
+}
 
 src_unpack()
 {
