@@ -165,7 +165,10 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-3.2-nodoctargz.patch
 	epatch "${FILESDIR}"/${P}-R600_debug.patch
 	epatch "${FILESDIR}"/${PN}-3.3-gentoo-install.patch
-	use clang && epatch "${FILESDIR}"/clang-3.3-gentoo-install.patch
+	if use clang ; then
+		epatch "${FILESDIR}"/clang-3.3-gentoo-install.patch
+		epatch "${FILESDIR}"/clang-3.3-nodoctargz.patch
+	fi
 
 	local sub_files=(
 		Makefile.config.in
