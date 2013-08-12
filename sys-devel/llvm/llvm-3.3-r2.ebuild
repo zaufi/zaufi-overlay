@@ -202,7 +202,6 @@ multilib_src_configure() {
 		$(use_enable !debug optimized)
 		$(use_enable debug assertions)
 		$(use_enable debug expensive-checks)
-		$(use_enable doc doxygen)
 		$(use_enable c++0x cxx11)"
 
 	if use clang; then
@@ -404,9 +403,5 @@ multilib_src_install_all() {
 			python_doscript "${S}"/projects/compiler-rt/lib/asan/scripts/asan_symbolize.py
 		}
 		python_foreach_impl python_inst
-	fi
-	# Remove useless *.md5 and *.map files from doxygen documentation
-	if use doc ; then
-		cd ${D}/usr/share/doc/${PF}/html/doxygen && rm *.md5 *.map 2>/dev/null || die
 	fi
 }
