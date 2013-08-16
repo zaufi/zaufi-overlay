@@ -19,12 +19,10 @@ KEYWORDS="~amd64 ~x86"
 
 RDEPEND="
 	$(add_kdebase_dep kate)
-	|| ( (>=sys-devel/clang-3.0 <=sys-devel/clang-3.3) >=sys-devel/llvm-3.3-r1[clang] )
-	"
+	>=sys-devel/clang-3.1"
 
 DEPEND="${RDEPEND}
-	>=sys-devel/gcc-4.6
-	"
+	>=sys-devel/gcc-4.6"
 
 src_unpack() {
 	unpack ${A}
