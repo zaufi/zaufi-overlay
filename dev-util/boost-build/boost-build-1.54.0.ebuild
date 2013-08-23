@@ -43,7 +43,7 @@ src_prepare() {
 		"${FILESDIR}/${PN}-1.54.0-support_dots_in_python-buildid.patch" \
 		"${FILESDIR}/${PN}-1.48.0-disable_python_rpath.patch" \
 		"${FILESDIR}/${PN}-1.50.0-respect-c_ld-flags.patch" \
-		"${FILESDIR}/${PN}-1.50.0-fix-test.patch" \
+		"${FILESDIR}/${PN}-1.54.0-fix-test.patch" \
 		"${FILESDIR}/${PN}-1.49.0-darwin-gentoo-toolchain.patch" \
 		"${FILESDIR}/${PN}-1.52.0-darwin-no-python-framework.patch"
 
