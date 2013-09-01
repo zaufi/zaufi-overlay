@@ -29,7 +29,7 @@ src_unpack() {
 src_configure() {
     local mycmakeargs=(
         $(cmake-utils_use_disable git)
-        $(cmake-utils_use_disable svn)
+        $(cmake-utils_use_disable subversion SVN)
     )
     cmake-utils_src_configure
 }
