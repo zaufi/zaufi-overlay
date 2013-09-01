@@ -19,7 +19,7 @@ COMMON_DEPEND="apps-shells/bash"
 DEPEND="${COMMON_DEPEND} dev-util/cmake"
 RDEPEND="${COMMON_DEPEND}
     git? ( dev-vcs/git )
-    svn? ( dev-vcs/subversion )
+    subversion? ( dev-vcs/subversion )
     "
 
 src_unpack() {
