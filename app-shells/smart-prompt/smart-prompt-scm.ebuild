@@ -14,7 +14,7 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~hppa ~ppc ~sparc ~x86"
 
-COMMON_DEPEND="apps-shells/bash"
+COMMON_DEPEND=">=app-shells/bash-4.0"
 
 DEPEND="${COMMON_DEPEND} dev-util/cmake"
 RDEPEND="${COMMON_DEPEND}
