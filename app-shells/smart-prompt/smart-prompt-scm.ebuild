@@ -9,7 +9,7 @@ inherit git-2 cmake-utils
 DESCRIPTION="Smart bash prompt: show various context info in a command prompt"
 HOMEPAGE="https://github.com/zaufi/smart-prompt"
 
-IUSE="git svn"
+IUSE="git subversion"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~hppa ~ppc ~sparc ~x86"
