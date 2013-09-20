@@ -1,0 +1,7 @@
+#
+# ChangeLog for (my) profile directory
+#
+
+* 05 Sep 2013; Alex Turbov <i.zaufi@gmail.com> package.use.force:
+    Force unmask ruby20 USE flag.
+
