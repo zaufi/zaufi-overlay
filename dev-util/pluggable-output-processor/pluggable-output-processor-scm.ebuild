@@ -28,16 +28,25 @@ DEPEND="${RDEPEND}"
 IUSE=""
 
 python_install_all() {
+    distutils-r1_python_install_all
+
+    # NOTE Stupid Python's distutils do copy for symlinked files,
+    # so lets recreate symlinks again after install...
     local pp_dir=$(python_get_sitedir)/outproc/pp
     local i
     for i in cc c++ g++; do
-        rm ${D}/${pp_dir}/${i}
-        dosym ${D}/${pp_dir}/gcc ${i}
+        rm ${D}/${pp_dir}/${i}.py
+        dosym ${pp_dir}/gcc.py ${pp_dir}/${i}.py
     done
-    distutils-r1_python_install_all
-    kepdir /usr/lib/outproc/bin
+
+    dodoc README.md LICENSE
+
+    # Install eselect module
     insinto /usr/share/eselect/modules
     doins contrib/outproc.eselect
+
+    # Make a dir required for eselect
+    keepdir /usr/$(get_libdir)/outproc/bin
 }
 
 pkg_postinst() {
