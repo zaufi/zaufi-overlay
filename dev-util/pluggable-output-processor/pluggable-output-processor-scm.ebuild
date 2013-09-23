@@ -9,8 +9,9 @@ EAPI=5
 EGIT_REPO_URI="https://github.com/zaufi/pluggable-output-processor.git"
 # TODO Check for other Python versions
 PYTHON_COMPAT=( python3_{2,3} )
+DISTUTILS_SINGLE_IMPL="yes"
 
-inherit distutils-r1 git-2 python-utils-r1
+inherit distutils-r1 git-2
 
 DESCRIPTION="Pluggable Output Processor"
 HOMEPAGE="https://github.com/zaufi/pluggable-output-processor"
@@ -27,8 +28,10 @@ RDEPEND="
 DEPEND="${RDEPEND}"
 IUSE=""
 
-python_install_all() {
-    distutils-r1_python_install_all
+DOCS=( 'README.md' 'LICENSE' )
+
+python_install() {
+    distutils-r1_python_install
 
     # NOTE Stupid Python's distutils do copy for symlinked files,
     # so lets recreate symlinks again after install...
@@ -39,8 +42,7 @@ python_install_all() {
         dosym ${pp_dir}/gcc.py ${pp_dir}/${i}.py
     done
 
-    dodoc README.md LICENSE
-
+    # Install
     # Install eselect module
     insinto /usr/share/eselect/modules
     doins contrib/outproc.eselect
@@ -58,4 +60,13 @@ pkg_postinst() {
     elog
     elog "To get list of available modules:"
     elog "  eselect outproc list"
+    ewarn "Make sure /usr/$(get_libdir)/outproc/bin is a very first directory in your PATH"
+}
+
+pkg_prerm() {
+    local modules=$(ls /usr/$(get_libdir)/outproc/bin)
+    if [[ -n "$modules" ]]; then
+        elog "Note there are some modules still configured:"
+        elog $(eselect outproc show)
+    fi
 }
