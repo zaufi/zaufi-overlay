@@ -15,9 +15,13 @@ HOMEPAGE="http://github.com/zaufi/kate-cpp-helper-plugin"
 EGIT_REPO_URI="git://github.com/zaufi/kate-cpp-helper-plugin.git"
 
 IUSE=""
-LICENSE="GPL-2"
+LICENSE="GPL-3"
 SLOT="4"
 KEYWORDS="~amd64 ~x86"
 
-DEPEND="$(add_kdebase_dep kate) >=sys-devel/clang-3.0"
-RDEPEND="${DEPEND}"
+DEPEND="
+	$(add_kdebase_dep kate)
+	>=dev-lib/boost-1.49
+	>=dev-lib/xapian-1.2.12
+	>=sys-devel/clang-3.3"
+RDEPEND="${DEPEND} >=sys-devel/gcc-4.8"

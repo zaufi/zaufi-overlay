@@ -19,10 +19,12 @@ KEYWORDS="~amd64 ~x86"
 
 RDEPEND="
 	$(add_kdebase_dep kate)
-	>=sys-devel/clang-3.1"
+	>=dev-libs/xapian-1.2.12
+	>=dev-libs/boost-1.49
+	>=sys-devel/clang-3.3"
 
 DEPEND="${RDEPEND}
-	>=sys-devel/gcc-4.6"
+	>=sys-devel/gcc-4.8"
 
 src_unpack() {
 	unpack ${A}
