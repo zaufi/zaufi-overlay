@@ -1,9 +1,9 @@
-# Copyright 2012 Alex Turbov <i.zaufi@gmail.com>
+# Copyright 2012-2013 Alex Turbov <i.zaufi@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 #
 # kate: hl bash;
 
-EAPI=4
+EAPI=5
 
 KDE_SCM="git"
 inherit kde4-base
