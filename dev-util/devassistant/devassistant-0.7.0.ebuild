@@ -10,7 +10,7 @@ PYTHON_COMPAT=( python3_{2,3} )
 
 inherit bash-completion-r1 distutils-r1
 
-SRC_URI="https://github.com/bkabrda/devassistant/archive/v${PV}.tar.gz -> ${PN}-${PV}.tar.gz"
+SRC_URI="https://github.com/bkabrda/devassistant/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 DESCRIPTION="DevAssistant: Making life easier for developers"
 HOMEPAGE="http://devassistant.org"
 LICENSE="GPL-2"
@@ -24,7 +24,7 @@ RDEPEND="${PYTHON_DEPS}
 DEPEND="${RDEPEND}
         doc? ( dev-python/sphinx[${PYTHON_USEDEP}] )"
 
-PATCHES=( "${FILESDIR}"/00-do-not-install-gui.patch )
+PATCHES=( "${FILESDIR}"/00-${P}-no-gui-install.patch )
 
 DOCS=( 'CHANGELOG' 'LICENSE' 'README.rst' )
 

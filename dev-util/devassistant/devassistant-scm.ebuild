@@ -24,7 +24,7 @@ RDEPEND="${PYTHON_DEPS}
 DEPEND="${RDEPEND}
         doc? ( dev-python/sphinx[${PYTHON_USEDEP}] )"
 
-PATCHES=( "${FILESDIR}"/00-do-not-install-gui.patch )
+PATCHES=( "${FILESDIR}"/00-${P}-no-gui-install.patch )
 
 DOCS=( 'CHANGELOG' 'LICENSE' 'README.rst' )
 
