@@ -1,9 +1,8 @@
 # Copyright 2011 Alex Turbov <i.zaufi@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
-# kate: hl bash;
 
-EAPI="4"
+EAPI="5"
 
 EGIT_REPO_URI="https://github.com/zaufi/paludis-hooks.git"
 inherit git-2 cmake-utils
@@ -35,11 +34,11 @@ src_install() {
     keepdir ${PALUDIS_CONFIG_DIR}/hooks/ebuild_{compile_{post,pre},configure_{post,pre},install_{post,pre},unpack_post}
     keepdir ${PALUDIS_CONFIG_DIR}/hooks/install_all_post
     # Create 'empty' directories for autopatch hook
-    keepdir /var/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre,unpack_post}
+    keepdir ${EPREFIX}/var/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre,unpack_post}
 
     # Symlink hooks into configuration dirs
-    local auto_patch="/usr/share/paludis/hooks/auto-patch.bash"
-    local filesystem_manager="/usr/share/paludis/hooks/filesystem-manager.bash"
+    local auto_patch="${EPREFIX}/usr/share/paludis/hooks/auto-patch.bash"
+    local filesystem_manager="${EPREFIX}/usr/share/paludis/hooks/filesystem-manager.bash"
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_compile_pre
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_compile_post
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_configure_post

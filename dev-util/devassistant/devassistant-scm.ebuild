@@ -22,7 +22,10 @@ IUSE=""
 
 PATCHES=( "${FILESDIR}"/00-do-not-install-gui.patch )
 
+DOCS=( 'LICENSE' )
+
 python_install_all() {
     distutils-r1_python_install_all
     newbashcomp da.bash da
+    keepdir ${EPREFIX}/usr/share/devassistant/
 }

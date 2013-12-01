@@ -44,11 +44,11 @@ python_install() {
 
     # Install
     # Install eselect module
-    insinto /usr/share/eselect/modules
+    insinto ${EPREFIX}/usr/share/eselect/modules
     doins contrib/outproc.eselect
 
     # Make a dir required for eselect
-    keepdir /usr/$(get_libdir)/outproc/bin
+    keepdir ${EPREFIX}/usr/$(get_libdir)/outproc/bin
 }
 
 pkg_postinst() {
@@ -60,11 +60,11 @@ pkg_postinst() {
     elog
     elog "To get list of available modules:"
     elog "  eselect outproc list"
-    ewarn "Make sure /usr/$(get_libdir)/outproc/bin is a very first directory in your PATH"
+    ewarn "Make sure ${EPREFIX}/usr/$(get_libdir)/outproc/bin is a very first directory in your PATH"
 }
 
 pkg_prerm() {
-    local modules=$(ls /usr/$(get_libdir)/outproc/bin)
+    local modules=$(ls ${EPREFIX}/usr/$(get_libdir)/outproc/bin)
     if [[ -n "$modules" ]]; then
         elog "Note there are some modules still configured:"
         elog $(eselect outproc show)
