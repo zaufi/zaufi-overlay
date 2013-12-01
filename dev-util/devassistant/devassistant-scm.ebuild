@@ -20,6 +20,8 @@ RDEPEND="${PYTHON_DEPS} dev-python/PyGithub[${PYTHON_USEDEP}] dev-python/pyyaml[
 DEPEND="${RDEPEND}"
 IUSE=""
 
+PATCHES=( "${FILES}/00-do-not-install-gui.patch" )
+
 python_install_all() {
     distutils-r1_python_install_all
     newbashcomp da.bash da

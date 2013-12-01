@@ -1,0 +1,19 @@
+diff --git a/setup.py b/setup.py
+index b50bb55..1eb9ede 100755
+--- a/setup.py
++++ b/setup.py
+@@ -59,12 +59,10 @@ setup(
+     author_email = 'bkabrda@redhat.com',
+     url = 'https://github.com/bkabrda/devassistant',
+     license = 'GPLv2+',
+-    packages = ['devassistant', 'devassistant.cli', 'devassistant.gui'],
++    packages = ['devassistant', 'devassistant.cli'],
+     include_package_data = True,
+     entry_points = {'console_scripts':['da=devassistant.cli.cli_runner:CliRunner.run',
+-                                       'da-gui=devassistant.gui:run_gui',
+-                                       'devassistant=devassistant.cli.cli_runner:CliRunner.run',
+-                                       'devassistant-gui=devassistant.gui:run_gui']},
++                                       'devassistant=devassistant.cli.cli_runner:CliRunner.run']},
+     # PyGithub is in fact optional, but let's keep it here
+     install_requires=['PyYaml', 'PyGithub>=1.14.2'],
+     setup_requires = [],
