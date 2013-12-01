@@ -38,10 +38,11 @@ python_compile_all() {
 python_install_all() {
     # Install user and developers documentation
     # TODO Make it mandatory?
-    use doc && local HTML_DOCS=( build/sphinx/html/. )
+    use doc && local HTML_DOCS=( ${BUILD_DIR}/sphinx/html/. )
 
     distutils-r1_python_install_all
 
     newbashcomp da.bash da
+    newbashcomp da.bash devassistant
     keepdir ${EPREFIX}/usr/share/devassistant/
 }
