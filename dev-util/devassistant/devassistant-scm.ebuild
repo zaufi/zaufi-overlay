@@ -5,7 +5,7 @@
 
 EAPI=5
 
-EGIT_REPO_URI="https://github.com/bkabrda/devassistant.git"
+EGIT_REPO_URI="https://github.com/zaufi/devassistant.git"
 # TODO Check for other Python versions
 PYTHON_COMPAT=( python3_{2,3} )
 
