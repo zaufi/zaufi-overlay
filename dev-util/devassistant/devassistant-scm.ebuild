@@ -19,6 +19,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="doc"
 
 RDEPEND="${PYTHON_DEPS}
+        dev-python/jinja[${PYTHON_USEDEP}]
         dev-python/PyGithub[${PYTHON_USEDEP}]
         dev-python/pyyaml[${PYTHON_USEDEP}]"
 DEPEND="${RDEPEND}
