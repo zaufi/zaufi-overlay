@@ -6,7 +6,7 @@
 EAPI=5
 
 # TODO Check for other Python versions
-PYTHON_COMPAT=( python3_{2,3} )
+PYTHON_COMPAT=( python2_6 python2_7 python3_3 )
 
 inherit bash-completion-r1 distutils-r1
 
