@@ -1,0 +1,174 @@
+diff -ub -rub paludis-1.4.2.org/configure.ac paludis-1.4.2/configure.ac
+--- paludis-1.4.2.org/configure.ac	2013-10-13 21:16:10.000000000 +0400
++++ paludis-1.4.2/configure.ac	2013-12-04 15:33:27.000000000 +0400
+@@ -1310,8 +1310,8 @@
+ 	 AC_MSG_ERROR([Your gcc is too old for Python support]))
+ 
+ 	AC_MSG_CHECKING(for headers required to compile python extensions)
+-	py_prefix=`$PYTHON -c "import sys; print sys.prefix"`
+-	py_exec_prefix=`$PYTHON -c "import sys; print sys.exec_prefix"`
++	py_prefix=`$PYTHON -c "import sys; print(sys.prefix)"`
++	py_exec_prefix=`$PYTHON -c "import sys; print(sys.exec_prefix)"`
+ 	PYTHON_INCLUDE_DIR="${py_prefix}/include/python${PYTHON_VERSION}"
+ 	if test "$py_prefix" != "$py_exec_prefix"; then
+ 		PYTHON_INCLUDE_DIR="$PYTHON_INCLUDE_DIR -I${py_exec_prefix}/include/python${PYTHON_VERSION}"
+diff -ub -rub paludis-1.4.2.org/doc/api/python/create_python_examples.py paludis-1.4.2/doc/api/python/create_python_examples.py
+--- paludis-1.4.2.org/doc/api/python/create_python_examples.py	2013-02-11 01:16:30.000000000 +0400
++++ paludis-1.4.2/doc/api/python/create_python_examples.py	2013-12-04 19:15:03.000000000 +0400
+@@ -22,7 +22,7 @@
+ header = header.replace('</head>', css + '</head>')
+ 
+ for example in sys.argv[2:]:
+-    input = file(os.path.join(srcdir, example)).read()
++    input = open(os.path.join(srcdir, example)).read()
+ 
+     example_html = "python/" + example.replace(".py", ".html")
+ 
+diff -ub -rub paludis-1.4.2.org/doc/api/python/example_about.py paludis-1.4.2/doc/api/python/example_about.py
+--- paludis-1.4.2.org/doc/api/python/example_about.py	2013-02-11 01:16:30.000000000 +0400
++++ paludis-1.4.2/doc/api/python/example_about.py	2013-12-04 19:14:00.000000000 +0400
+@@ -9,4 +9,4 @@
+         "." + str(paludis.VERSION_MICRO) + paludis.VERSION_SUFFIX),
+ 
+ if paludis.GIT_HEAD:
+-    print 'git-' + paludis.GIT_HEAD
++    print('git-' + paludis.GIT_HEAD)
+diff -ub -rub paludis-1.4.2.org/doc/api/python/example_command_line.py paludis-1.4.2/doc/api/python/example_command_line.py
+--- paludis-1.4.2.org/doc/api/python/example_command_line.py	2013-02-11 01:16:30.000000000 +0400
++++ paludis-1.4.2/doc/api/python/example_command_line.py	2013-12-04 19:12:52.000000000 +0400
+@@ -17,7 +17,7 @@
+ 
+         (options, args) = parser.parse_args()
+ 
+-        print options.log_level
++        print(options.log_level)
+         if options.log_level:
+             paludis.Log.instance.log_level = getattr(paludis.LogLevel, options.log_level.upper())
+ 
+diff -ub -rub paludis-1.4.2.org/doc/api/python/example_version_spec.py paludis-1.4.2/doc/api/python/example_version_spec.py
+--- paludis-1.4.2.org/doc/api/python/example_version_spec.py	2013-02-11 01:16:30.000000000 +0400
++++ paludis-1.4.2/doc/api/python/example_version_spec.py	2013-12-04 19:12:22.000000000 +0400
+@@ -10,13 +10,13 @@
+ 
+ # For each version...
+ for v in versions:
+-    print str(v) + ":"
++    print(str(v) + ":")
+ 
+     # Show the output of various members.
+-    print "    Remove revision:             %s" % v.remove_revision()
+-    print "    Revision only:               %s" % v.revision_only()
+-    print "    Bump:                        %s" % v.bump()
+-    print "    Is SCM?                      %s" % v.is_scm
+-    print "    Has -try?                    %s" % v.has_try_part
+-    print "    Has -scm?                    %s" % v.has_scm_part
+-    print
++    print("    Remove revision:             %s" % v.remove_revision())
++    print("    Revision only:               %s" % v.revision_only())
++    print("    Bump:                        %s" % v.bump())
++    print("    Is SCM?                      %s" % v.is_scm)
++    print("    Has -try?                    %s" % v.has_try_part)
++    print("    Has -scm?                    %s" % v.has_scm_part)
++    print("\n")
+diff -ub -rub paludis-1.4.2.org/python/exception.hh paludis-1.4.2/python/exception.hh
+--- paludis-1.4.2.org/python/exception.hh	2013-05-23 04:45:24.000000000 +0400
++++ paludis-1.4.2/python/exception.hh	2013-12-04 17:30:09.000000000 +0400
+@@ -68,8 +68,7 @@
+             _e(PyErr_NewException(const_cast<char*>(_longname.c_str()), base, NULL))
+         {
+             PyModule_AddObject(boost::python::detail::current_scope, const_cast<char*>(_name.c_str()), _e);
+-            PyObject * doc_string = PyString_FromString(doc.c_str());
+-            PyObject_SetAttrString(_e, "__doc__", doc_string);
++            PyObject_SetAttrString(_e, "__doc__", boost::python::str(doc.c_str()).ptr());
+             boost::python::register_exception_translator<Ex_>(
+                     std::bind(std::mem_fn(&RegisteredException<Ex_>::translator), this, std::placeholders::_1));
+         }
+@@ -78,9 +77,9 @@
+         void
+         RegisteredException<Ex_>::translator(const Ex_ & x) const
+         {
+-            PyObject * backtrace = PyString_FromString(x.backtrace("\n").c_str());
+-            PyObject * message = PyString_FromString(x.message().c_str());
+-            PyObject * what = PyString_FromString(x.what());
++            PyObject * backtrace = boost::python::str(x.backtrace("\n").c_str()).ptr();
++            PyObject * message = boost::python::str(x.message().c_str()).ptr();
++            PyObject * what = boost::python::str(x.what()).ptr();
+             PyObject_SetAttrString(_e, "backtrace", backtrace);
+             PyObject_SetAttrString(_e, "message", message);
+             PyObject_SetAttrString(_e, "what", what);
+diff -ub -rub paludis-1.4.2.org/python/iterable.hh paludis-1.4.2/python/iterable.hh
+--- paludis-1.4.2.org/python/iterable.hh	2013-05-23 04:45:24.000000000 +0400
++++ paludis-1.4.2/python/iterable.hh	2013-12-04 17:50:18.000000000 +0400
+@@ -63,8 +63,7 @@
+         {
+             static void add(Set<To_> & c, PyObject * ptr)
+             {
+-                const char * str = PyString_AsString(ptr);
+-                c.insert(To_(std::string(str)));
++                c.insert(To_(boost::python::extract<std::string>(ptr)));
+             }
+         };
+ 
+@@ -73,8 +72,7 @@
+         {
+             static void add(Sequence<To_> & c, PyObject * ptr)
+             {
+-                const char * str = PyString_AsString(ptr);
+-                c.push_back(To_(std::string(str)));
++                c.push_back(To_(boost::python::extract<std::string>(ptr)));
+             }
+         };
+ 
+@@ -130,7 +128,14 @@
+                         V_ * ptr = boost::python::extract<V_ *>(o);
+                         s->push_back(*ptr);
+                     }
+-                    else if (IsConvertible<std::string, V_>::value && PyString_Check(o.ptr()))
++                    else if (
++                        IsConvertible<std::string, V_>::value
++#if PY_MAJOR_VERSION < 3
++                     && PyString_Check(o.ptr())
++#else
++                     && PyUnicode_Check(o.ptr())
++#endif
++                      )
+                     {
+                         ConditionalAdd<V_, std::string, Sequence<V_>,
+                             IsConvertible<std::string, V_>::value>::add(*s, o.ptr());
+@@ -200,7 +205,14 @@
+                         V_ * ptr = boost::python::extract<V_ *>(o);
+                         s->insert(*ptr);
+                     }
+-                    else if (IsConvertible<std::string, V_>::value && PyString_Check(o.ptr()))
++                    else if (
++                        IsConvertible<std::string, V_>::value
++#if PY_MAJOR_VERSION < 3
++                     && PyString_Check(o.ptr())
++#else
++                     && PyUnicode_Check(o.ptr())
++#endif
++                      )
+                     {
+                         ConditionalAdd<V_, std::string, Set<V_>,
+                                 IsConvertible<std::string, V_>::value>::add(*s, o.ptr());
+diff -ub -rub paludis-1.4.2.org/python/paludis_python.hh paludis-1.4.2/python/paludis_python.hh
+--- paludis-1.4.2.org/python/paludis_python.hh	2013-09-02 12:13:14.000000000 +0400
++++ paludis-1.4.2/python/paludis_python.hh	2013-12-04 17:54:55.000000000 +0400
+@@ -92,7 +92,7 @@
+                 doc += "\n\t" + e_name_up;
+             }
+             PyTypeObject * pto = reinterpret_cast<PyTypeObject *>(enum_.ptr());
+-            PyDict_SetItemString(pto->tp_dict, "__doc__", PyString_FromString(doc.c_str()));
++            PyDict_SetItemString(pto->tp_dict, "__doc__", boost::python::str(doc.c_str()).ptr());
+         }
+ 
+         // Compare
+@@ -128,7 +128,7 @@
+             static PyObject *
+             convert(const T_ & x)
+             {
+-                return PyString_FromString(stringify<T_>(x).c_str());
++                return boost::python::incref(boost::python::str(stringify<T_>(x).c_str()).ptr());
+             }
+         };
+ 

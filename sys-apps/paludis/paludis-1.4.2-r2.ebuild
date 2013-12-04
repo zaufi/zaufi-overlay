@@ -6,7 +6,7 @@ EAPI=5
 
 PYTHON_COMPAT=( python{2_6,2_7} python3_3 )
 
-inherit bash-completion-r1 eutils python-single-r1 user
+inherit autotools-utils bash-completion-r1 eutils python-single-r1 user
 
 DESCRIPTION="paludis, the other package mangler"
 HOMEPAGE="http://paludis.exherbo.org/"
@@ -49,6 +49,9 @@ PDEPEND="app-admin/eselect-package-manager"
 
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
+AUTOTOOLS_AUTORECONF=1
+PATCHES=( ${FILESDIR}/${P}-python3-fixes.patch )
+
 pkg_pretend() {
 	if [[ ${MERGE_TYPE} != buildonly ]]; then
 		if id paludisbuild >/dev/null 2>/dev/null ; then
@@ -84,12 +87,10 @@ src_prepare() {
 	# https://bugs.gentoo.org/show_bug.cgi?id=439372#c2
 	sed -i -e '1s/ruby/&19/' ruby/demos/*.rb || die
 
-	epatch_user
+	autotools-utils_src_prepare
 }
 
 src_configure() {
-	epatch "${FILESDIR}"/paludis-fix-python-detectior.patch
-
 	local myeconfargs=(
 		--htmldir=/usr/share/doc/${PF}/html
 
@@ -112,11 +113,11 @@ src_configure() {
 		--with-vim-install-dir=/usr/share/vim/vimfiles
 	)
 
-	econf "${myeconfargs[@]}"
+	autotools-utils_src_configure
 }
 
 src_install() {
-	default
+	autotools-utils_src_install
 	prune_libtool_files
 
 	dobashcomp bash-completion/cave
