@@ -1,5 +1,5 @@
 diff -ub -rub paludis-1.4.2.org/configure.ac paludis-1.4.2/configure.ac
---- paludis-1.4.2.org/configure.ac	2013-10-13 21:16:10.000000000 +0400
+--- paludis-1.4.2.org/configure.ac	2013-12-05 10:57:47.000000000 +0400
 +++ paludis-1.4.2/configure.ac	2013-12-04 15:33:27.000000000 +0400
 @@ -1310,8 +1310,8 @@
  	 AC_MSG_ERROR([Your gcc is too old for Python support]))
@@ -12,87 +12,133 @@ diff -ub -rub paludis-1.4.2.org/configure.ac paludis-1.4.2/configure.ac
  	PYTHON_INCLUDE_DIR="${py_prefix}/include/python${PYTHON_VERSION}"
  	if test "$py_prefix" != "$py_exec_prefix"; then
  		PYTHON_INCLUDE_DIR="$PYTHON_INCLUDE_DIR -I${py_exec_prefix}/include/python${PYTHON_VERSION}"
-diff -ub -rub paludis-1.4.2.org/doc/api/python/create_python_examples.py paludis-1.4.2/doc/api/python/create_python_examples.py
---- paludis-1.4.2.org/doc/api/python/create_python_examples.py	2013-02-11 01:16:30.000000000 +0400
-+++ paludis-1.4.2/doc/api/python/create_python_examples.py	2013-12-04 19:15:03.000000000 +0400
-@@ -22,7 +22,7 @@
- header = header.replace('</head>', css + '</head>')
+diff -ub -rub paludis-1.4.2.org/python/choices_TEST.py paludis-1.4.2/python/choices_TEST.py
+--- paludis-1.4.2.org/python/choices_TEST.py	2013-02-11 01:16:30.000000000 +0400
++++ paludis-1.4.2/python/choices_TEST.py	2013-12-06 05:19:15.000000000 +0400
+@@ -34,7 +34,7 @@
+ class TestCase_01_Choices(unittest.TestCase):
+     def setUp(self):
+         self.e = EnvironmentFactory.instance.create("")
+-        self.pid = iter(self.e.fetch_repository("testrepo").package_ids("foo/bar", [])).next()
++        self.pid = next(iter(self.e.fetch_repository("testrepo").package_ids("foo/bar", [])))
+         self.choices = self.pid.find_metadata("PALUDIS_CHOICES").parse_value()
  
- for example in sys.argv[2:]:
--    input = file(os.path.join(srcdir, example)).read()
-+    input = open(os.path.join(srcdir, example)).read()
+     def test_01_choices(self):
+@@ -50,7 +50,7 @@
+         self.assert_(not self.choices.has_matching_contains_every_value_prefix("foo"))
  
-     example_html = "python/" + example.replace(".py", ".html")
+     def test_04_iter(self):
+-        self.assert_(isinstance(iter(self.choices).next(), Choice))
++        self.assert_(isinstance(next(iter(self.choices)), Choice))
+         found = False
+         for f in self.choices:
+             if f.raw_name == "USE":
+@@ -60,11 +60,12 @@
+ class TestCase_02_Choice(unittest.TestCase):
+     def setUp(self):
+         self.e = EnvironmentFactory.instance.create("")
+-        self.pid = iter(self.e.fetch_repository("testrepo").package_ids("foo/bar", [])).next()
++        self.pid = next(iter(self.e.fetch_repository("testrepo").package_ids("foo/bar", [])))
+         self.choices = self.pid.find_metadata("PALUDIS_CHOICES").parse_value()
+         self.use = None
+         self.linguas = None
+         for f in self.choices:
++            print('-------------name={}'.format(f))
+             if f.raw_name == "USE":
+                 self.use = f
+             elif f.raw_name == "LINGUAS":
+@@ -74,7 +75,10 @@
+         self.assert_(self.use)
+         self.assertEquals(self.use.raw_name, "USE")
+         self.assertEquals(self.use.human_name, "USE")
+-        self.assertEquals(self.use.prefix, "")
++        print('-------- use.pref={}'.format(repr(self.use.prefix)))
++        print('-------- use.preix="{}"'.format(str(self.use.prefix)))
++        print('-------- use.preix={}'.format(repr(self.use.prefix == '')))
++        self.assertEquals(str(self.use.prefix), "")
+         self.assertEquals(self.use.contains_every_value, False)
+         self.assertEquals(self.use.hidden, False)
+         self.assertEquals(self.use.show_with_no_prefix, True)
+@@ -91,7 +95,7 @@
+         self.assertEquals(self.linguas.consider_added_or_changed, True)
  
-diff -ub -rub paludis-1.4.2.org/doc/api/python/example_about.py paludis-1.4.2/doc/api/python/example_about.py
---- paludis-1.4.2.org/doc/api/python/example_about.py	2013-02-11 01:16:30.000000000 +0400
-+++ paludis-1.4.2/doc/api/python/example_about.py	2013-12-04 19:14:00.000000000 +0400
-@@ -9,4 +9,4 @@
-         "." + str(paludis.VERSION_MICRO) + paludis.VERSION_SUFFIX),
+     def test_03_use_iter(self):
+-        self.assert_(isinstance(iter(self.use).next(), ChoiceValue))
++        self.assert_(isinstance(next(iter(self.use)), ChoiceValue))
+         found = False
+         for f in self.use:
+             if f.name_with_prefix == "testflag":
+@@ -99,7 +103,7 @@
+         self.assert_(found)
  
- if paludis.GIT_HEAD:
--    print 'git-' + paludis.GIT_HEAD
-+    print('git-' + paludis.GIT_HEAD)
-diff -ub -rub paludis-1.4.2.org/doc/api/python/example_command_line.py paludis-1.4.2/doc/api/python/example_command_line.py
---- paludis-1.4.2.org/doc/api/python/example_command_line.py	2013-02-11 01:16:30.000000000 +0400
-+++ paludis-1.4.2/doc/api/python/example_command_line.py	2013-12-04 19:12:52.000000000 +0400
-@@ -17,7 +17,7 @@
+     def test_04_linguas_iter(self):
+-        self.assert_(isinstance(iter(self.linguas).next(), ChoiceValue))
++        self.assert_(isinstance(next(iter(self.linguas)), ChoiceValue))
+         found = False
+         for f in self.linguas:
+             if f.name_with_prefix == "linguas_en":
+@@ -109,7 +113,7 @@
+ class TestCase_03_ChoiceValue(unittest.TestCase):
+     def setUp(self):
+         self.e = EnvironmentFactory.instance.create("")
+-        self.pid = iter(self.e.fetch_repository("testrepo").package_ids("foo/bar", [])).next()
++        self.pid = next(iter(self.e.fetch_repository("testrepo").package_ids("foo/bar", [])))
+         self.choices = self.pid.find_metadata("PALUDIS_CHOICES").parse_value()
+         self.use_testflag = self.choices.find_by_name_with_prefix("testflag")
+         self.linguas_en = self.choices.find_by_name_with_prefix("linguas_en")
+diff -ub -rub paludis-1.4.2.org/python/dep_spec_TEST.py paludis-1.4.2/python/dep_spec_TEST.py
+--- paludis-1.4.2.org/python/dep_spec_TEST.py	2013-02-11 01:16:30.000000000 +0400
++++ paludis-1.4.2/python/dep_spec_TEST.py	2013-12-06 05:41:49.000000000 +0400
+@@ -79,8 +79,8 @@
+         vrc = self.pds.version_requirements
  
-         (options, args) = parser.parse_args()
+         self.assertEquals(len(list(vrc)), 1)
+-        self.assertEquals(iter(vrc).next().version_spec, VersionSpec("1"))
+-        self.assertEquals(iter(vrc).next().version_operator.value, VersionOperator(">=").value)
++        self.assertEquals(next(iter(vrc)).version_spec, VersionSpec("1"))
++        self.assertEquals(next(iter(vrc)).version_operator.value, VersionOperator(">=").value)
  
--        print options.log_level
-+        print(options.log_level)
-         if options.log_level:
-             paludis.Log.instance.log_level = getattr(paludis.LogLevel, options.log_level.upper())
+     def test_08_version_requirements_mode(self):
+         self.get_depspecs()
+@@ -88,7 +88,7 @@
  
-diff -ub -rub paludis-1.4.2.org/doc/api/python/example_version_spec.py paludis-1.4.2/doc/api/python/example_version_spec.py
---- paludis-1.4.2.org/doc/api/python/example_version_spec.py	2013-02-11 01:16:30.000000000 +0400
-+++ paludis-1.4.2/doc/api/python/example_version_spec.py	2013-12-04 19:12:22.000000000 +0400
-@@ -10,13 +10,13 @@
+ ###    def test_09_additional_requirements(self):
+ ###        spec = parse_user_package_dep_spec("foo/monkey[foo]", UserPackageDepSpecOptions())
+-###        ur = iter(spec.additional_requirements).next()
++###        ur = next(iter(spec.additional_requirements))
+ ###        self.assert_(isinstance(ur, EnabledUseRequirement))
  
- # For each version...
- for v in versions:
--    print str(v) + ":"
-+    print(str(v) + ":")
- 
-     # Show the output of various members.
--    print "    Remove revision:             %s" % v.remove_revision()
--    print "    Revision only:               %s" % v.revision_only()
--    print "    Bump:                        %s" % v.bump()
--    print "    Is SCM?                      %s" % v.is_scm
--    print "    Has -try?                    %s" % v.has_try_part
--    print "    Has -scm?                    %s" % v.has_scm_part
--    print
-+    print("    Remove revision:             %s" % v.remove_revision())
-+    print("    Revision only:               %s" % v.revision_only())
-+    print("    Bump:                        %s" % v.bump())
-+    print("    Is SCM?                      %s" % v.is_scm)
-+    print("    Has -try?                    %s" % v.has_try_part)
-+    print("    Has -scm?                    %s" % v.has_scm_part)
-+    print("\n")
+     def test_11_name(self):
 diff -ub -rub paludis-1.4.2.org/python/exception.hh paludis-1.4.2/python/exception.hh
 --- paludis-1.4.2.org/python/exception.hh	2013-05-23 04:45:24.000000000 +0400
-+++ paludis-1.4.2/python/exception.hh	2013-12-04 17:30:09.000000000 +0400
-@@ -68,8 +68,7 @@
++++ paludis-1.4.2/python/exception.hh	2013-12-06 05:40:08.000000000 +0400
+@@ -68,7 +68,12 @@
              _e(PyErr_NewException(const_cast<char*>(_longname.c_str()), base, NULL))
          {
              PyModule_AddObject(boost::python::detail::current_scope, const_cast<char*>(_name.c_str()), _e);
 -            PyObject * doc_string = PyString_FromString(doc.c_str());
--            PyObject_SetAttrString(_e, "__doc__", doc_string);
-+            PyObject_SetAttrString(_e, "__doc__", boost::python::str(doc.c_str()).ptr());
++            PyObject * doc_string =
++#if PY_MAJOR_VERSION < 3
++                PyString_FromString(doc.c_str());
++#   else
++                PyUnicode_FromString(doc.c_str());
++#   endif
+             PyObject_SetAttrString(_e, "__doc__", doc_string);
              boost::python::register_exception_translator<Ex_>(
                      std::bind(std::mem_fn(&RegisteredException<Ex_>::translator), this, std::placeholders::_1));
-         }
-@@ -78,9 +77,9 @@
+@@ -78,9 +83,15 @@
          void
          RegisteredException<Ex_>::translator(const Ex_ & x) const
          {
--            PyObject * backtrace = PyString_FromString(x.backtrace("\n").c_str());
--            PyObject * message = PyString_FromString(x.message().c_str());
--            PyObject * what = PyString_FromString(x.what());
-+            PyObject * backtrace = boost::python::str(x.backtrace("\n").c_str()).ptr();
-+            PyObject * message = boost::python::str(x.message().c_str()).ptr();
-+            PyObject * what = boost::python::str(x.what()).ptr();
++#if PY_MAJOR_VERSION < 3
+             PyObject * backtrace = PyString_FromString(x.backtrace("\n").c_str());
+             PyObject * message = PyString_FromString(x.message().c_str());
+             PyObject * what = PyString_FromString(x.what());
++#else
++            PyObject * backtrace = PyUnicode_FromString(x.backtrace("\n").c_str());
++            PyObject * message = PyUnicode_FromString(x.message().c_str());
++            PyObject * what = PyUnicode_FromString(x.what());
++#endif
              PyObject_SetAttrString(_e, "backtrace", backtrace);
              PyObject_SetAttrString(_e, "message", message);
              PyObject_SetAttrString(_e, "what", what);
@@ -151,24 +197,139 @@ diff -ub -rub paludis-1.4.2.org/python/iterable.hh paludis-1.4.2/python/iterable
                      {
                          ConditionalAdd<V_, std::string, Set<V_>,
                                  IsConvertible<std::string, V_>::value>::add(*s, o.ptr());
+diff -ub -rub paludis-1.4.2.org/python/mask_TEST.py paludis-1.4.2/python/mask_TEST.py
+--- paludis-1.4.2.org/python/mask_TEST.py	2013-02-11 01:16:31.000000000 +0400
++++ paludis-1.4.2/python/mask_TEST.py	2013-12-06 05:42:50.000000000 +0400
+@@ -36,8 +36,8 @@
+     def test_01_user_mask(self):
+         q = Selection.RequireExactlyOne(Generator.Matches(
+             parse_user_package_dep_spec("=masked/user-1.0", self.e, []), []))
+-        pid = iter(self.e[q]).next()
+-        m = iter(pid.masks).next()
++        pid = next(iter(self.e[q]))
++        m = next(iter(pid.masks))
+ 
+         self.assert_(isinstance(m, Mask))
+         self.assert_(isinstance(m, UserMask))
+@@ -48,8 +48,8 @@
+     def test_02_unaccepted_mask(self):
+         q = Selection.RequireExactlyOne(Generator.Matches(
+             parse_user_package_dep_spec("=masked/unaccepted-1.0", self.e, []), []))
+-        pid = iter(self.e[q]).next()
+-        m = iter(pid.masks).next()
++        pid = next(iter(self.e[q]))
++        m = next(iter(pid.masks))
+ 
+         self.assert_(isinstance(m, Mask))
+         self.assert_(isinstance(m, UnacceptedMask))
+@@ -61,8 +61,8 @@
+     def test_03_repository_mask(self):
+         q = Selection.RequireExactlyOne(Generator.Matches(
+             parse_user_package_dep_spec("=masked/repo-1.0", self.e, []), []))
+-        pid = iter(self.e[q]).next()
+-        m = iter(pid.masks).next()
++        pid = next(iter(self.e[q]))
++        m = next(iter(pid.masks))
+ 
+         self.assert_(isinstance(m, Mask))
+         self.assert_(isinstance(m, RepositoryMask))
+@@ -76,8 +76,8 @@
+     def test_04_unsupported_mask(self):
+         q = Selection.RequireExactlyOne(Generator.Matches(
+             parse_user_package_dep_spec("=masked/unsupported-1.0", self.e, []), []))
+-        pid = iter(self.e[q]).next()
+-        m = iter(pid.masks).next()
++        pid = next(iter(self.e[q]))
++        m = next(iter(pid.masks))
+ 
+         self.assert_(isinstance(m, Mask))
+         self.assert_(isinstance(m, UnsupportedMask))
+diff -ub -rub paludis-1.4.2.org/python/metadata_key_TEST.py paludis-1.4.2/python/metadata_key_TEST.py
+--- paludis-1.4.2.org/python/metadata_key_TEST.py	2013-02-11 01:16:31.000000000 +0400
++++ paludis-1.4.2/python/metadata_key_TEST.py	2013-12-06 05:43:27.000000000 +0400
+@@ -35,8 +35,8 @@
+ class TestCase_01_MetadataKeys(unittest.TestCase):
+     def setUp(self):
+         self.e = EnvironmentFactory.instance.create("")
+-        self.pid = iter(self.e.fetch_repository("testrepo").package_ids("foo/bar", [])).next()
+-        self.ipid = iter(self.e.fetch_repository("installed").package_ids("cat-one/pkg-one", [])).next()
++        self.pid = next(iter(self.e.fetch_repository("testrepo").package_ids("foo/bar", [])))
++        self.ipid = next(iter(self.e.fetch_repository("installed").package_ids("cat-one/pkg-one", [])))
+ 
+     def test_02_installed_time(self):
+         self.assertEquals(self.pid.find_metadata("INSTALLED_TIME"), None)
+@@ -70,7 +70,7 @@
+ 
+             def parse_value(self):
+                 e = EnvironmentFactory.instance.create("")
+-                pid = iter(e.fetch_repository("testrepo").package_ids("foo/bar", [])).next()
++                pid = next(iter(e.fetch_repository("testrepo").package_ids("foo/bar", [])))
+                 return pid
+ 
+             def raw_name(self):
+diff -ub -rub paludis-1.4.2.org/python/package_id_TEST.py paludis-1.4.2/python/package_id_TEST.py
+--- paludis-1.4.2.org/python/package_id_TEST.py	2013-02-11 01:16:31.000000000 +0400
++++ paludis-1.4.2/python/package_id_TEST.py	2013-12-06 05:44:11.000000000 +0400
+@@ -33,9 +33,9 @@
+ class TestCase_01_PackageID(unittest.TestCase):
+     def setUp(self):
+         self.e = EnvironmentFactory.instance.create("")
+-        self.pid = iter(self.e.fetch_repository("testrepo").package_ids("foo/bar", [])).next()
+-        self.ipid = iter(self.e.fetch_repository("installed").package_ids("cat-one/pkg-one", [])).next()
+-        self.mpid = iter(self.e.fetch_repository("testrepo").package_ids("cat/masked", [])).next()
++        self.pid = next(iter(self.e.fetch_repository("testrepo").package_ids("foo/bar", [])))
++        self.ipid = next(iter(self.e.fetch_repository("installed").package_ids("cat-one/pkg-one", [])))
++        self.mpid = next(iter(self.e.fetch_repository("testrepo").package_ids("cat/masked", [])))
+ 
+     def test_01_get(self):
+         pass
+@@ -102,7 +102,7 @@
+         self.assert_(self.mpid.masked)
+ 
+     def test_13_masks(self):
+-        mask = iter(self.mpid.masks).next()
++        mask = next(iter(self.mpid.masks))
+         self.assert_(isinstance(mask, UnacceptedMask))
+ 
+     def test_18_build_dependencies_key(self):
+@@ -139,7 +139,7 @@
+ 
+     def test_28_from_repositories_key(self):
+         self.assertEquals(self.pid.from_repositories_key(), None)
+-        self.assertEquals(iter(self.ipid.from_repositories_key().parse_value()).next(), "origin_test")
++        self.assertEquals(next(iter(self.ipid.from_repositories_key().parse_value())), "origin_test")
+ 
+     def test_30_fs_location_key(self):
+         self.assert_(isinstance(self.ipid.fs_location_key(), MetadataFSPathKey))
 diff -ub -rub paludis-1.4.2.org/python/paludis_python.hh paludis-1.4.2/python/paludis_python.hh
 --- paludis-1.4.2.org/python/paludis_python.hh	2013-09-02 12:13:14.000000000 +0400
-+++ paludis-1.4.2/python/paludis_python.hh	2013-12-04 17:54:55.000000000 +0400
-@@ -92,7 +92,7 @@
++++ paludis-1.4.2/python/paludis_python.hh	2013-12-06 05:37:16.000000000 +0400
+@@ -92,7 +92,15 @@
                  doc += "\n\t" + e_name_up;
              }
              PyTypeObject * pto = reinterpret_cast<PyTypeObject *>(enum_.ptr());
 -            PyDict_SetItemString(pto->tp_dict, "__doc__", PyString_FromString(doc.c_str()));
-+            PyDict_SetItemString(pto->tp_dict, "__doc__", boost::python::str(doc.c_str()).ptr());
++            PyDict_SetItemString(
++                pto->tp_dict
++              , "__doc__"
++#if PY_MAJOR_VERSION < 3
++              , PyString_FromString(doc.c_str())
++#else
++              , PyUnicode_FromString(doc.c_str())
++#endif
++              );
          }
  
          // Compare
-@@ -128,7 +128,7 @@
+@@ -128,7 +136,11 @@
              static PyObject *
              convert(const T_ & x)
              {
--                return PyString_FromString(stringify<T_>(x).c_str());
-+                return boost::python::incref(boost::python::str(stringify<T_>(x).c_str()).ptr());
++#if PY_MAJOR_VERSION < 3
+                 return PyString_FromString(stringify<T_>(x).c_str());
++#else
++                return PyUnicode_FromString(stringify<T_>(x).c_str());
++#endif
              }
          };
  
