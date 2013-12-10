@@ -34,7 +34,7 @@ src_install() {
     keepdir ${PALUDIS_CONFIG_DIR}/hooks/ebuild_{compile_{post,pre},configure_{post,pre},install_{post,pre},unpack_post}
     keepdir ${PALUDIS_CONFIG_DIR}/hooks/install_all_post
     # Create 'empty' directories for autopatch hook
-    keepdir ${EPREFIX}/var/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre,unpack_post}
+    keepdir ${EPREFIX}/var/db/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre,unpack_post}
 
     # Symlink hooks into configuration dirs
     local auto_patch="${EPREFIX}/usr/share/paludis/hooks/auto-patch.bash"
