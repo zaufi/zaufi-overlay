@@ -1,8 +1,6 @@
-Only in paludis-1.4.2.org: aclocal.m4
-Only in paludis-1.4.2.python3: autom4te.cache
-diff -ub -rub paludis-1.4.2.org/configure.ac paludis-1.4.2.python3/configure.ac
+diff -ub -rub paludis-1.4.2.org/configure.ac paludis-1.4.2/configure.ac
 --- paludis-1.4.2.org/configure.ac	2013-12-05 10:57:47.000000000 +0400
-+++ paludis-1.4.2.python3/configure.ac	2013-12-04 15:33:27.000000000 +0400
++++ paludis-1.4.2/configure.ac	2013-12-10 20:38:23.000000000 +0400
 @@ -1310,8 +1310,8 @@
  	 AC_MSG_ERROR([Your gcc is too old for Python support]))
  
@@ -14,9 +12,9 @@ diff -ub -rub paludis-1.4.2.org/configure.ac paludis-1.4.2.python3/configure.ac
  	PYTHON_INCLUDE_DIR="${py_prefix}/include/python${PYTHON_VERSION}"
  	if test "$py_prefix" != "$py_exec_prefix"; then
  		PYTHON_INCLUDE_DIR="$PYTHON_INCLUDE_DIR -I${py_exec_prefix}/include/python${PYTHON_VERSION}"
-diff -ub -rub paludis-1.4.2.org/python/choices_TEST.py paludis-1.4.2.python3/python/choices_TEST.py
+diff -ub -rub paludis-1.4.2.org/python/choices_TEST.py paludis-1.4.2/python/choices_TEST.py
 --- paludis-1.4.2.org/python/choices_TEST.py	2013-02-11 01:16:30.000000000 +0400
-+++ paludis-1.4.2.python3/python/choices_TEST.py	2013-12-06 06:42:21.000000000 +0400
++++ paludis-1.4.2/python/choices_TEST.py	2013-12-11 02:25:46.000000000 +0400
 @@ -34,7 +34,7 @@
  class TestCase_01_Choices(unittest.TestCase):
      def setUp(self):
@@ -44,6 +42,15 @@ diff -ub -rub paludis-1.4.2.org/python/choices_TEST.py paludis-1.4.2.python3/pyt
          self.choices = self.pid.find_metadata("PALUDIS_CHOICES").parse_value()
          self.use = None
          self.linguas = None
+@@ -74,7 +74,7 @@
+         self.assert_(self.use)
+         self.assertEquals(self.use.raw_name, "USE")
+         self.assertEquals(self.use.human_name, "USE")
+-        self.assertEquals(self.use.prefix, "")
++        self.assertEquals(str(self.use.prefix), "")
+         self.assertEquals(self.use.contains_every_value, False)
+         self.assertEquals(self.use.hidden, False)
+         self.assertEquals(self.use.show_with_no_prefix, True)
 @@ -91,7 +91,7 @@
          self.assertEquals(self.linguas.consider_added_or_changed, True)
  
@@ -71,9 +78,9 @@ diff -ub -rub paludis-1.4.2.org/python/choices_TEST.py paludis-1.4.2.python3/pyt
          self.choices = self.pid.find_metadata("PALUDIS_CHOICES").parse_value()
          self.use_testflag = self.choices.find_by_name_with_prefix("testflag")
          self.linguas_en = self.choices.find_by_name_with_prefix("linguas_en")
-diff -ub -rub paludis-1.4.2.org/python/dep_spec_TEST.py paludis-1.4.2.python3/python/dep_spec_TEST.py
+diff -ub -rub paludis-1.4.2.org/python/dep_spec_TEST.py paludis-1.4.2/python/dep_spec_TEST.py
 --- paludis-1.4.2.org/python/dep_spec_TEST.py	2013-02-11 01:16:30.000000000 +0400
-+++ paludis-1.4.2.python3/python/dep_spec_TEST.py	2013-12-06 05:41:49.000000000 +0400
++++ paludis-1.4.2/python/dep_spec_TEST.py	2013-12-10 20:38:23.000000000 +0400
 @@ -79,8 +79,8 @@
          vrc = self.pds.version_requirements
  
@@ -94,9 +101,9 @@ diff -ub -rub paludis-1.4.2.org/python/dep_spec_TEST.py paludis-1.4.2.python3/py
  ###        self.assert_(isinstance(ur, EnabledUseRequirement))
  
      def test_11_name(self):
-diff -ub -rub paludis-1.4.2.org/python/exception.hh paludis-1.4.2.python3/python/exception.hh
+diff -ub -rub paludis-1.4.2.org/python/exception.hh paludis-1.4.2/python/exception.hh
 --- paludis-1.4.2.org/python/exception.hh	2013-05-23 04:45:24.000000000 +0400
-+++ paludis-1.4.2.python3/python/exception.hh	2013-12-06 05:40:08.000000000 +0400
++++ paludis-1.4.2/python/exception.hh	2013-12-10 20:38:23.000000000 +0400
 @@ -68,7 +68,12 @@
              _e(PyErr_NewException(const_cast<char*>(_longname.c_str()), base, NULL))
          {
@@ -127,9 +134,9 @@ diff -ub -rub paludis-1.4.2.org/python/exception.hh paludis-1.4.2.python3/python
              PyObject_SetAttrString(_e, "backtrace", backtrace);
              PyObject_SetAttrString(_e, "message", message);
              PyObject_SetAttrString(_e, "what", what);
-diff -ub -rub paludis-1.4.2.org/python/iterable.hh paludis-1.4.2.python3/python/iterable.hh
+diff -ub -rub paludis-1.4.2.org/python/iterable.hh paludis-1.4.2/python/iterable.hh
 --- paludis-1.4.2.org/python/iterable.hh	2013-05-23 04:45:24.000000000 +0400
-+++ paludis-1.4.2.python3/python/iterable.hh	2013-12-04 17:50:18.000000000 +0400
++++ paludis-1.4.2/python/iterable.hh	2013-12-10 20:38:23.000000000 +0400
 @@ -63,8 +63,7 @@
          {
              static void add(Set<To_> & c, PyObject * ptr)
@@ -182,9 +189,9 @@ diff -ub -rub paludis-1.4.2.org/python/iterable.hh paludis-1.4.2.python3/python/
                      {
                          ConditionalAdd<V_, std::string, Set<V_>,
                                  IsConvertible<std::string, V_>::value>::add(*s, o.ptr());
-diff -ub -rub paludis-1.4.2.org/python/mask_TEST.py paludis-1.4.2.python3/python/mask_TEST.py
+diff -ub -rub paludis-1.4.2.org/python/mask_TEST.py paludis-1.4.2/python/mask_TEST.py
 --- paludis-1.4.2.org/python/mask_TEST.py	2013-02-11 01:16:31.000000000 +0400
-+++ paludis-1.4.2.python3/python/mask_TEST.py	2013-12-06 05:42:50.000000000 +0400
++++ paludis-1.4.2/python/mask_TEST.py	2013-12-10 20:38:23.000000000 +0400
 @@ -36,8 +36,8 @@
      def test_01_user_mask(self):
          q = Selection.RequireExactlyOne(Generator.Matches(
@@ -229,9 +236,9 @@ diff -ub -rub paludis-1.4.2.org/python/mask_TEST.py paludis-1.4.2.python3/python
  
          self.assert_(isinstance(m, Mask))
          self.assert_(isinstance(m, UnsupportedMask))
-diff -ub -rub paludis-1.4.2.org/python/metadata_key_TEST.py paludis-1.4.2.python3/python/metadata_key_TEST.py
+diff -ub -rub paludis-1.4.2.org/python/metadata_key_TEST.py paludis-1.4.2/python/metadata_key_TEST.py
 --- paludis-1.4.2.org/python/metadata_key_TEST.py	2013-02-11 01:16:31.000000000 +0400
-+++ paludis-1.4.2.python3/python/metadata_key_TEST.py	2013-12-06 05:43:27.000000000 +0400
++++ paludis-1.4.2/python/metadata_key_TEST.py	2013-12-10 20:38:23.000000000 +0400
 @@ -35,8 +35,8 @@
  class TestCase_01_MetadataKeys(unittest.TestCase):
      def setUp(self):
@@ -252,9 +259,29 @@ diff -ub -rub paludis-1.4.2.org/python/metadata_key_TEST.py paludis-1.4.2.python
                  return pid
  
              def raw_name(self):
-diff -ub -rub paludis-1.4.2.org/python/package_id_TEST.py paludis-1.4.2.python3/python/package_id_TEST.py
+diff -ub -rub paludis-1.4.2.org/python/name.cc paludis-1.4.2/python/name.cc
+--- paludis-1.4.2.org/python/name.cc	2013-05-23 04:45:24.000000000 +0400
++++ paludis-1.4.2/python/name.cc	2013-12-11 02:19:58.000000000 +0400
+@@ -188,7 +188,16 @@
+                 "[ro] PackageNamePart"
+                 )
+ 
++#if PY_MAJOR_VERSION < 3
+         .def("__cmp__", &py_cmp<QualifiedPackageName>)
++# else
++        .def(bp::self == bp::self)
++        .def(bp::self != bp::self)
++        .def(bp::self <  bp::self)
++        .def(bp::self <= bp::self)
++        .def(bp::self >  bp::self)
++        .def(bp::self >= bp::self)
++# endif
+ 
+         .def(bp::self_ns::str(bp::self))
+         ;
+diff -ub -rub paludis-1.4.2.org/python/package_id_TEST.py paludis-1.4.2/python/package_id_TEST.py
 --- paludis-1.4.2.org/python/package_id_TEST.py	2013-02-11 01:16:31.000000000 +0400
-+++ paludis-1.4.2.python3/python/package_id_TEST.py	2013-12-06 05:44:11.000000000 +0400
++++ paludis-1.4.2/python/package_id_TEST.py	2013-12-10 20:38:23.000000000 +0400
 @@ -33,9 +33,9 @@
  class TestCase_01_PackageID(unittest.TestCase):
      def setUp(self):
@@ -286,9 +313,9 @@ diff -ub -rub paludis-1.4.2.org/python/package_id_TEST.py paludis-1.4.2.python3/
  
      def test_30_fs_location_key(self):
          self.assert_(isinstance(self.ipid.fs_location_key(), MetadataFSPathKey))
-diff -ub -rub paludis-1.4.2.org/python/paludis_python.hh paludis-1.4.2.python3/python/paludis_python.hh
+diff -ub -rub paludis-1.4.2.org/python/paludis_python.hh paludis-1.4.2/python/paludis_python.hh
 --- paludis-1.4.2.org/python/paludis_python.hh	2013-09-02 12:13:14.000000000 +0400
-+++ paludis-1.4.2.python3/python/paludis_python.hh	2013-12-06 05:37:16.000000000 +0400
++++ paludis-1.4.2/python/paludis_python.hh	2013-12-10 20:38:23.000000000 +0400
 @@ -92,7 +92,15 @@
                  doc += "\n\t" + e_name_up;
              }
@@ -318,3 +345,51 @@ diff -ub -rub paludis-1.4.2.org/python/paludis_python.hh paludis-1.4.2.python3/p
              }
          };
  
+diff -ub -rub paludis-1.4.2.org/python/version_spec.cc paludis-1.4.2/python/version_spec.cc
+--- paludis-1.4.2.org/python/version_spec.cc	2013-05-23 04:45:24.000000000 +0400
++++ paludis-1.4.2/python/version_spec.cc	2013-12-11 02:13:00.000000000 +0400
+@@ -95,7 +95,16 @@
+                 "Revision part only (or \"r0\")."
+             )
+ 
++#if PY_MAJOR_VERSION < 3
+         .def("__cmp__", &VersionSpec::compare)
++#else
++        .def(bp::self == bp::self)
++        .def(bp::self != bp::self)
++        .def(bp::self <  bp::self)
++        .def(bp::self <= bp::self)
++        .def(bp::self >  bp::self)
++        .def(bp::self >= bp::self)
++#endif
+ 
+         .def(bp::self_ns::str(bp::self))
+         ;
+diff -ub -rub paludis-1.4.2.org/python/wrapped_value.hh paludis-1.4.2/python/wrapped_value.hh
+--- paludis-1.4.2.org/python/wrapped_value.hh	2013-05-23 04:45:24.000000000 +0400
++++ paludis-1.4.2/python/wrapped_value.hh	2013-12-11 03:01:56.000000000 +0400
+@@ -43,10 +43,20 @@
+                             boost::python::init<const typename WrappedValueTraits<Tag_>::UnderlyingType &>(("__init__("+init_arg+")").c_str())
+                             )
+                 {
+-                    this->def(boost::python::self_ns::str(boost::python::self));
+-                    this->def("__cmp__",
+-                              &paludis::python::py_cmp<WrappedValue<Tag_> >);
+-                    boost::python::implicitly_convertible<typename WrappedValueTraits<Tag_>::UnderlyingType,
++                    namespace bp = boost::python;
++                    this->def(bp::self_ns::str(bp::self))
++#if PY_MAJOR_VERSION < 3
++                      .def("__cmp__", &paludis::python::py_cmp<WrappedValue<Tag_> >)
++# else
++                      .def(bp::self == bp::self)
++                      .def(bp::self != bp::self)
++                      .def(bp::self <  bp::self)
++                      .def(bp::self <= bp::self)
++                      .def(bp::self >  bp::self)
++                      .def(bp::self >= bp::self)
++# endif
++                      ;
++                    bp::implicitly_convertible<typename WrappedValueTraits<Tag_>::UnderlyingType,
+                             WrappedValue<Tag_> >();
+                 }
+         };
