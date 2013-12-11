@@ -42,15 +42,6 @@ diff -ub -rub paludis-1.4.2.org/python/choices_TEST.py paludis-1.4.2/python/choi
          self.choices = self.pid.find_metadata("PALUDIS_CHOICES").parse_value()
          self.use = None
          self.linguas = None
-@@ -74,7 +74,7 @@
-         self.assert_(self.use)
-         self.assertEquals(self.use.raw_name, "USE")
-         self.assertEquals(self.use.human_name, "USE")
--        self.assertEquals(self.use.prefix, "")
-+        self.assertEquals(str(self.use.prefix), "")
-         self.assertEquals(self.use.contains_every_value, False)
-         self.assertEquals(self.use.hidden, False)
-         self.assertEquals(self.use.show_with_no_prefix, True)
 @@ -91,7 +91,7 @@
          self.assertEquals(self.linguas.consider_added_or_changed, True)
  
