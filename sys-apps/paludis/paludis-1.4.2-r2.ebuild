@@ -4,7 +4,7 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_6,2_7} python3_3 )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
 
 inherit autotools-utils bash-completion-r1 eutils python-single-r1 user
 
