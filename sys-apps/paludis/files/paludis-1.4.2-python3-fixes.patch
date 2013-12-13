@@ -1,7 +1,29 @@
-diff -ub -rub paludis-1.4.2.org/configure.ac paludis-1.4.2/configure.ac
---- paludis-1.4.2.org/configure.ac	2013-12-05 10:57:47.000000000 +0400
-+++ paludis-1.4.2/configure.ac	2013-12-10 20:38:23.000000000 +0400
-@@ -1310,8 +1310,8 @@
+From 3a81d739556dedb66c222e40c1856a2b66f14d86 Mon Sep 17 00:00:00 2001
+From: zaufi <i.zaufi@gmail.com>
+Date: Fri, 13 Dec 2013 01:47:46 +0400
+Subject: [PATCH 1/2] Make it Python3 compatible
+
+---
+ configure.ac                           |  4 ++--
+ doc/api/python/example_version_spec.py | 15 +++++++--------
+ python/choices_TEST.py                 | 12 ++++++------
+ python/dep_spec_TEST.py                |  6 +++---
+ python/exception.hh                    | 13 ++++++++++++-
+ python/iterable.hh                     | 24 ++++++++++++++++++------
+ python/mask_TEST.py                    | 16 ++++++++--------
+ python/metadata_key_TEST.py            |  6 +++---
+ python/name.cc                         |  9 +++++++++
+ python/package_id_TEST.py              | 10 +++++-----
+ python/paludis_python.hh               | 14 +++++++++++++-
+ python/version_spec.cc                 |  9 +++++++++
+ python/wrapped_value.hh                | 18 ++++++++++++++----
+ 13 files changed, 109 insertions(+), 47 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 7b4f209..03f62ab 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1316,8 +1316,8 @@ if test "x$enable_python" = "xyes" ; then
  	 AC_MSG_ERROR([Your gcc is too old for Python support]))
  
  	AC_MSG_CHECKING(for headers required to compile python extensions)
@@ -12,10 +34,36 @@ diff -ub -rub paludis-1.4.2.org/configure.ac paludis-1.4.2/configure.ac
  	PYTHON_INCLUDE_DIR="${py_prefix}/include/python${PYTHON_VERSION}"
  	if test "$py_prefix" != "$py_exec_prefix"; then
  		PYTHON_INCLUDE_DIR="$PYTHON_INCLUDE_DIR -I${py_exec_prefix}/include/python${PYTHON_VERSION}"
-diff -ub -rub paludis-1.4.2.org/python/choices_TEST.py paludis-1.4.2/python/choices_TEST.py
---- paludis-1.4.2.org/python/choices_TEST.py	2013-02-11 01:16:30.000000000 +0400
-+++ paludis-1.4.2/python/choices_TEST.py	2013-12-11 02:25:46.000000000 +0400
-@@ -34,7 +34,7 @@
+diff --git a/doc/api/python/example_version_spec.py b/doc/api/python/example_version_spec.py
+index c479d73..bd61102 100755
+--- a/doc/api/python/example_version_spec.py
++++ b/doc/api/python/example_version_spec.py
+@@ -10,13 +10,12 @@ versions = [paludis.VersionSpec(v) for v in "1.0 1.1 1.2 1.2-r1 2.0 2.0-try1 2.0
+ 
+ # For each version...
+ for v in versions:
+-    print str(v) + ":"
++    print(str(v) + ":")
+ 
+     # Show the output of various members.
+-    print "    Remove revision:             %s" % v.remove_revision()
+-    print "    Revision only:               %s" % v.revision_only()
+-    print "    Bump:                        %s" % v.bump()
+-    print "    Is SCM?                      %s" % v.is_scm
+-    print "    Has -try?                    %s" % v.has_try_part
+-    print "    Has -scm?                    %s" % v.has_scm_part
+-    print
++    print("    Remove revision:             %s" % v.remove_revision())
++    print("    Revision only:               %s" % v.revision_only())
++    print("    Bump:                        %s" % v.bump())
++    print("    Is SCM?                      %s" % v.is_scm)
++    print("    Has -try?                    %s" % v.has_try_part)
++    print("    Has -scm?                    %s" % v.has_scm_part)
+diff --git a/python/choices_TEST.py b/python/choices_TEST.py
+index 161cbef..161b9aa 100644
+--- a/python/choices_TEST.py
++++ b/python/choices_TEST.py
+@@ -34,7 +34,7 @@ Log.instance.log_level = LogLevel.WARNING
  class TestCase_01_Choices(unittest.TestCase):
      def setUp(self):
          self.e = EnvironmentFactory.instance.create("")
@@ -24,7 +72,7 @@ diff -ub -rub paludis-1.4.2.org/python/choices_TEST.py paludis-1.4.2/python/choi
          self.choices = self.pid.find_metadata("PALUDIS_CHOICES").parse_value()
  
      def test_01_choices(self):
-@@ -50,7 +50,7 @@
+@@ -50,7 +50,7 @@ class TestCase_01_Choices(unittest.TestCase):
          self.assert_(not self.choices.has_matching_contains_every_value_prefix("foo"))
  
      def test_04_iter(self):
@@ -33,7 +81,7 @@ diff -ub -rub paludis-1.4.2.org/python/choices_TEST.py paludis-1.4.2/python/choi
          found = False
          for f in self.choices:
              if f.raw_name == "USE":
-@@ -60,7 +60,7 @@
+@@ -60,7 +60,7 @@ class TestCase_01_Choices(unittest.TestCase):
  class TestCase_02_Choice(unittest.TestCase):
      def setUp(self):
          self.e = EnvironmentFactory.instance.create("")
@@ -42,7 +90,7 @@ diff -ub -rub paludis-1.4.2.org/python/choices_TEST.py paludis-1.4.2/python/choi
          self.choices = self.pid.find_metadata("PALUDIS_CHOICES").parse_value()
          self.use = None
          self.linguas = None
-@@ -91,7 +91,7 @@
+@@ -91,7 +91,7 @@ class TestCase_02_Choice(unittest.TestCase):
          self.assertEquals(self.linguas.consider_added_or_changed, True)
  
      def test_03_use_iter(self):
@@ -51,7 +99,7 @@ diff -ub -rub paludis-1.4.2.org/python/choices_TEST.py paludis-1.4.2/python/choi
          found = False
          for f in self.use:
              if f.name_with_prefix == "testflag":
-@@ -99,7 +99,7 @@
+@@ -99,7 +99,7 @@ class TestCase_02_Choice(unittest.TestCase):
          self.assert_(found)
  
      def test_04_linguas_iter(self):
@@ -60,7 +108,7 @@ diff -ub -rub paludis-1.4.2.org/python/choices_TEST.py paludis-1.4.2/python/choi
          found = False
          for f in self.linguas:
              if f.name_with_prefix == "linguas_en":
-@@ -109,7 +109,7 @@
+@@ -109,7 +109,7 @@ class TestCase_02_Choice(unittest.TestCase):
  class TestCase_03_ChoiceValue(unittest.TestCase):
      def setUp(self):
          self.e = EnvironmentFactory.instance.create("")
@@ -69,10 +117,11 @@ diff -ub -rub paludis-1.4.2.org/python/choices_TEST.py paludis-1.4.2/python/choi
          self.choices = self.pid.find_metadata("PALUDIS_CHOICES").parse_value()
          self.use_testflag = self.choices.find_by_name_with_prefix("testflag")
          self.linguas_en = self.choices.find_by_name_with_prefix("linguas_en")
-diff -ub -rub paludis-1.4.2.org/python/dep_spec_TEST.py paludis-1.4.2/python/dep_spec_TEST.py
---- paludis-1.4.2.org/python/dep_spec_TEST.py	2013-02-11 01:16:30.000000000 +0400
-+++ paludis-1.4.2/python/dep_spec_TEST.py	2013-12-10 20:38:23.000000000 +0400
-@@ -79,8 +79,8 @@
+diff --git a/python/dep_spec_TEST.py b/python/dep_spec_TEST.py
+index b34a88f..28b26ca 100755
+--- a/python/dep_spec_TEST.py
++++ b/python/dep_spec_TEST.py
+@@ -79,8 +79,8 @@ class TestCase_1_DepSpecs(unittest.TestCase):
          vrc = self.pds.version_requirements
  
          self.assertEquals(len(list(vrc)), 1)
@@ -83,7 +132,7 @@ diff -ub -rub paludis-1.4.2.org/python/dep_spec_TEST.py paludis-1.4.2/python/dep
  
      def test_08_version_requirements_mode(self):
          self.get_depspecs()
-@@ -88,7 +88,7 @@
+@@ -88,7 +88,7 @@ class TestCase_1_DepSpecs(unittest.TestCase):
  
  ###    def test_09_additional_requirements(self):
  ###        spec = parse_user_package_dep_spec("foo/monkey[foo]", UserPackageDepSpecOptions())
@@ -92,10 +141,11 @@ diff -ub -rub paludis-1.4.2.org/python/dep_spec_TEST.py paludis-1.4.2/python/dep
  ###        self.assert_(isinstance(ur, EnabledUseRequirement))
  
      def test_11_name(self):
-diff -ub -rub paludis-1.4.2.org/python/exception.hh paludis-1.4.2/python/exception.hh
---- paludis-1.4.2.org/python/exception.hh	2013-05-23 04:45:24.000000000 +0400
-+++ paludis-1.4.2/python/exception.hh	2013-12-10 20:38:23.000000000 +0400
-@@ -68,7 +68,12 @@
+diff --git a/python/exception.hh b/python/exception.hh
+index 767ab9a..b817551 100644
+--- a/python/exception.hh
++++ b/python/exception.hh
+@@ -68,7 +68,12 @@ namespace paludis
              _e(PyErr_NewException(const_cast<char*>(_longname.c_str()), base, NULL))
          {
              PyModule_AddObject(boost::python::detail::current_scope, const_cast<char*>(_name.c_str()), _e);
@@ -109,7 +159,7 @@ diff -ub -rub paludis-1.4.2.org/python/exception.hh paludis-1.4.2/python/excepti
              PyObject_SetAttrString(_e, "__doc__", doc_string);
              boost::python::register_exception_translator<Ex_>(
                      std::bind(std::mem_fn(&RegisteredException<Ex_>::translator), this, std::placeholders::_1));
-@@ -78,9 +83,15 @@
+@@ -78,9 +83,15 @@ namespace paludis
          void
          RegisteredException<Ex_>::translator(const Ex_ & x) const
          {
@@ -125,10 +175,11 @@ diff -ub -rub paludis-1.4.2.org/python/exception.hh paludis-1.4.2/python/excepti
              PyObject_SetAttrString(_e, "backtrace", backtrace);
              PyObject_SetAttrString(_e, "message", message);
              PyObject_SetAttrString(_e, "what", what);
-diff -ub -rub paludis-1.4.2.org/python/iterable.hh paludis-1.4.2/python/iterable.hh
---- paludis-1.4.2.org/python/iterable.hh	2013-05-23 04:45:24.000000000 +0400
-+++ paludis-1.4.2/python/iterable.hh	2013-12-10 20:38:23.000000000 +0400
-@@ -63,8 +63,7 @@
+diff --git a/python/iterable.hh b/python/iterable.hh
+index 8dc3589..770213a 100644
+--- a/python/iterable.hh
++++ b/python/iterable.hh
+@@ -63,8 +63,7 @@ namespace paludis
          {
              static void add(Set<To_> & c, PyObject * ptr)
              {
@@ -138,7 +189,7 @@ diff -ub -rub paludis-1.4.2.org/python/iterable.hh paludis-1.4.2/python/iterable
              }
          };
  
-@@ -73,8 +72,7 @@
+@@ -73,8 +72,7 @@ namespace paludis
          {
              static void add(Sequence<To_> & c, PyObject * ptr)
              {
@@ -148,7 +199,7 @@ diff -ub -rub paludis-1.4.2.org/python/iterable.hh paludis-1.4.2/python/iterable
              }
          };
  
-@@ -130,7 +128,14 @@
+@@ -130,7 +128,14 @@ namespace paludis
                          V_ * ptr = boost::python::extract<V_ *>(o);
                          s->push_back(*ptr);
                      }
@@ -164,7 +215,7 @@ diff -ub -rub paludis-1.4.2.org/python/iterable.hh paludis-1.4.2/python/iterable
                      {
                          ConditionalAdd<V_, std::string, Sequence<V_>,
                              IsConvertible<std::string, V_>::value>::add(*s, o.ptr());
-@@ -200,7 +205,14 @@
+@@ -200,7 +205,14 @@ namespace paludis
                          V_ * ptr = boost::python::extract<V_ *>(o);
                          s->insert(*ptr);
                      }
@@ -180,10 +231,11 @@ diff -ub -rub paludis-1.4.2.org/python/iterable.hh paludis-1.4.2/python/iterable
                      {
                          ConditionalAdd<V_, std::string, Set<V_>,
                                  IsConvertible<std::string, V_>::value>::add(*s, o.ptr());
-diff -ub -rub paludis-1.4.2.org/python/mask_TEST.py paludis-1.4.2/python/mask_TEST.py
---- paludis-1.4.2.org/python/mask_TEST.py	2013-02-11 01:16:31.000000000 +0400
-+++ paludis-1.4.2/python/mask_TEST.py	2013-12-10 20:38:23.000000000 +0400
-@@ -36,8 +36,8 @@
+diff --git a/python/mask_TEST.py b/python/mask_TEST.py
+index 83660b5..d272f2b 100755
+--- a/python/mask_TEST.py
++++ b/python/mask_TEST.py
+@@ -36,8 +36,8 @@ class TestCase_01_Masks(unittest.TestCase):
      def test_01_user_mask(self):
          q = Selection.RequireExactlyOne(Generator.Matches(
              parse_user_package_dep_spec("=masked/user-1.0", self.e, []), []))
@@ -194,7 +246,7 @@ diff -ub -rub paludis-1.4.2.org/python/mask_TEST.py paludis-1.4.2/python/mask_TE
  
          self.assert_(isinstance(m, Mask))
          self.assert_(isinstance(m, UserMask))
-@@ -48,8 +48,8 @@
+@@ -48,8 +48,8 @@ class TestCase_01_Masks(unittest.TestCase):
      def test_02_unaccepted_mask(self):
          q = Selection.RequireExactlyOne(Generator.Matches(
              parse_user_package_dep_spec("=masked/unaccepted-1.0", self.e, []), []))
@@ -205,7 +257,7 @@ diff -ub -rub paludis-1.4.2.org/python/mask_TEST.py paludis-1.4.2/python/mask_TE
  
          self.assert_(isinstance(m, Mask))
          self.assert_(isinstance(m, UnacceptedMask))
-@@ -61,8 +61,8 @@
+@@ -61,8 +61,8 @@ class TestCase_01_Masks(unittest.TestCase):
      def test_03_repository_mask(self):
          q = Selection.RequireExactlyOne(Generator.Matches(
              parse_user_package_dep_spec("=masked/repo-1.0", self.e, []), []))
@@ -216,7 +268,7 @@ diff -ub -rub paludis-1.4.2.org/python/mask_TEST.py paludis-1.4.2/python/mask_TE
  
          self.assert_(isinstance(m, Mask))
          self.assert_(isinstance(m, RepositoryMask))
-@@ -76,8 +76,8 @@
+@@ -76,8 +76,8 @@ class TestCase_01_Masks(unittest.TestCase):
      def test_04_unsupported_mask(self):
          q = Selection.RequireExactlyOne(Generator.Matches(
              parse_user_package_dep_spec("=masked/unsupported-1.0", self.e, []), []))
@@ -227,10 +279,11 @@ diff -ub -rub paludis-1.4.2.org/python/mask_TEST.py paludis-1.4.2/python/mask_TE
  
          self.assert_(isinstance(m, Mask))
          self.assert_(isinstance(m, UnsupportedMask))
-diff -ub -rub paludis-1.4.2.org/python/metadata_key_TEST.py paludis-1.4.2/python/metadata_key_TEST.py
---- paludis-1.4.2.org/python/metadata_key_TEST.py	2013-02-11 01:16:31.000000000 +0400
-+++ paludis-1.4.2/python/metadata_key_TEST.py	2013-12-10 20:38:23.000000000 +0400
-@@ -35,8 +35,8 @@
+diff --git a/python/metadata_key_TEST.py b/python/metadata_key_TEST.py
+index 0261e4a..e9ab7f2 100755
+--- a/python/metadata_key_TEST.py
++++ b/python/metadata_key_TEST.py
+@@ -35,8 +35,8 @@ Log.instance.log_level = LogLevel.WARNING
  class TestCase_01_MetadataKeys(unittest.TestCase):
      def setUp(self):
          self.e = EnvironmentFactory.instance.create("")
@@ -241,7 +294,7 @@ diff -ub -rub paludis-1.4.2.org/python/metadata_key_TEST.py paludis-1.4.2/python
  
      def test_02_installed_time(self):
          self.assertEquals(self.pid.find_metadata("INSTALLED_TIME"), None)
-@@ -70,7 +70,7 @@
+@@ -70,7 +70,7 @@ class TestCase_02_MetadataKeys_suclassing(unittest.TestCase):
  
              def parse_value(self):
                  e = EnvironmentFactory.instance.create("")
@@ -250,10 +303,11 @@ diff -ub -rub paludis-1.4.2.org/python/metadata_key_TEST.py paludis-1.4.2/python
                  return pid
  
              def raw_name(self):
-diff -ub -rub paludis-1.4.2.org/python/name.cc paludis-1.4.2/python/name.cc
---- paludis-1.4.2.org/python/name.cc	2013-05-23 04:45:24.000000000 +0400
-+++ paludis-1.4.2/python/name.cc	2013-12-11 02:19:58.000000000 +0400
-@@ -188,7 +188,16 @@
+diff --git a/python/name.cc b/python/name.cc
+index 5d98ebf..32a22fc 100644
+--- a/python/name.cc
++++ b/python/name.cc
+@@ -188,7 +188,16 @@ void expose_name()
                  "[ro] PackageNamePart"
                  )
  
@@ -270,10 +324,11 @@ diff -ub -rub paludis-1.4.2.org/python/name.cc paludis-1.4.2/python/name.cc
  
          .def(bp::self_ns::str(bp::self))
          ;
-diff -ub -rub paludis-1.4.2.org/python/package_id_TEST.py paludis-1.4.2/python/package_id_TEST.py
---- paludis-1.4.2.org/python/package_id_TEST.py	2013-02-11 01:16:31.000000000 +0400
-+++ paludis-1.4.2/python/package_id_TEST.py	2013-12-10 20:38:23.000000000 +0400
-@@ -33,9 +33,9 @@
+diff --git a/python/package_id_TEST.py b/python/package_id_TEST.py
+index 0c652b1..15b55c1 100755
+--- a/python/package_id_TEST.py
++++ b/python/package_id_TEST.py
+@@ -33,9 +33,9 @@ Log.instance.log_level = LogLevel.WARNING
  class TestCase_01_PackageID(unittest.TestCase):
      def setUp(self):
          self.e = EnvironmentFactory.instance.create("")
@@ -286,7 +341,7 @@ diff -ub -rub paludis-1.4.2.org/python/package_id_TEST.py paludis-1.4.2/python/p
  
      def test_01_get(self):
          pass
-@@ -102,7 +102,7 @@
+@@ -102,7 +102,7 @@ class TestCase_01_PackageID(unittest.TestCase):
          self.assert_(self.mpid.masked)
  
      def test_13_masks(self):
@@ -295,7 +350,7 @@ diff -ub -rub paludis-1.4.2.org/python/package_id_TEST.py paludis-1.4.2/python/p
          self.assert_(isinstance(mask, UnacceptedMask))
  
      def test_18_build_dependencies_key(self):
-@@ -139,7 +139,7 @@
+@@ -139,7 +139,7 @@ class TestCase_01_PackageID(unittest.TestCase):
  
      def test_28_from_repositories_key(self):
          self.assertEquals(self.pid.from_repositories_key(), None)
@@ -304,10 +359,11 @@ diff -ub -rub paludis-1.4.2.org/python/package_id_TEST.py paludis-1.4.2/python/p
  
      def test_30_fs_location_key(self):
          self.assert_(isinstance(self.ipid.fs_location_key(), MetadataFSPathKey))
-diff -ub -rub paludis-1.4.2.org/python/paludis_python.hh paludis-1.4.2/python/paludis_python.hh
---- paludis-1.4.2.org/python/paludis_python.hh	2013-09-02 12:13:14.000000000 +0400
-+++ paludis-1.4.2/python/paludis_python.hh	2013-12-10 20:38:23.000000000 +0400
-@@ -92,7 +92,15 @@
+diff --git a/python/paludis_python.hh b/python/paludis_python.hh
+index 0691fee..feed603 100644
+--- a/python/paludis_python.hh
++++ b/python/paludis_python.hh
+@@ -92,7 +92,15 @@ namespace paludis
                  doc += "\n\t" + e_name_up;
              }
              PyTypeObject * pto = reinterpret_cast<PyTypeObject *>(enum_.ptr());
@@ -324,7 +380,7 @@ diff -ub -rub paludis-1.4.2.org/python/paludis_python.hh paludis-1.4.2/python/pa
          }
  
          // Compare
-@@ -128,7 +136,11 @@
+@@ -128,7 +136,11 @@ namespace paludis
              static PyObject *
              convert(const T_ & x)
              {
@@ -336,10 +392,11 @@ diff -ub -rub paludis-1.4.2.org/python/paludis_python.hh paludis-1.4.2/python/pa
              }
          };
  
-diff -ub -rub paludis-1.4.2.org/python/version_spec.cc paludis-1.4.2/python/version_spec.cc
---- paludis-1.4.2.org/python/version_spec.cc	2013-05-23 04:45:24.000000000 +0400
-+++ paludis-1.4.2/python/version_spec.cc	2013-12-11 02:13:00.000000000 +0400
-@@ -95,7 +95,16 @@
+diff --git a/python/version_spec.cc b/python/version_spec.cc
+index 17e6d72..1619a6c 100644
+--- a/python/version_spec.cc
++++ b/python/version_spec.cc
+@@ -95,7 +95,16 @@ void expose_version_spec()
                  "Revision part only (or \"r0\")."
              )
  
@@ -356,10 +413,11 @@ diff -ub -rub paludis-1.4.2.org/python/version_spec.cc paludis-1.4.2/python/vers
  
          .def(bp::self_ns::str(bp::self))
          ;
-diff -ub -rub paludis-1.4.2.org/python/wrapped_value.hh paludis-1.4.2/python/wrapped_value.hh
---- paludis-1.4.2.org/python/wrapped_value.hh	2013-05-23 04:45:24.000000000 +0400
-+++ paludis-1.4.2/python/wrapped_value.hh	2013-12-11 03:01:56.000000000 +0400
-@@ -43,10 +43,20 @@
+diff --git a/python/wrapped_value.hh b/python/wrapped_value.hh
+index b390b4e..b3cba52 100644
+--- a/python/wrapped_value.hh
++++ b/python/wrapped_value.hh
+@@ -43,10 +43,20 @@ namespace paludis
                              boost::python::init<const typename WrappedValueTraits<Tag_>::UnderlyingType &>(("__init__("+init_arg+")").c_str())
                              )
                  {
@@ -384,3 +442,6 @@ diff -ub -rub paludis-1.4.2.org/python/wrapped_value.hh paludis-1.4.2/python/wra
                              WrappedValue<Tag_> >();
                  }
          };
+-- 
+1.8.5.1
+

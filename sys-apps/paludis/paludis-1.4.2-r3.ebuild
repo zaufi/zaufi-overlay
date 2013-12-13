@@ -34,9 +34,7 @@ COMMON_DEPEND="
 DEPEND="${COMMON_DEPEND}
 	doc? (
 		|| ( >=app-doc/doxygen-1.5.3 <=app-doc/doxygen-1.5.1 )
-		python? (
-			dev-python/epydoc[${PYTHON_USEDEP}]
-			dev-python/pygments[${PYTHON_USEDEP}] )
+		python? ( dev-python/sphinx[${PYTHON_USEDEP}] )
 		ruby? ( dev-ruby/syntax )
 	)
 	virtual/pkgconfig
@@ -50,7 +48,7 @@ PDEPEND="app-admin/eselect-package-manager"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 AUTOTOOLS_AUTORECONF=1
-PATCHES=( ${FILESDIR}/${P}-python3-fixes.patch )
+PATCHES=( ${FILESDIR}/${P}-python3-fixes.patch ${FILESDIR}/${P}-python3-docs-fixes.patch )
 
 pkg_pretend() {
 	if [[ ${MERGE_TYPE} != buildonly ]]; then

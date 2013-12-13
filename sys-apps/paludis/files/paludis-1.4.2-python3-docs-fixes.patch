@@ -1,0 +1,980 @@
+From d0e1a9a460f99604319df96a5e143accc4309066 Mon Sep 17 00:00:00 2001
+From: zaufi <i.zaufi@gmail.com>
+Date: Fri, 13 Dec 2013 15:44:20 +0400
+Subject: [PATCH 2/2] Use `sphinx` (which is Pythons 2 and 3 compatible) to
+ build Python API documentation instead of Python 2 only `epydoc`.
+
+---
+ configure.ac                             |  16 +-
+ doc/api/python/Makefile.am               |  30 ++--
+ doc/api/python/conf.py.in                | 261 +++++++++++++++++++++++++++++++
+ doc/api/python/create_python_examples.py |  37 -----
+ doc/api/python/epydoc.css                | 129 ---------------
+ doc/api/python/example_about.rst         |   5 +
+ doc/api/python/example_command_line.rst  |   5 +
+ doc/api/python/example_version_spec.rst  |   5 +
+ doc/api/python/index.rst                 |  25 +++
+ doc/api/python/paludis.rst               |  10 ++
+ doc/api/python/python_syntax.css         |  73 ---------
+ python/action.cc                         |   4 +-
+ python/dep_spec.cc                       |   8 +-
+ python/metadata_key.cc                   |   8 +-
+ python/name.cc                           |   4 +-
+ python/paludis_python.hh                 |   2 +-
+ python/slot_requirement.cc               |  16 +-
+ python/version_spec.cc                   |  12 +-
+ 18 files changed, 357 insertions(+), 293 deletions(-)
+ create mode 100644 doc/api/python/conf.py.in
+ delete mode 100755 doc/api/python/create_python_examples.py
+ delete mode 100644 doc/api/python/epydoc.css
+ create mode 100644 doc/api/python/example_about.rst
+ create mode 100644 doc/api/python/example_command_line.rst
+ create mode 100644 doc/api/python/example_version_spec.rst
+ create mode 100644 doc/api/python/index.rst
+ create mode 100644 doc/api/python/paludis.rst
+ delete mode 100644 doc/api/python/python_syntax.css
+
+diff --git a/configure.ac b/configure.ac
+index 03f62ab..1241d14 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1434,18 +1434,9 @@ fi
+ AC_MSG_RESULT($enable_python_doc)
+ 
+ if test "x$enable_python_doc" = "xyes" ; then
+-	AC_MSG_CHECKING([for epydoc])
+-	if epydoc --version >/dev/null 2>/dev/null ; then
+-		AC_MSG_RESULT([yes])
+-	else
+-		AC_MSG_ERROR([epydoc (http://epydoc.sourceforge.net/) is needed to build Python documentation])
+-	fi
+-
+-	AC_MSG_CHECKING([for pygments])
+-	if pygmentize -V >/dev/null 2>/dev/null ; then
+-		AC_MSG_RESULT([yes])
+-	else
+-		AC_MSG_ERROR([pygments (http://pygments.org/) is needed to build Python documentation])
++	AC_CHECK_PROGS(SPHINX_BUILD, [sphinx-build], [no])
++	if test "x$SPHINX_BUILD" = "xno" ; then
++		AC_MSG_ERROR([sphinx-build (http://sphinx-doc.com/) is needed to build Python documentation])
+ 	fi
+ fi
+ AM_CONDITIONAL([ENABLE_PYTHON_DOC], test "x$enable_python_doc" = "xyes")
+@@ -1816,6 +1807,7 @@ AC_CONFIG_FILES([
+ 	doc/api/cplusplus/doxygen.conf
+ 	doc/api/cplusplus/Makefile
+ 	doc/api/cplusplus/examples/Makefile
++    doc/api/python/conf.py
+ 	doc/api/python/Makefile
+ 	doc/api/ruby/Makefile
+ 	doc/clients/Makefile
+diff --git a/doc/api/python/Makefile.am b/doc/api/python/Makefile.am
+index d78da95..6f7f3c7 100644
+--- a/doc/api/python/Makefile.am
++++ b/doc/api/python/Makefile.am
+@@ -8,21 +8,25 @@ examples = \
+ 	example_command_line.py \
+ 	example_version_spec.py
+ 
+-EXTRA_DIST = epydoc.css \
+-	     python_syntax.css \
++rst_docs = \
++	example_about.rst \
++	example_command_line.rst \
++	example_version_spec.rst \
++	index.rst \
++	paludis.rst
++
++EXTRA_DIST = conf.py \
++	     $(rst_docs) \
+ 	     $(examples)
+ 
+-dist_noinst_SCRIPTS = create_python_examples.py
+-
+ if ENABLE_PYTHON_DOC
+ 
+-all-local : epydoc
++all-local : sphinx
+ 
+-epydoc : python
++sphinx : python
+ 
+-python : $(top_builddir)/python/paludis.so epydoc.css python_syntax.css create_python_examples.py $(examples)
+-	rm -fr python
+-	mkdir python
++python : $(top_builddir)/python/paludis.so $(examples) $(rst_docs)
++	mkdir -p $(builddir)/python && \
+ 	env \
+ 	    LD_LIBRARY_PATH="`echo $$LD_LIBRARY_PATH: | sed -e 's,^:,,'`` \
+ 		    $(top_srcdir)/paludis/repositories/e/ebuild/utils/canonicalise $(top_builddir)/paludis/.libs/ \
+@@ -31,11 +35,7 @@ python : $(top_builddir)/python/paludis.so epydoc.css python_syntax.css create_p
+ 		    `:`$(top_srcdir)/paludis/repositories/e/ebuild/utils/canonicalise $(top_builddir)/python/.libs/ \
+ 		    `:`$(top_srcdir)/paludis/repositories/e/ebuild/utils/canonicalise $(top_builddir)/paludis/repositories/e/.libs/`" \
+ 	    PYTHONPATH="$(top_builddir)/python/:$(top_builddir)/python/.libs/" \
+-	    epydoc --name Paludis -o python --url http://paludis.exherbo.org --no-frames --css $(srcdir)/epydoc.css \
+-	        $(top_builddir)/python/paludis.so
+-	$(PYTHON) $(srcdir)/create_python_examples.py $(srcdir) $(examples)
+-	find python/ -type f | xargs sed -i -e 's@http://###EX###@@'
+-	cp $(srcdir)/python_syntax.css python/
++	    $(SPHINX_BUILD) -c $(builddir) -b html -d $(builddir)/doctrees $(srcdir) $(builddir)/python
+ 
+ 
+ install-data-local :
+@@ -44,7 +44,7 @@ install-data-local :
+ 
+ else
+ 
+-epydoc :
++sphinx :
+ 	@echo "You don't have python-doc turned on!"
+ 	exit 1
+ 
+diff --git a/doc/api/python/conf.py.in b/doc/api/python/conf.py.in
+new file mode 100644
+index 0000000..e77d527
+--- /dev/null
++++ b/doc/api/python/conf.py.in
+@@ -0,0 +1,261 @@
++#!/usr/bin/env python3
++# -*- coding: utf-8 -*-
++#
++# paludis documentation build configuration file, created by
++# sphinx-quickstart on Fri Dec 13 04:18:36 2013.
++#
++# This file is execfile()d with the current directory set to its
++# containing dir.
++#
++# Note that not all possible configuration values are present in this
++# autogenerated file.
++#
++# All configuration values have a default; values that are commented out
++# serve to show the default.
++
++import sys
++import os
++
++# If extensions (or modules to document with autodoc) are in another directory,
++# add these directories to sys.path here. If the directory is relative to the
++# documentation root, use os.path.abspath to make it absolute, like shown here.
++#sys.path.insert(0, os.path.abspath('.'))
++
++# -- General configuration ------------------------------------------------
++
++# If your documentation needs a minimal Sphinx version, state it here.
++#needs_sphinx = '1.0'
++
++# Add any Sphinx extension module names here, as strings. They can be
++# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
++# ones.
++extensions = [
++    'sphinx.ext.autodoc',
++]
++
++# Add any paths that contain templates here, relative to this directory.
++templates_path = ['_templates']
++
++# The suffix of source filenames.
++source_suffix = '.rst'
++
++# The encoding of source files.
++#source_encoding = 'utf-8-sig'
++
++# The master toctree document.
++master_doc = 'index'
++
++# General information about the project.
++project = 'Paludis Python API'
++copyright = '2013, respective authors listed in AUTHORS file'
++
++# The version info for the project you're documenting, acts as replacement for
++# |version| and |release|, also used in various other places throughout the
++# built documents.
++#
++# The short X.Y version.
++version = '@VERSION@'
++# The full version, including alpha/beta/rc tags.
++release = '@VERSION@'
++
++# The language for content autogenerated by Sphinx. Refer to documentation
++# for a list of supported languages.
++#language = None
++
++# There are two options for replacing |today|: either, you set today to some
++# non-false value, then it is used:
++#today = ''
++# Else, today_fmt is used as the format for a strftime call.
++#today_fmt = '%B %d, %Y'
++
++# List of patterns, relative to source directory, that match files and
++# directories to ignore when looking for source files.
++exclude_patterns = []
++
++# The reST default role (used for this markup: `text`) to use for all
++# documents.
++#default_role = None
++
++# If true, '()' will be appended to :func: etc. cross-reference text.
++#add_function_parentheses = True
++
++# If true, the current module name will be prepended to all description
++# unit titles (such as .. function::).
++#add_module_names = True
++
++# If true, sectionauthor and moduleauthor directives will be shown in the
++# output. They are ignored by default.
++#show_authors = False
++
++# The name of the Pygments (syntax highlighting) style to use.
++pygments_style = 'sphinx'
++
++# A list of ignored prefixes for module index sorting.
++#modindex_common_prefix = []
++
++# If true, keep warnings as "system message" paragraphs in the built documents.
++#keep_warnings = False
++
++
++# -- Options for HTML output ----------------------------------------------
++
++# The theme to use for HTML and HTML Help pages.  See the documentation for
++# a list of builtin themes.
++html_theme = 'default'
++
++# Theme options are theme-specific and customize the look and feel of a theme
++# further.  For a list of options available for each theme, see the
++# documentation.
++#html_theme_options = {}
++
++# Add any paths that contain custom themes here, relative to this directory.
++#html_theme_path = []
++
++# The name for this set of Sphinx documents.  If None, it defaults to
++# "<project> v<release> documentation".
++#html_title = None
++
++# A shorter title for the navigation bar.  Default is the same as html_title.
++#html_short_title = None
++
++# The name of an image file (relative to this directory) to place at the top
++# of the sidebar.
++#html_logo = None
++
++# The name of an image file (within the static path) to use as favicon of the
++# docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
++# pixels large.
++#html_favicon = None
++
++# Add any paths that contain custom static files (such as style sheets) here,
++# relative to this directory. They are copied after the builtin static files,
++# so a file named "default.css" will overwrite the builtin "default.css".
++html_static_path = []
++
++# Add any extra paths that contain custom files (such as robots.txt or
++# .htaccess) here, relative to this directory. These files are copied
++# directly to the root of the documentation.
++#html_extra_path = []
++
++# If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
++# using the given strftime format.
++#html_last_updated_fmt = '%b %d, %Y'
++
++# If true, SmartyPants will be used to convert quotes and dashes to
++# typographically correct entities.
++#html_use_smartypants = True
++
++# Custom sidebar templates, maps document names to template names.
++#html_sidebars = {}
++
++# Additional templates that should be rendered to pages, maps page names to
++# template names.
++#html_additional_pages = {}
++
++# If false, no module index is generated.
++#html_domain_indices = True
++
++# If false, no index is generated.
++#html_use_index = True
++
++# If true, the index is split into individual pages for each letter.
++#html_split_index = False
++
++# If true, links to the reST sources are added to the pages.
++#html_show_sourcelink = True
++
++# If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
++#html_show_sphinx = True
++
++# If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
++#html_show_copyright = True
++
++# If true, an OpenSearch description file will be output, and all pages will
++# contain a <link> tag referring to it.  The value of this option must be the
++# base URL from which the finished HTML is served.
++#html_use_opensearch = ''
++
++# This is the file name suffix for HTML files (e.g. ".xhtml").
++#html_file_suffix = None
++
++# Output file base name for HTML help builder.
++htmlhelp_basename = 'paludisdoc'
++
++
++# -- Options for LaTeX output ---------------------------------------------
++
++latex_elements = {
++# The paper size ('letterpaper' or 'a4paper').
++#'papersize': 'letterpaper',
++
++# The font size ('10pt', '11pt' or '12pt').
++#'pointsize': '10pt',
++
++# Additional stuff for the LaTeX preamble.
++#'preamble': '',
++}
++
++# Grouping the document tree into LaTeX files. List of tuples
++# (source start file, target name, title,
++#  author, documentclass [howto, manual, or own class]).
++latex_documents = [
++  ('index', 'paludis.tex', 'paludis Documentation',
++   'See AUTHORS', 'manual'),
++]
++
++# The name of an image file (relative to this directory) to place at the top of
++# the title page.
++#latex_logo = None
++
++# For "manual" documents, if this is true, then toplevel headings are parts,
++# not chapters.
++#latex_use_parts = False
++
++# If true, show page references after internal links.
++#latex_show_pagerefs = False
++
++# If true, show URL addresses after external links.
++#latex_show_urls = False
++
++# Documents to append as an appendix to all manuals.
++#latex_appendices = []
++
++# If false, no module index is generated.
++#latex_domain_indices = True
++
++
++# -- Options for manual page output ---------------------------------------
++
++# One entry per manual page. List of tuples
++# (source start file, name, description, authors, manual section).
++man_pages = [
++    ('index', 'paludis', 'paludis Documentation',
++     ['See AUTHORS'], 1)
++]
++
++# If true, show URL addresses after external links.
++#man_show_urls = False
++
++
++# -- Options for Texinfo output -------------------------------------------
++
++# Grouping the document tree into Texinfo files. List of tuples
++# (source start file, target name, title, author,
++#  dir menu entry, description, category)
++texinfo_documents = [
++  ('index', 'paludis', 'paludis Documentation',
++   'See AUTHORS', 'paludis', 'One line description of project.',
++   'Miscellaneous'),
++]
++
++# Documents to append as an appendix to all manuals.
++#texinfo_appendices = []
++
++# If false, no module index is generated.
++#texinfo_domain_indices = True
++
++# How to display URL addresses: 'footnote', 'no', or 'inline'.
++#texinfo_show_urls = 'footnote'
++
++# If true, do not generate a @detailmenu in the "Top" node's menu.
++#texinfo_no_detailmenu = False
+diff --git a/doc/api/python/create_python_examples.py b/doc/api/python/create_python_examples.py
+deleted file mode 100755
+index 6dd99a0..0000000
+--- a/doc/api/python/create_python_examples.py
++++ /dev/null
+@@ -1,37 +0,0 @@
+-#!/usr/bin/env python
+-# vim: set fileencoding=utf-8 sw=4 sts=4 et :
+-
+-import sys, os, re
+-from pygments import highlight
+-from pygments.lexers import PythonLexer
+-from pygments.formatters import HtmlFormatter
+-
+-srcdir = sys.argv[1]
+-
+-lexer = PythonLexer()
+-formatter = HtmlFormatter(linenos=True, cssclass="syntax")
+-
+-topuri = '../../'
+-toplinks = file(os.path.join(srcdir, '../toplinks.html.part.in')).read()
+-header = file(os.path.join(srcdir, '../../header.html.part.in')).read()
+-footer = file(os.path.join(srcdir, '../../footer.html.part.in')).read()
+-css = '<link rel="stylesheet" href="python_syntax.css" type="text/css" />'
+-
+-header = header.replace('###TOPLINKS###', toplinks)
+-header = header.replace('###TOPURI###', topuri)
+-header = header.replace('</head>', css + '</head>')
+-
+-for example in sys.argv[2:]:
+-    input = file(os.path.join(srcdir, example)).read()
+-
+-    example_html = "python/" + example.replace(".py", ".html")
+-
+-    out_file = file(example_html, "w")
+-    out_file.write(header)
+-    out_file.write("<h1>%s</h1>" % example)
+-    out_file.write("<p>%s</h1>" % re.search('"""(.*?)"""', input).groups()[0])
+-    out_file.close()
+-
+-    highlight(input, lexer, formatter, file(example_html, "a"))
+-
+-    file(example_html, "a").write(footer)
+diff --git a/doc/api/python/epydoc.css b/doc/api/python/epydoc.css
+deleted file mode 100644
+index 71740ea..0000000
+--- a/doc/api/python/epydoc.css
++++ /dev/null
+@@ -1,129 +0,0 @@
+-html { background: #4b4d4d; margin: 0;
+-  padding: 1em 1em 3em;
+-}
+-body { background: #fff;
+-  border: 1px solid #000; color: #000; margin: 1em 0; padding: 0 1em 1em;
+-}
+-body, th, td {
+-  font: normal small Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
+-}
+-h1, h2, h3, h4 {
+-  font-family: Arial,Verdana,'Bitstream Vera Sans',Helvetica,sans-serif;
+-  font-weight: bold; letter-spacing: -0.018em;
+-}
+-h1 { font-size: 19px; margin: 2em 0 .5em; }
+-h2 { font-size: 16px; margin: 1.5em 0 .5em; }
+-h3 { font-size: 14px; margin: 1.2em 0 .5em; }
+-hr { border: none;  border-top: 1px solid #ccb; margin: 2em 0; }
+-p { margin: 0 0 1em; }
+-:link, :visited { text-decoration: none; border-bottom: 1px dotted #bbb;
+-  color: #b00;
+-}
+-:link:hover, :visited:hover { background-color: #eee; color: #555; }
+-
+-table { border: none; border-collapse: collapse; }
+-
+-table.navbar { background: #000; color: #fff; margin: 2em 0 .33em; }
+-table.navbar th { border: 1px solid #000; font-weight: bold; padding: 1px; }
+-table.navbar :link, table.navbar :visited { border: none; color: #fff; }
+-table.navbar :link:hover, table.navbar :visited:hover { background: none;
+-  text-decoration: underline overline;
+-}
+-table.navbar th.navbar-select { background: #fff; color: #000; }
+-span.breadcrumbs { color: #666; font-size: 95%; }
+-h1.epydoc { border: none; color: #666;
+-  font-size: x-large; margin: 1em 0 0; padding: 0;
+-}
+-pre.base-tree { color: #666; margin: 0; padding: 0; }
+-pre.base-tree :link, pre.base-tree :visited { border: none; }
+-pre.py-doctest, pre.variable, pre.rst-literal-block { background: #eee;
+-  border: 1px solid #e6e6e6; color: #000; margin: 1em; padding: .25em;
+-  overflow: auto;
+-}
+-pre.variable { margin: 0; }
+-
+-/* Summary tables */
+-
+-table.summary { margin: .5em 0; }
+-table.summary tr.table-header { background: #f7f7f0; }
+-table.summary td.table-header { color: #666; font-weight: bold; }
+-table.summary th, table.summary td { border: 1px solid #d7d7d7; }
+-table.summary th th, table.summary td td { border: none; }
+-table.summary td.summary table td { color: #666; font-size: 90%; }
+-table.summary td.summary table br { display: none; }
+-p.indent-wrapped-lines { color: #999; font-size: 85%; margin: 0;
+-  padding: 0 0 0 7em; text-indent: -7em;
+-}
+-p.indent-wrapped-lines code { color: #999; font-size: 115%; }
+-p.indent-wrapped-lines :link, p.indent-wrapped-lines :visited { border: none; }
+-.summary-sig { display: block; font-family: monospace; font-size: 120%;
+-  margin-bottom: .5em;
+-}
+-.summary-sig-name { font-weight: bold; }
+-.summary-sig-arg { color: #333; }
+-.summary-sig :link, .summary-sig :visited { border: none; }
+-.summary-name { font-family: monospace; font-weight: bold; }
+-
+-/* Details tables */
+-
+-table.details { margin: 2em 0 0; }
+-div table.details { margin-top: 0; }
+-table.details tr.table-header { background: transparent; }
+-table.details td.table-header { border-bottom: 1px solid #ccc; padding: 2em 0 0; }
+-table.details span.table-header {
+-  font: bold 140% Arial,Verdana,'Bitstream Vera Sans',Helvetica,sans-serif;
+-  letter-spacing: -0.018em;
+-}
+-table.details th, table.details td { border: none; }
+-table.details th th, table.details td td { border: none; }
+-table.details td { padding-left: 2em; }
+-table.details td td { padding-left: 0; }
+-table.details h3.epydoc { margin-left: -2em; }
+-table.details h3.epydoc .sig { color: #999; font-family: monospace; }
+-table.details h3.epydoc .sig-name { color: #000; }
+-table.details h3.epydoc .sig-arg { color: #666; }
+-table.details h3.epydoc .sig-default { font-size: 95%; font-weight: normal; }
+-table.details h3.epydoc .sig-default code { font-weight: normal; }
+-table.details h3.epydoc .fname { color: #999; font-size: 90%;
+-  font-style: italic; font-weight: normal; line-height: 1.6em;
+-}
+-
+-dl dt { color: #666; margin-top: 1em; }
+-dl dd { margin: 0; padding-left: 2em; }
+-dl.fields { margin: 1em 0; padding: 0; }
+-dl.fields dt { color: #666; margin-top: 1em; }
+-dl.fields dd ul { margin: 0; padding: 0; }
+-div.fields { font-size: 90%; margin: 0 0 2em 2em; }
+-div.fields p { margin-bottom: 0.5em; }
+-
+-table td.footer { color: #999; font-size: 85%; margin-top: 3em;
+-  padding: 0 3em 1em; position: absolute; width: 80%; }
+-table td.footer :link, table td.footer :visited { border: none; color: #999; }
+-table td.footer :link:hover, table td.footer :visited:hover {
+-  background: transparent; text-decoration: underline;
+-}
+-
+-/* Syntax highlighting */
+-
+-.py-prompt, .py-more, .variable-ellipsis, .variable-op { color: #999; }
+-.variable-group { color: #666; font-weight: bold; }
+-.py-string, .variable-string, .variable-quote { color: #093; }
+-.py-comment { color: #06f; font-style: italic; }
+-.py-keyword { color: #00f; }
+-.py-output { background: #f6f6f0; color: #666; font-weight: bold; }
+-
+-/* Index */
+-
+-table.link-index { background: #f6f6f0; border: none; margin-top: 1em; }
+-table.link-index td.link-index { border: none; font-family: monospace;
+-  font-weight: bold; padding: .5em 1em;
+-}
+-table.link-index td table, table.link-index td td { border: none; }
+-table.link-index .index-where { color: #999;
+-  font-family: Verdana,Arial,'Bitstream Vera Sans',Helvetica,sans-serif;
+-  font-size: 90%; font-weight: normal; line-height: 1.6em;
+-}
+-table.link-index .index-where :link, table.link-index .index-where :visited {
+-  border: none; color: #666;
+-}
+-h2.epydoc { color: #999; font-size: 200%; line-height: 10px; }
+diff --git a/doc/api/python/example_about.rst b/doc/api/python/example_about.rst
+new file mode 100644
+index 0000000..d309ca4
+--- /dev/null
++++ b/doc/api/python/example_about.rst
+@@ -0,0 +1,5 @@
++Example example_about.py
++========================
++
++.. literalinclude:: example_about.py
++    :language: python
+diff --git a/doc/api/python/example_command_line.rst b/doc/api/python/example_command_line.rst
+new file mode 100644
+index 0000000..69111a0
+--- /dev/null
++++ b/doc/api/python/example_command_line.rst
+@@ -0,0 +1,5 @@
++Example example_command_line.py
++===============================
++
++.. literalinclude:: example_command_line.py
++    :language: python
+diff --git a/doc/api/python/example_version_spec.rst b/doc/api/python/example_version_spec.rst
+new file mode 100644
+index 0000000..9bcf2b2
+--- /dev/null
++++ b/doc/api/python/example_version_spec.rst
+@@ -0,0 +1,5 @@
++Example example_version_spec.py
++===============================
++
++.. literalinclude:: example_version_spec.py
++    :language: python
+diff --git a/doc/api/python/index.rst b/doc/api/python/index.rst
+new file mode 100644
+index 0000000..049b715
+--- /dev/null
++++ b/doc/api/python/index.rst
+@@ -0,0 +1,25 @@
++.. paludis documentation master file, created by
++   sphinx-quickstart on Fri Dec 13 04:18:36 2013.
++   You can adapt this file completely to your liking, but it should at least
++   contain the root `toctree` directive.
++
++Welcome to Paludis Python API documentation!
++============================================
++
++Contents:
++
++.. toctree::
++   :maxdepth: 2
++
++   paludis
++   Example example_about.py <example_about>
++   Example example_command_line.py <example_command_line>
++   Example example_version_spec.py <example_version_spec>
++
++
++Indices and tables
++==================
++
++* :ref:`genindex`
++* :ref:`modindex`
++* :ref:`search`
+diff --git a/doc/api/python/paludis.rst b/doc/api/python/paludis.rst
+new file mode 100644
+index 0000000..dfc121f
+--- /dev/null
++++ b/doc/api/python/paludis.rst
+@@ -0,0 +1,10 @@
++paludis package
++===============
++
++Module contents
++---------------
++
++.. automodule:: paludis
++    :members:
++    :show-inheritance:
++    :special-members:
+diff --git a/doc/api/python/python_syntax.css b/doc/api/python/python_syntax.css
+deleted file mode 100644
+index 3d255ea..0000000
+--- a/doc/api/python/python_syntax.css
++++ /dev/null
+@@ -1,73 +0,0 @@
+-table.syntaxtable { background: #FFF5EE; width: 90%; margin: 0; padding: 0; border: 0; border-spacing: 0; border-collapse: collapse; }
+-table.syntaxtable pre { margin: 0; padding: 0; border: 0; }
+-table.syntaxtable td { margin: 0; padding: 3px; border: 0; }
+-td.code { width: 100% }
+-
+-.syntaxtable pre  { background: #fff5ee; color: #000000; background-color: #fff5ee }
+-.syntaxtable pre .c { color: #339933; font-style: italic; background-color: #fff5ee } /* Comment */
+-.syntaxtable pre .err { color: #000000; background-color: #fff5ee } /* Error */
+-.syntaxtable pre .g { color: #000000; background-color: #fff5ee } /* Generic */
+-.syntaxtable pre .k { color: #6a5acd; font-weight: bold; background-color: #fff5ee } /* Keyword */
+-.syntaxtable pre .l { color: #000000; background-color: #fff5ee } /* Literal */
+-.syntaxtable pre .n { color: #000000; background-color: #fff5ee } /* Name */
+-.syntaxtable pre .o { color: #000000; background-color: #fff5ee } /* Operator */
+-.syntaxtable pre .x { color: #000000; background-color: #fff5ee } /* Other */
+-.syntaxtable pre .p { color: #000000; background-color: #fff5ee } /* Punctuation */
+-.syntaxtable pre .cm { color: #339933; font-style: italic; background-color: #fff5ee } /* Comment.Multiline */
+-.syntaxtable pre .cp { color: #339933; font-style: italic; background-color: #fff5ee } /* Comment.Preproc */
+-.syntaxtable pre .c1 { color: #339933; font-style: italic; background-color: #fff5ee } /* Comment.Single */
+-.syntaxtable pre .cs { color: #339933; font-style: italic; background-color: #fff5ee } /* Comment.Special */
+-.syntaxtable pre .gd { color: #000000; background-color: #fff5ee } /* Generic.Deleted */
+-.syntaxtable pre .ge { color: #000000; text-decoration: underline; background-color: #fff5ee } /* Generic.Emph */
+-.syntaxtable pre .gr { color: #000000; background-color: #ff0000 } /* Generic.Error */
+-.syntaxtable pre .gh { color: #000000; font-weight: bold; background-color: #fff5ee } /* Generic.Heading */
+-.syntaxtable pre .gi { color: #000000; background-color: #fff5ee } /* Generic.Inserted */
+-.syntaxtable pre .go { color: #000000; background-color: #fff5ee } /* Generic.Output */
+-.syntaxtable pre .gp { color: #000000; background-color: #fff5ee } /* Generic.Prompt */
+-.syntaxtable pre .gs { color: #000000; background-color: #fff5ee } /* Generic.Strong */
+-.syntaxtable pre .gu { color: #000000; font-weight: bold; background-color: #fff5ee } /* Generic.Subheading */
+-.syntaxtable pre .gt { color: #000000; background-color: #fff5ee } /* Generic.Traceback */
+-.syntaxtable pre .kc { color: #6a5acd; font-weight: bold; background-color: #fff5ee } /* Keyword.Constant */
+-.syntaxtable pre .kd { color: #6a5acd; font-weight: bold; background-color: #fff5ee } /* Keyword.Declaration */
+-.syntaxtable pre .kp { color: #6a5acd; font-weight: bold; background-color: #fff5ee } /* Keyword.Pseudo */
+-.syntaxtable pre .kr { color: #6a5acd; font-weight: bold; background-color: #fff5ee } /* Keyword.Reserved */
+-.syntaxtable pre .kt { color: #6a5acd; font-weight: bold; background-color: #fff5ee } /* Keyword.Type */
+-.syntaxtable pre .ld { color: #000000; background-color: #fff5ee } /* Literal.Date */
+-.syntaxtable pre .m { color: #000000; background-color: #fff5ee } /* Literal.Number */
+-.syntaxtable pre .s { color: #b8860b; background-color: #fff5ee } /* Literal.String */
+-.syntaxtable pre .na { color: #8a2be2; background-color: #fff5ee } /* Name.Attribute */
+-.syntaxtable pre .nb { color: #000000; background-color: #fff5ee } /* Name.Builtin */
+-.syntaxtable pre .nc { color: #000000; background-color: #fff5ee } /* Name.Class */
+-.syntaxtable pre .no { color: #000000; font-weight: bold; background-color: #fff5ee } /* Name.Constant */
+-.syntaxtable pre .nd { color: #000000; background-color: #fff5ee } /* Name.Decorator */
+-.syntaxtable pre .ni { color: #000000; background-color: #fff5ee } /* Name.Entity */
+-.syntaxtable pre .ne { color: #000000; background-color: #fff5ee } /* Name.Exception */
+-.syntaxtable pre .nf { color: #8a2be2; background-color: #fff5ee } /* Name.Function */
+-.syntaxtable pre .nl { color: #000000; background-color: #fff5ee } /* Name.Label */
+-.syntaxtable pre .nn { color: #000000; background-color: #fff5ee } /* Name.Namespace */
+-.syntaxtable pre .nx { color: #000000; background-color: #fff5ee } /* Name.Other */
+-.syntaxtable pre .py { color: #000000; background-color: #fff5ee } /* Name.Property */
+-.syntaxtable pre .nt { color: #6a5acd; font-weight: bold; background-color: #fff5ee } /* Name.Tag */
+-.syntaxtable pre .nv { color: #c71585; background-color: #fff5ee } /* Name.Variable */
+-.syntaxtable pre .ow { color: #ff0000; background-color: #fff5ee } /* Operator.Word */
+-.syntaxtable pre .w { color: #000000; background-color: #fff5ee } /* Text.Whitespace */
+-.syntaxtable pre .mf { color: #000000; background-color: #fff5ee } /* Literal.Number.Float */
+-.syntaxtable pre .mh { color: #000000; background-color: #fff5ee } /* Literal.Number.Hex */
+-.syntaxtable pre .mi { color: #000000; background-color: #fff5ee } /* Literal.Number.Integer */
+-.syntaxtable pre .mo { color: #000000; background-color: #fff5ee } /* Literal.Number.Oct */
+-.syntaxtable pre .sb { color: #b8860b; background-color: #fff5ee } /* Literal.String.Backtick */
+-.syntaxtable pre .sc { color: #b8860b; background-color: #fff5ee } /* Literal.String.Char */
+-.syntaxtable pre .sd { color: #b8860b; background-color: #fff5ee } /* Literal.String.Doc */
+-.syntaxtable pre .s2 { color: #b8860b; background-color: #fff5ee } /* Literal.String.Double */
+-.syntaxtable pre .se { color: #b8860b; background-color: #fff5ee } /* Literal.String.Escape */
+-.syntaxtable pre .sh { color: #b8860b; background-color: #fff5ee } /* Literal.String.Heredoc */
+-.syntaxtable pre .si { color: #b8860b; background-color: #fff5ee } /* Literal.String.Interpol */
+-.syntaxtable pre .sx { color: #b8860b; background-color: #fff5ee } /* Literal.String.Other */
+-.syntaxtable pre .sr { color: #b8860b; background-color: #fff5ee } /* Literal.String.Regex */
+-.syntaxtable pre .s1 { color: #b8860b; background-color: #fff5ee } /* Literal.String.Single */
+-.syntaxtable pre .ss { color: #b8860b; background-color: #fff5ee } /* Literal.String.Symbol */
+-.syntaxtable pre .bp { color: #000000; background-color: #fff5ee } /* Name.Builtin.Pseudo */
+-.syntaxtable pre .vc { color: #c71585; background-color: #fff5ee } /* Name.Variable.Class */
+-.syntaxtable pre .vg { color: #c71585; background-color: #fff5ee } /* Name.Variable.Global */
+-.syntaxtable pre .vi { color: #c71585; background-color: #fff5ee } /* Name.Variable.Instance */
+-.syntaxtable pre .il { color: #000000; background-color: #fff5ee } /* Literal.Number.Integer.Long */
+diff --git a/python/action.cc b/python/action.cc
+index bbc5ffb..d4a81fd 100644
+--- a/python/action.cc
++++ b/python/action.cc
+@@ -344,7 +344,7 @@ void expose_action()
+         (
+          "ConfigAction",
+          "A ConfigAction is used via PackageID::perform_action to execute\n"
+-         "post-install configuration (for example, via 'paludis --config')\n"
++         "post-install configuration (for example, via :command:`cave perform config`)\n"
+          "on a PackageID.",
+          bp::init<ConfigActionOptions>("__init__(ConfigActionOptions)")
+         );
+@@ -356,7 +356,7 @@ void expose_action()
+         (
+          "InfoAction",
+          "An InfoAction is used via PackageID::perform_action to execute\n"
+-         "additional information (for example, via 'paludis --info')\n"
++         "additional information (for example, via :command:`cave info`)\n"
+          "on a PackageID.",
+          bp::init<InfoActionOptions>("__init__(InfoActionOptions)")
+         );
+diff --git a/python/dep_spec.cc b/python/dep_spec.cc
+index e01880a..2bee02b 100644
+--- a/python/dep_spec.cc
++++ b/python/dep_spec.cc
+@@ -1076,7 +1076,7 @@ void expose_dep_spec()
+ 
+     ExceptionRegister::get_instance()->add_exception<GotASetNotAPackageDepSpec>
+         ("GotASetNotAPackageDepSpec", "BaseException",
+-         "Thrown by parse_user_package_dep_spec if options includes THROW_IF_SET"
++         "Thrown by parse_user_package_dep_spec if options includes ``THROW_IF_SET``"
+          " and we're given a set.");
+ 
+     /**
+@@ -1229,7 +1229,7 @@ void expose_dep_spec()
+         (
+          "PackageDepSpec",
+          "A PackageDepSpec represents a package name (for example, 'app-editors/vim'),"
+-         " possibly with associated version and SLOT restrictions.",
++         " possibly with associated version and ``SLOT`` restrictions.",
+          bp::no_init
+         )
+ 
+@@ -1291,7 +1291,7 @@ void expose_dep_spec()
+     bp::class_<PythonPlainTextDepSpec, bp::bases<PythonStringDepSpec> >
+         (
+          "PlainTextDepSpec",
+-         "A PlainTextDepSpec represents a plain text entry (for example, a RESTRICT keyword).",
++         "A PlainTextDepSpec represents a plain text entry (for example, a ``RESTRICT`` keyword).",
+          bp::init<const std::string &>("__init__(string)")
+         )
+         .def("__str__", &PythonPlainTextDepSpec::text)
+@@ -1390,7 +1390,7 @@ void expose_dep_spec()
+         (
+          "BlockDepSpec",
+          "A BlockDepSpec represents a block on a package name (for example, 'app-editors/vim'), \n"
+-         "possibly with associated version and SLOT restrictions.",
++         "possibly with associated version and ``SLOT`` restrictions.",
+          bp::init<std::string, std::shared_ptr<const PythonPackageDepSpec> >("__init__(string, PackageDepSpec)")
+         )
+         .add_property("blocking", &PythonBlockDepSpec::blocking,
+diff --git a/python/metadata_key.cc b/python/metadata_key.cc
+index a5f0a6a..196ae12 100644
+--- a/python/metadata_key.cc
++++ b/python/metadata_key.cc
+@@ -916,8 +916,8 @@ void expose_metadata_key()
+ 
+          "- A raw name. This is in a repository-defined format designed to closely\n"
+          "  represent the internal name. For example, ebuilds and VDB IDs use\n"
+-         "  raw names like 'DESCRIPTION' and 'KEYWORDS', whereas CRAN uses names\n"
+-         "  like 'Title' and 'BundleDescription'. The raw name is unique in a\n"
++         "  raw names like ``DESCRIPTION`` and ``KEYWORDS``, whereas CRAN uses names\n"
++         "  like ``Title`` and ``BundleDescription``. The raw name is unique in a\n"
+          "  PackageID.\n\n"
+ 
+          "- A human name. This is the name that should be used when outputting\n"
+@@ -1057,7 +1057,7 @@ void expose_metadata_key()
+             bp::bases<MetadataKey>, boost::noncopyable>
+         (
+          "MetadataTimeKey",
+-         "A MetadataTimeKey is a MetadataKey that has a int(time_t) as its value.\n\n"
++         "A MetadataTimeKey is a MetadataKey that has a ``int(time_t)`` as its value.\n\n"
+ 
+          "This class can be subclassed in Python.",
+          bp::init<>(
+@@ -1080,7 +1080,7 @@ void expose_metadata_key()
+             bp::bases<MetadataKey>, boost::noncopyable>
+         (
+          "MetadataFSPathKey",
+-         "A MetadataFSPathKey is a MetadataKey that has an string(FSPath) as its value.\n\n"
++         "A MetadataFSPathKey is a MetadataKey that has an ``string(FSPath)`` as its value.\n\n"
+ 
+          "This class can be subclassed in Python.",
+          bp::init<>(
+diff --git a/python/name.cc b/python/name.cc
+index 32a22fc..9ee178f 100644
+--- a/python/name.cc
++++ b/python/name.cc
+@@ -104,7 +104,7 @@ void expose_name()
+     class_wrapped_value<SlotName>
+         (
+          "SlotName",
+-         "Holds a string that is a valid name for a SLOT."
++         "Holds a string that is a valid name for a ``SLOT``."
+         );
+ 
+     /**
+@@ -123,7 +123,7 @@ void expose_name()
+     class_wrapped_value<KeywordName>
+         (
+          "KeywordName",
+-         "Holds a string that is a valid name for a KEYWORD."
++         "Holds a string that is a valid name for a ``KEYWORD``."
+         );
+ 
+     /**
+diff --git a/python/paludis_python.hh b/python/paludis_python.hh
+index feed603..5cac703 100644
+--- a/python/paludis_python.hh
++++ b/python/paludis_python.hh
+@@ -89,7 +89,7 @@ namespace paludis
+             {
+                 std::string e_name_up(toupper(stringify(e)));
+                 enum_.value(e_name_up.c_str(), e);
+-                doc += "\n\t" + e_name_up;
++                doc += "\n\t* ``" + e_name_up + "``";
+             }
+             PyTypeObject * pto = reinterpret_cast<PyTypeObject *>(enum_.ptr());
+             PyDict_SetItemString(
+diff --git a/python/slot_requirement.cc b/python/slot_requirement.cc
+index 527621e..3317b56 100644
+--- a/python/slot_requirement.cc
++++ b/python/slot_requirement.cc
+@@ -107,7 +107,7 @@ void expose_slot_requirement()
+         (
+          "SlotRequirement",
+          "A SlotRequirement represents a PackageDepSpec's slot requirement, "
+-         "such as :3 , :* , := or :=3 .",
++         "such as ``:3``, ``:*``, ``:=`` or ``:=3``.",
+          bp::no_init
+         )
+ 
+@@ -123,7 +123,7 @@ void expose_slot_requirement()
+         (
+          "SlotExactPartialRequirement",
+          "A SlotExactPartialRequirement is a SlotRequirement for exact slot requirements, "
+-         "such as :3 or :=3 .",
++         "such as ``:3`` or ``:=3``.",
+          bp::no_init
+         )
+ 
+@@ -142,7 +142,7 @@ void expose_slot_requirement()
+         (
+          "SlotExactFullRequirement",
+          "A SlotExactFullRequirement is a SlotRequirement for exact slot requirements, "
+-         "such as :3/3 or :=3/3 .",
++         "such as ``:3/3`` or ``:=3/3``.",
+          bp::no_init
+         )
+         ;
+@@ -155,7 +155,7 @@ void expose_slot_requirement()
+     bp::class_<SlotAnyAtAllLockedRequirement, std::shared_ptr<SlotAnyAtAllLockedRequirement>, bp::bases<SlotRequirement>, boost::noncopyable>
+         (
+          "SlotAnyAtAllLockedRequirement",
+-         "A SlotAnyAtAllLockedRequirement is a SlotRequirement for := slot requirements.",
++         "A SlotAnyAtAllLockedRequirement is a SlotRequirement for ``:=`` slot requirements.",
+          bp::no_init
+         )
+         ;
+@@ -168,7 +168,7 @@ void expose_slot_requirement()
+     bp::class_<SlotAnyPartialLockedRequirement, std::shared_ptr<SlotAnyPartialLockedRequirement>, bp::bases<SlotRequirement>, boost::noncopyable>
+         (
+          "SlotAnyPartialLockedRequirement",
+-         "A SlotAnyPartialLockedRequirement is a SlotRequirement for :3= slot requirements.",
++         "A SlotAnyPartialLockedRequirement is a SlotRequirement for ``:3=`` slot requirements.",
+          bp::no_init
+         )
+         ;
+@@ -181,7 +181,7 @@ void expose_slot_requirement()
+     bp::class_<SlotAnyUnlockedRequirement, std::shared_ptr<SlotAnyUnlockedRequirement>, bp::bases<SlotRequirement>, boost::noncopyable>
+         (
+          "SlotAnyUnlockedRequirement",
+-         "A SlotAnyUnlockedRequirement is a SlotRequirement for :* slot requirements.",
++         "A SlotAnyUnlockedRequirement is a SlotRequirement for ``:*`` slot requirements.",
+          bp::no_init
+         )
+         ;
+@@ -195,9 +195,9 @@ void expose_slot_requirement()
+         (
+          "SlotUnknownRewrittenRequirement",
+          "A SlotUnknownRewrittenRequirement is a SlotRequirement for the "
+-         "maybe_original_requirement_if_written() method of :3/3.1= slot "
++         "maybe_original_requirement_if_written() method of ``:3/3.1= slot`` "
+          "requirements that do not indicate whether they were originally "
+-         "of := or :3= type.",
++         "of ``:=`` or ``:3=`` type.",
+          bp::no_init
+         )
+         ;
+diff --git a/python/version_spec.cc b/python/version_spec.cc
+index 1619a6c..e1676c3 100644
+--- a/python/version_spec.cc
++++ b/python/version_spec.cc
+@@ -53,9 +53,9 @@ void expose_version_spec()
+     bp::class_<VersionSpec>
+         (
+          "VersionSpec",
+-         "A VersionSpec represents a version number (for example, 1.2.3b-r1).\n\n"
++         "A VersionSpec represents a version number (for example, ``1.2.3b-r1``).\n\n"
+ 
+-         "See U{example_version_spec<###EX###example_version_spec.html>}",
++         "See :doc:`example_version_spec`",
+          bp::no_init
+         )
+         .def("__init__",
+@@ -66,8 +66,8 @@ void expose_version_spec()
+         .def("bump", &VersionSpec::bump,
+                 "bump() -> VersionSpec\n"
+                 "This is used by the ~> operator. It returns a VersionSpec where the next to last number "
+-                "is one greater (e.g. 5.3.1 => 5.4).\n"
+-                "Any non number parts are stripped (e.g. 1.2.3_alpha4-r5 => 1.3)."
++                "is one greater (e.g. ``5.3.1`` => ``5.4``).\n"
++                "Any non number parts are stripped (e.g. ``1.2.3_alpha4-r5`` => ``1.3``)."
+             )
+ 
+         .add_property("is_scm", &VersionSpec::is_scm,
+@@ -77,12 +77,12 @@ void expose_version_spec()
+ 
+         .add_property("has_scm_part", &VersionSpec::has_scm_part,
+                 "[ro] bool\n"
+-                "Do we have an -scm part?"
++                "Do we have an ``-scm`` part?"
+                 )
+ 
+         .add_property("has_try_part", &VersionSpec::has_try_part,
+                 "[ro] bool\n"
+-                "Do we have a -try part?"
++                "Do we have a ``-try`` part?"
+                 )
+ 
+         .def("remove_revision", &VersionSpec::remove_revision,
+-- 
+1.8.5.1
+
