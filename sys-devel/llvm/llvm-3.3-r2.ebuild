@@ -1,10 +1,10 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-devel/llvm/llvm-3.3-r1.ebuild,v 1.9 2013/08/02 12:25:46 mgorny Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-devel/llvm/llvm-3.3-r1.ebuild,v 1.16 2013/11/10 15:14:28 chithanh Exp $
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_5,2_6,2_7} pypy{1_9,2_0} )
+PYTHON_COMPAT=( python{2_6,2_7} pypy2_0 )
 
 inherit eutils flag-o-matic multilib multilib-minimal \
 	python-r1 toolchain-funcs pax-utils check-reqs
@@ -17,12 +17,12 @@ SRC_URI="http://llvm.org/releases/${PV}/${P}.src.tar.gz
 	!doc? ( http://dev.gentoo.org/~voyageur/distfiles/${P}-manpages.tar.bz2 )"
 
 LICENSE="UoI-NCSA"
-SLOT="0"
-KEYWORDS="~amd64 ~arm ~ppc ~x86 ~amd64-fbsd ~x86-fbsd ~x64-freebsd ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos"
-IUSE="c++0x clang debug doc gold kernel_FreeBSD +libffi multitarget ocaml python
-	+static-analyzer test udis86 video_cards_radeon"
+SLOT="0/${PV}"
+KEYWORDS="~amd64 ~arm ~ppc ~ppc64 ~x86 ~amd64-fbsd ~x86-fbsd ~x64-freebsd ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos"
+IUSE="c++0x clang debug doc gold kernel_Darwin kernel_FreeBSD +libffi multitarget
+	ocaml python +static-analyzer test udis86 video_cards_radeon"
 
-DEPEND="app-admin/chrpath
+DEPEND="!kernel_Darwin? ( app-admin/chrpath )
 	dev-lang/perl
 	>=sys-devel/make-3.79
 	>=sys-devel/flex-2.5.4
@@ -165,9 +165,10 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-3.2-nodoctargz.patch
 	epatch "${FILESDIR}"/${P}-R600_debug.patch
 	epatch "${FILESDIR}"/${PN}-3.3-gentoo-install.patch
-	if use clang ; then
+	if use clang; then
 		epatch "${FILESDIR}"/clang-3.3-gentoo-install.patch
-		epatch "${FILESDIR}"/clang-3.3-nodoctargz.patch
+		# backport support for g++-X.Y header location
+		epatch "${FILESDIR}"/clang-3.3-gcc-header-path.patch
 	fi
 
 	local sub_files=(
@@ -238,6 +239,7 @@ multilib_src_configure() {
 	fi
 
 	if use libffi; then
+		local CPPFLAGS=${CPPFLAGS}
 		append-cppflags "$(pkg-config --cflags libffi)"
 	fi
 	CONF_FLAGS="${CONF_FLAGS} $(use_enable libffi)"
@@ -300,8 +302,10 @@ multilib_src_install() {
 	emake DESTDIR="${D}" GENTOO_LIBDIR=$(get_libdir) install
 
 	# Fix rpaths.
-	chrpath -r "${EPREFIX}"/usr/$(get_libdir)/llvm \
-		"${ED}"/usr/bin/* || die
+	if use !kernel_Darwin ; then
+		chrpath -r "${EPREFIX}"/usr/$(get_libdir)/llvm \
+			"${ED}"/usr/bin/* || die
+	fi
 
 	if multilib_is_native_abi; then
 		# Move files back.
