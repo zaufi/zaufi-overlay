@@ -4,7 +4,8 @@
 
 EAPI=5
 
-inherit eutils multilib toolchain-funcs autotools-multilib
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
+inherit eutils multilib toolchain-funcs python-any-r1 autotools-multilib
 
 DESCRIPTION="EXIF and IPTC metadata C++ library and command line utility"
 HOMEPAGE="http://www.exiv2.org/"
@@ -27,8 +28,10 @@ DEPEND="${RDEPEND}
 	contrib? ( >=dev-libs/boost-1.44 )
 	doc? (
 		app-doc/doxygen
+		dev-libs/libxslt
 		virtual/pkgconfig
 		media-gfx/graphviz
+		${PYTHON_DEPEND}
 	)
 	nls? ( sys-devel/gettext )
 "
@@ -46,7 +49,8 @@ src_prepare() {
 	if use doc; then
 		einfo "Updating doxygen config"
 		doxygen 2>&1 >/dev/null -u config/Doxyfile
-		python_convert_shebangs -r 2 doc/templates
+		python-any-r1_pkg_setup
+		epatch ${FILESDIR}/${P}-python3-ready.patch
 	fi
 
 	if use contrib; then
