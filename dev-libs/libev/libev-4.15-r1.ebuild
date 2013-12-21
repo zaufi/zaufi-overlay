@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit autotools-utils eutils multilib
+inherit autotools-multilib
 
 DESCRIPTION="A high-performance event loop/event model with lots of feature"
 HOMEPAGE="http://software.schmorp.de/pkg/libev.html"
@@ -23,7 +23,7 @@ RDEPEND="${DEPEND}"
 DOCS=( Changes README )
 
 # bug #411847
-PATCHES=( "${FILESDIR}/${PN}-pc.patch" "${FILESDIR}/${P}-gentoo.patch" )
+PATCHES=( "${FILESDIR}"/${PN}-pc.patch "${FILESDIR}"/${P}-gentoo.patch )
 AUTOTOOLS_AUTORECONF=1
 
 src_configure() {
@@ -31,18 +31,24 @@ src_configure() {
 		--disable-maintainer-mode
 		$(use_enable static-libs static)
 	)
-	autotools-utils_src_configure
+	autotools-multilib_src_configure
 }
 
 src_install() {
-	autotools-utils_src_install
+	autotools-multilib_src_install
 	use static-libs || prune_libtool_files
 }
 
 pkg_preinst() {
-	preserve_old_lib /usr/$(get_libdir)/libev.so.3.0.0
+	keep_old_lib() {
+		preserve_old_lib /usr/$(get_libdir)/libev.so.3.0.0
+	}
+	multilib_foreach_abi keep_old_lib
 }
 
 pkg_postinst() {
-	preserve_old_lib_notify /usr/$(get_libdir)/libev.so.3.0.0
+	keep_old_lib() {
+		preserve_old_lib_notify /usr/$(get_libdir)/libev.so.3.0.0
+	}
+	multilib_foreach_abi keep_old_lib
 }
