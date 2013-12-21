@@ -23,7 +23,7 @@ RDEPEND="${DEPEND}"
 DOCS=( Changes README )
 
 # bug #411847
-PATCHES=( "${FILESDIR}/${PN}-pc.patch" "${FILESDIR}/${PV}-gentoo.patch" )
+PATCHES=( "${FILESDIR}/${PN}-pc.patch" "${FILESDIR}/${P}-gentoo.patch" )
 AUTOTOOLS_AUTORECONF=1
 
 src_configure() {
