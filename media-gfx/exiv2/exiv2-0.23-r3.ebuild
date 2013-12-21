@@ -74,6 +74,7 @@ src_configure() {
 		$(use_enable nls)
 		$(use_enable xmp)
 		$(use_enable static-libs static)
+		--disable-dependency-tracking
 	)
 
 	# plain 'use_with' fails
@@ -96,7 +97,9 @@ src_compile() {
 			CPPFLAGS="${CPPFLAGS} -I\$(BOOST_INC_DIR) -I. -DEXV_HAVE_STDINT_H"
 	fi
 
-	use doc && multilib_for_best_abi emake doc
+	if use doc; then
+		autotools-multilib_src_compile -C doc
+	fi
 }
 
 src_install() {
@@ -108,7 +111,9 @@ src_install() {
 	fi
 
 	use xmp && dodoc doc/{COPYING-XMPSDK,README-XMP,cmdxmp.txt}
-	use doc && multilib_for_best_abi dohtml -r doc/html/.
+	if use doc; then
+		autotools-multilib_src_install -C doc
+	fi
 	if use examples; then
 		insinto /usr/share/doc/${PF}/examples
 		docompress -x /usr/share/doc/${PF}/examples
