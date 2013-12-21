@@ -98,7 +98,10 @@ src_compile() {
 	fi
 
 	if use doc; then
-		autotools-multilib_src_compile -C doc
+		emake_docs() {
+			emake -C ${BUILD_DIR}/doc doc
+		}
+		multilib_for_best_abi emake_docs
 	fi
 }
 
@@ -112,11 +115,18 @@ src_install() {
 
 	use xmp && dodoc doc/{COPYING-XMPSDK,README-XMP,cmdxmp.txt}
 	if use doc; then
-		autotools-multilib_src_install -C doc
+		install_docs() {
+			dohtml -r ${BUILD_DIR}/doc/html/.
+		}
+		multilib_for_best_abi install_docs
 	fi
 	if use examples; then
-		insinto /usr/share/doc/${PF}/examples
-		docompress -x /usr/share/doc/${PF}/examples
-		doins samples/*.cpp
+		# Install examples only once!
+		install_examples() {
+			insinto /usr/share/doc/${PF}/examples
+			docompress -x /usr/share/doc/${PF}/examples
+			doins samples/*.cpp
+		}
+		multilib_for_best_abi install_examples
 	fi
 }
