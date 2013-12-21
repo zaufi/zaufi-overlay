@@ -23,13 +23,8 @@ RDEPEND="${DEPEND}"
 DOCS=( Changes README )
 
 # bug #411847
-PATCHES=( "${FILESDIR}/${PN}-pc.patch" )
+PATCHES=( "${FILESDIR}/${PN}-pc.patch" "${FILESDIR}/${PV}-gentoo.patch" )
 AUTOTOOLS_AUTORECONF=1
-
-src_prepare() {
-	sed -i -e "/^include_HEADERS/s/ event.h//" Makefile.am || die
-	autotools-utils_src_prepare
-}
 
 src_configure() {
 	local myeconfargs=(

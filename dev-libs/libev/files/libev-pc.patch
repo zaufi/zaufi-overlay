@@ -1,20 +1,32 @@
---- /dev/null
-+++ b/libev.pc.in
-@@ -0,0 +1,11 @@
-+prefix=@prefix@
-+exec_prefix=@prefix@
-+libdir=@libdir@
-+includedir=@includedir@
-+
-+Name: libev
-+Description: A high-performance event loop/event model with lots of features
-+Version: @VERSION@
-+Libs: -L${libdir} -lev
-+Libs.private:
-+Cflags: -I${includedir}
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -16,5 +16,8 @@ lib_LTLIBRARIES = libev.la
+diff -ub -r libev-4.15.org/configure.ac libev-4.15/configure.ac
+--- libev-4.15.org/configure.ac	2013-03-01 15:10:27.000000000 +0400
++++ libev-4.15/configure.ac	2013-12-21 09:18:59.000000000 +0400
+@@ -1,10 +1,11 @@
+-AC_INIT
++AC_INIT([libev],[4.15])
+ 
+ orig_CFLAGS="$CFLAGS"
+ 
+ AC_CONFIG_SRCDIR([ev_epoll.c])
++AC_CONFIG_MACRO_DIR([m4])
+ 
+-AM_INIT_AUTOMAKE(libev,4.15) dnl also update ev.h!
++AM_INIT_AUTOMAKE
+ AC_CONFIG_HEADERS([config.h])
+ AM_MAINTAINER_MODE
+ 
+@@ -22,5 +23,5 @@
+ 
+ m4_include([libev.m4])
+ 
+-AC_CONFIG_FILES([Makefile])
++AC_CONFIG_FILES([Makefile libev.pc])
+ AC_OUTPUT
+Only in libev-4.15: libev.pc.in
+diff -ub -r libev-4.15.org/Makefile.am libev-4.15/Makefile.am
+--- libev-4.15.org/Makefile.am	2012-05-29 19:20:25.000000000 +0400
++++ libev-4.15/Makefile.am	2013-12-21 09:20:25.000000000 +0400
+@@ -16,5 +16,8 @@
  libev_la_SOURCES = ev.c event.c
  libev_la_LDFLAGS = -version-info $(VERSION_INFO)
  
@@ -23,20 +35,3 @@
 +
  ev.3: ev.pod
  	pod2man -n LIBEV -r "libev-$(VERSION)" -c "libev - high performance full featured event loop" -s3 <$< >$@
---- a/configure.ac
-+++ b/configure.ac
-@@ -2,6 +2,7 @@ orig_CFLAGS="$CFLAGS"
- 
- AC_INIT
- AC_CONFIG_SRCDIR([ev_epoll.c])
-+AC_CONFIG_MACRO_DIR([m4])
- 
- AM_INIT_AUTOMAKE(libev,4.11) dnl also update ev.h!
- AC_CONFIG_HEADERS([config.h])
-@@ -21,5 +22,5 @@ AC_PROG_LIBTOOL
- 
- m4_include([libev.m4])
- 
--AC_CONFIG_FILES([Makefile])
-+AC_CONFIG_FILES([Makefile libev.pc])
- AC_OUTPUT
