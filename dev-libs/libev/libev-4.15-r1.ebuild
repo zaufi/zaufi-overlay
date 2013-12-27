@@ -22,7 +22,7 @@ RDEPEND="${DEPEND}"
 
 DOCS=( Changes README )
 
-# bug #411847
+# Bug #411847
 PATCHES=( "${FILESDIR}"/${PN}-pc.patch "${FILESDIR}"/${P}-gentoo.patch )
 AUTOTOOLS_AUTORECONF=1
 

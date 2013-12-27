@@ -2,6 +2,9 @@
 # ChangeLog for (my) profile directory
 #
 
+* 27 Dec 2013; Alex Turbov <i.zaufi@gmail.com> package.use.force:
+    Do not needed anymore, so removed
+
 * 05 Sep 2013; Alex Turbov <i.zaufi@gmail.com> package.use.force:
     Force unmask ruby20 USE flag.
 
