@@ -50,5 +50,5 @@ src_install() {
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_unpack_post
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/install_all_post
     dosym ${filesystem_manager} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_install_post
-    python_fix_shebang /usr/bin/get-ebuild-for
+    python_fix_shebang ${D}/usr/libexec/cave/commands/print-ebuild-path
 }
