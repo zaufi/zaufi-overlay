@@ -6,7 +6,9 @@ EAPI="5"
 
 PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
 EGIT_REPO_URI="https://github.com/zaufi/paludis-hooks.git"
-inherit git-2 cmake-utils python-r1
+# TODO It must be python-single-r1 because of paludis dependency which
+# is a single nowadays...
+inherit git-2 cmake-utils python-single-r1
 
 DESCRIPTION="My hooks for paludis"
 HOMEPAGE="https://github.com/zaufi/paludis-hooks"
@@ -48,6 +50,5 @@ src_install() {
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_unpack_post
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/install_all_post
     dosym ${filesystem_manager} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_install_post
-
-    python_replicate_script ${D}/usr/bin/get-ebuild-for
+    python_fix_shebang /usr/bin/get-ebuild-for
 }
