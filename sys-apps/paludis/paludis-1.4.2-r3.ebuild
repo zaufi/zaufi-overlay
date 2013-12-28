@@ -6,7 +6,7 @@ EAPI=5
 
 PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
 
-inherit autotools-utils bash-completion-r1 eutils python-single-r1 user
+inherit autotools-utils bash-completion-r1 eutils python-any-r1 user
 
 DESCRIPTION="paludis, the other package mangler"
 HOMEPAGE="http://paludis.exherbo.org/"
