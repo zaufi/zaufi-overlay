@@ -31,6 +31,9 @@ src_unpack() {
 src_install() {
     cmake-utils_src_install
 
+    # Rename non-versioned doc dir
+    mv "${D}"/usr/share/doc/${PN} "${D}"/usr/share/doc/${P}
+
     einfo "Installing hooks into paludis configuration dir..."
 
     # Create all necessary directories
