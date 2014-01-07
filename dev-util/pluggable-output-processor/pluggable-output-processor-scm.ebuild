@@ -47,7 +47,7 @@ python_install() {
     python_fix_shebang ${EPREFIX}/usr/bin/outproc
     # Install eselect module
     insinto ${EPREFIX}/usr/share/eselect/modules
-    sed -i "s,python,${PYTHON},g"
+    sed -i "s,python,${PYTHON},g" contrib/outproc.eselect
     doins contrib/outproc.eselect
 
     # Make a dir required for eselect
