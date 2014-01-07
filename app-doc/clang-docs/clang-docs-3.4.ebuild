@@ -16,13 +16,13 @@ IUSE=""
 DEPEND="app-doc/doxygen[dot]"
 RDEPEND=""
 
-S=${WORKDIR}/cfe-${PV}.src
+S=${WORKDIR}/clang-${PV}
 
 src_configure() {
     # Render `preconfigured' doxygen configuration file
     sed -e "s,@S@,${S}," \
         -e "s,@DST@,${D}/usr/share/doc/${PF}," \
-        "${FILESDIR}"/${P}-doxygen.cfg.in > "${S}"/docs/doxygen.cfg || die
+        "${FILESDIR}"/clang-${PV}-doxygen.cfg.in > "${S}"/docs/doxygen.cfg || die
     # Make destination dir before "compile"
     mkdir -p ${D}/usr/share/doc/${PF} || die
 }
