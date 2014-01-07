@@ -13,6 +13,7 @@ RUBY_FAKEGEM_DOCDIR="doc"
 RUBY_FAKEGEM_EXTRADOC="docs/div_syntax.md docs/entity_test.md
 	docs/markdown_syntax.md docs/maruku.md docs/math.md docs/other_stuff.md
 	docs/proposal.md"
+RUBY_FAKEGEM_EXTRAINSTALL="data"
 
 inherit ruby-fakegem
 
