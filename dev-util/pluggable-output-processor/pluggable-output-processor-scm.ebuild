@@ -42,7 +42,8 @@ python_install() {
         dosym ${pp_dir}/gcc.py ${pp_dir}/${i}.py
     done
 
-    # Install
+    # Install main script
+    python_fix_shebang ${EPREFIX}/usr/bin/outproc
     # Install eselect module
     insinto ${EPREFIX}/usr/share/eselect/modules
     doins contrib/outproc.eselect
