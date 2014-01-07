@@ -8,7 +8,7 @@ EAPI=5
 
 EGIT_REPO_URI="https://github.com/zaufi/pluggable-output-processor.git"
 # ATTENTION This package is Python3 only!
-# 1h <-- Increment this wated time counter if your are dare to make it Python2 compatible!
+# 2.5h <-- Increment this wated time counter if your are dare to make it Python2 compatible!
 PYTHON_COMPAT=( python3_{2,3} )
 DISTUTILS_SINGLE_IMPL="yes"
 
