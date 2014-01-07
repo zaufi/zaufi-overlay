@@ -7,7 +7,8 @@
 EAPI=5
 
 EGIT_REPO_URI="https://github.com/zaufi/pluggable-output-processor.git"
-# TODO Check for other Python versions
+# ATTENTION This package is Python3 only!
+# 1h <-- Increment this wated time counter if your are dare to make it Python2 compatible!
 PYTHON_COMPAT=( python3_{2,3} )
 DISTUTILS_SINGLE_IMPL="yes"
 
@@ -46,6 +47,7 @@ python_install() {
     python_fix_shebang ${EPREFIX}/usr/bin/outproc
     # Install eselect module
     insinto ${EPREFIX}/usr/share/eselect/modules
+    sed -i "s,python,${PYTHON},g"
     doins contrib/outproc.eselect
 
     # Make a dir required for eselect
