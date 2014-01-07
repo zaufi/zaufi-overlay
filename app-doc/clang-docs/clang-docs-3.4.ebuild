@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,7 +6,7 @@ EAPI=5
 
 DESCRIPTION="clang API documentation"
 HOMEPAGE="http://clang.llvm.org/"
-SRC_URI="http://llvm.org/releases/${PV}/cfe-${PV}.src.tar.gz"
+SRC_URI="http://llvm.org/releases/${PV}/clang-${PV}.src.tar.gz"
 
 LICENSE="UoI-NCSA"
 SLOT="0"
@@ -22,7 +22,7 @@ src_configure() {
     # Render `preconfigured' doxygen configuration file
     sed -e "s,@S@,${S}," \
         -e "s,@DST@,${D}/usr/share/doc/${PF}," \
-        "${FILESDIR}"/doxygen.cfg.in > "${S}"/docs/doxygen.cfg || die
+        "${FILESDIR}"/${P}-doxygen.cfg.in > "${S}"/docs/doxygen.cfg || die
     # Make destination dir before "compile"
     mkdir -p ${D}/usr/share/doc/${PF} || die
 }
