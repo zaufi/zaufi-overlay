@@ -31,7 +31,7 @@ RDEPEND="dev-python/pygments[${PYTHON_USEDEP}]
 	dev-python/simplejson[${PYTHON_USEDEP}]"
 DEPEND="test? ( ${RDEPEND} )"
 
-ruby_add_rdepend "~dev-ruby/yajl-ruby-1.1.*
+ruby_add_rdepend "~dev-ruby/yajl-ruby-1.1.0
 	>=dev-ruby/posix-spawn-0.3.6"
 ruby_add_bdepend "dev-ruby/rake-compiler"
 
