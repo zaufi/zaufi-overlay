@@ -19,7 +19,7 @@ RDEPEND="
 "
 DEPEND="${RDEPEND}"
 
-DOCS=( README )
+DOCS=( README.md )
 
 src_configure() {
 	# The features provided by aspell, hspell, and hunspell
