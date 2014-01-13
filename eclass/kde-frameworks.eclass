@@ -43,7 +43,7 @@ QT_MINIMAL="${QT_MINIMAL:-5.2.0}"
 
 # @ECLASS-VARIABLE: FRAMEWORKS_DOXYGEN
 # @DESCRIPTION:
-# If defined, add doc to IUSE, add a dependency on doxygen,
+# If defined, add doc to IUSE, add a dependency on apidox,
 # and generate and install API documentation.
 
 # @ECLASS-VARIABLE: FRAMEWORKS_EXAMPLES
@@ -73,7 +73,7 @@ DEPEND+=" >=dev-libs/extra-cmake-modules-0.0.9"
 
 if [[ -n "${FRAMEWORKS_DOXYGEN}" ]]; then
 	IUSE+=" doc"
-	DEPEND+=" doc? ( app-doc/doxygen )"
+	DEPEND+=" doc? ( kde-frameworks/apidox )"
 fi
 
 case ${FRAMEWORKS_DEBUG} in
@@ -287,7 +287,14 @@ kde-frameworks_src_compile() {
 
 	# Build doxygen documentation if applicable
 	if use_if_iuse doc ; then
-		doxygen "${S}"
+		local dox_options="\
+		    --doxdatadir=/usr/share/doc/HTML/en/common/ \
+		    --installdir=/usr/share/doc/HTML/en/ \
+		    --recurse"
+		/bin/sh /usr/share/apidox/doxygen.sh $dox_options "${S}"
+		if [ -d "${S}"/src ]; then
+			/bin/sh /usr/share/apidox/doxygen.sh $dox_options "${S}" src
+		fi
 	fi
 }
 
@@ -336,7 +343,8 @@ kde-frameworks_src_install() {
 
 	# Install doxygen documentation if applicable
 	if use_if_iuse doc ; then
-		dohtml -r html/*
+		dohtml -A tag -r ${P}-apidocs/*
+		dosym /usr/share/doc/${P} /usr/share/doc/HTML/en/${P}
 	fi
 
 	cmake-utils_src_install
