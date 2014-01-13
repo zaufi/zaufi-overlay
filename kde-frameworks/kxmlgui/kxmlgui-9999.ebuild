@@ -5,10 +5,9 @@
 EAPI=5
 
 FRAMEWORKS_DOXYGEN="true"
-VIRTUALX_REQUIRED="test"
 inherit kde-frameworks
 
-DESCRIPTION="Graph drawing functions"
+DESCRIPTION="KDE XML GUI library"
 LICENSE="LGPL-2+"
 KEYWORDS=""
 IUSE=""
