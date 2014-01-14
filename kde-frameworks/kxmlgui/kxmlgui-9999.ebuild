@@ -15,7 +15,7 @@ IUSE=""
 
 RDEPEND="
 	dev-qt/qtdbus:5
-	dev-qt/qtnetworks:5
+	dev-qt/qtnetwork:5
 	dev-qt/qtprintsupport:5
 	dev-qt/qtwidgets:5
 	dev-qt/qtxml:5
