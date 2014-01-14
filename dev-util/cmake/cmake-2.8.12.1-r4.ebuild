@@ -188,7 +188,7 @@ src_install() {
 
 	# Install bash completions to the proper location, if requested
 	if use bash-completion; then
-		bashcomp Docs/bash-completion/{${PN},ctest,cpack}
+		dobashcomp Docs/bash-completion/{${PN},ctest,cpack}
 	fi
 	rm -rf ${D}/usr/share/cmake/completions
 }
