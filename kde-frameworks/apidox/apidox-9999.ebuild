@@ -5,6 +5,7 @@
 EAPI=5
 
 KMNAME=kapidox
+FRAMEWORKS_DISABLE_DOXYGEN="true"
 inherit kde-frameworks
 
 DESCRIPTION="API documentation generation and assets for frameworks"
