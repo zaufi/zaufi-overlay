@@ -5,18 +5,20 @@
 EAPI=5
 
 FRAMEWORKS_EXAMPLES="true"
-VIRTUALX_REQUIRED="test"
 inherit kde-frameworks
 
-DESCRIPTION="Graph drawing functions"
+DESCRIPTION="Detection and notification of device idle time"
 LICENSE="LGPL-2+"
 KEYWORDS=""
 IUSE=""
 
 RDEPEND="
-	dev-qt/qtgui:5
+	dev-qt/qtdbus:5
 	dev-qt/qtwidgets:5
+	dev-qt/qtx11extras:5
+	x11-libs/libX11
+	x11-libs/libXScrnSaver
+	x11-libs/libXext
+	x11-libs/libxcb
 "
 DEPEND="${RDEPEND}"
-
-DOCS=( README.md )
