@@ -4,7 +4,6 @@
 
 EAPI=5
 
-FRAMEWORKS_DOXYGEN="true"
 inherit kde-frameworks
 
 DESCRIPTION="An abstraction layer for common spell checking applications"

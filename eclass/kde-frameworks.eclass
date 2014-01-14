@@ -41,10 +41,9 @@ QT_MINIMAL="${QT_MINIMAL:-5.2.0}"
 # For any other value, add debug to IUSE.
 : ${FRAMEWORKS_DEBUG:=true}
 
-# @ECLASS-VARIABLE: FRAMEWORKS_DOXYGEN
+# @ECLASS-VARIABLE: FRAMEWORKS_DISABLE_DOXYGEN
 # @DESCRIPTION:
-# If defined, add doc to IUSE, add a dependency on apidox,
-# and generate and install API documentation.
+# If set to "true", do not add doc to IUSE.
 
 # @ECLASS-VARIABLE: FRAMEWORKS_EXAMPLES
 # @DESCRIPTION:
@@ -71,10 +70,13 @@ SLOT=5
 
 DEPEND+=" >=dev-libs/extra-cmake-modules-0.0.9"
 
-if [[ -n "${FRAMEWORKS_DOXYGEN}" ]]; then
-	IUSE+=" doc"
-	DEPEND+=" doc? ( kde-frameworks/apidox )"
-fi
+case ${FRAMEWORKS_DISABLE_DOXYGEN} in
+	true)	;;
+	*)
+		IUSE+=" doc"
+		DEPEND+=" doc? ( kde-frameworks/apidox )"
+		;;
+esac
 
 case ${FRAMEWORKS_DEBUG} in
 	false)	;;
