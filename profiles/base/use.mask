@@ -1,0 +1,2 @@
+# Unmask qt5 USE flag
+-qt5
