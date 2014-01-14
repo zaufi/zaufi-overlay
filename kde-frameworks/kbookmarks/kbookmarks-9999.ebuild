@@ -4,30 +4,23 @@
 
 EAPI=5
 
-KMNAME=kxmlgui
 VIRTUALX_REQUIRED="test"
 inherit kde-frameworks
 
-DESCRIPTION="Framework for managing menu and toolbar actions"
+DESCRIPTION="Bookmark management"
 LICENSE="LGPL-2+"
 KEYWORDS=""
 IUSE=""
 
 RDEPEND="
 	dev-qt/qtdbus:5
-	dev-qt/qtnetworks:5
-	dev-qt/qtprintsupport:5
 	dev-qt/qtwidgets:5
 	dev-qt/qtxml:5
-	kde-frameworks/kitemviews
-	kde-frameworks/kconfig
-	kde-frameworks/kglobalaccel
 	kde-frameworks/kconfigwidgets
-	kde-frameworks/ki18n
+	kde-frameworks/kcoreaddons
 	kde-frameworks/kiconthemes
-	kde-frameworks/ktextwidgets
 	kde-frameworks/kwidgetsaddons
-	kde-frameworks/kwindowsystem
+	kde-frameworks/kxmlgui
 "
 DEPEND="${RDEPEND}"
 
