@@ -34,7 +34,7 @@ RDEPEND="
 	kde-frameworks/knotifications
 	kde-frameworks/kservice
 	kde-frameworks/ktextwidgets
-	kde-frameworks/kwindetsaddons
+	kde-frameworks/kwidgetsaddons
 	kde-frameworks/kwindowsystem
 	kde-frameworks/kxmlgui
 	kde-frameworks/solid
