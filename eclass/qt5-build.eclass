@@ -608,7 +608,7 @@ qt5_regenerate_cmake_extras() {
 			module=$(basename "${h}")
 			extras="${D}${QT5_LIBDIR}/cmake/${module/Qt/Qt5}/ExtraSourceIncludes.cmake"
 			if [ ! -f "${extras}" ]; then
-				echo 'set(${module/Qt/Qt5}_PRIVATE_INCLUDE_DIRS' > "${extras}"
+				echo "set(${module/Qt/Qt5}_PRIVATE_INCLUDE_DIRS" > "${extras}"
 				echo "  \"${QT5_HEADERDIR}/${module}/${PV}\"" >> "${extras}"
 				echo "  \"${QT5_HEADERDIR}/${module}/${PV}/${module}\"" >> "${extras}"
 				echo ")" >> "${extras}"
