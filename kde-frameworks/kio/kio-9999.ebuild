@@ -28,7 +28,7 @@ RDEPEND="
 	kde-frameworks/kdbusaddons
 	kde-frameworks/kguiaddons
 	kde-frameworks/ki18n
-	kde-frameworks/kicontthemes
+	kde-frameworks/kiconthemes
 	kde-frameworks/kitemviews
 	kde-frameworks/kjobwidgets
 	kde-frameworks/knotifications
