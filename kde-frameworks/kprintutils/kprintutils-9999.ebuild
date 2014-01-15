@@ -13,11 +13,11 @@ KEYWORDS=""
 IUSE=""
 
 RDEPEND="
+	$(add_frameworks_dep kparts)
+	$(add_frameworks_dep kxmlgui)
+	$(add_frameworks_dep ktextwidgets)
 	dev-qt/qtprintsupport:5
 	dev-qt/qtwidgets:5
-	kde-frameworks/kparts
-	kde-frameworks/kxmlgui
-	kde-frameworks/ktextwidgets
 "
 DEPEND="${RDEPEND}"
 

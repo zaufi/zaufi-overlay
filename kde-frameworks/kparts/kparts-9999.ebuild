@@ -13,14 +13,14 @@ KEYWORDS=""
 IUSE=""
 
 RDEPEND="
+	$(add_frameworks_dep kio)
+	$(add_frameworks_dep kxmlgui)
+	$(add_frameworks_dep ktextwidgets)
+	$(add_frameworks_dep knotifications)
 	dev-qt/qtcore:5
 	dev-qt/qtnetwork:5
 	dev-qt/qtxml:5
 	dev-qt/qtwidgets:5
-	kde-frameworks/kio
-	kde-frameworks/kxmlgui
-	kde-frameworks/ktextwidgets
-	kde-frameworks/knotifications
 "
 DEPEND="${RDEPEND}"
 

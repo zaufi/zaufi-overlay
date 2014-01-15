@@ -14,20 +14,20 @@ KEYWORDS=""
 IUSE=""
 
 RDEPEND="
+	$(add_frameworks_dep kitemviews)
+	$(add_frameworks_dep kconfig)
+	$(add_frameworks_dep kglobalaccel)
+	$(add_frameworks_dep kconfigwidgets)
+	$(add_frameworks_dep ki18n)
+	$(add_frameworks_dep kiconthemes)
+	$(add_frameworks_dep ktextwidgets)
+	$(add_frameworks_dep kwidgetsaddons)
+	$(add_frameworks_dep kwindowsystem)
 	dev-qt/qtdbus:5
 	dev-qt/qtnetwork:5
 	dev-qt/qtprintsupport:5
 	dev-qt/qtwidgets:5
 	dev-qt/qtxml:5
-	kde-frameworks/kitemviews
-	kde-frameworks/kconfig
-	kde-frameworks/kglobalaccel
-	kde-frameworks/kconfigwidgets
-	kde-frameworks/ki18n
-	kde-frameworks/kiconthemes
-	kde-frameworks/ktextwidgets
-	kde-frameworks/kwidgetsaddons
-	kde-frameworks/kwindowsystem
 "
 DEPEND="${RDEPEND}"
 

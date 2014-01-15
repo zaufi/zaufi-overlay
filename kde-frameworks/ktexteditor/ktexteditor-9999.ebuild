@@ -13,19 +13,19 @@ KEYWORDS=""
 IUSE=""
 
 RDEPEND="
+	$(add_frameworks_dep karchive)
+	$(add_frameworks_dep kconfig)
+	$(add_frameworks_dep kguiaddons)
+	$(add_frameworks_dep ki18n)
+	$(add_frameworks_dep kjobwidgets)
+	$(add_frameworks_dep kio)
+	$(add_frameworks_dep kparts)
+	$(add_frameworks_dep kprintutils)
+	$(add_frameworks_dep sonnet)
+	$(add_frameworks_dep kxmlgui)
+	$(add_frameworks_dep knotifications)
 	dev-qt/qtwidgets:5
 	dev-qt/qtscript:5
-	kde-frameworks/karchive
-	kde-frameworks/kconfig
-	kde-frameworks/kguiaddons
-	kde-frameworks/ki18n
-	kde-frameworks/kjobwidgets
-	kde-frameworks/kio
-	kde-frameworks/kparts
-	kde-frameworks/kprintutils
-	kde-frameworks/sonnet
-	kde-frameworks/kxmlgui
-	kde-frameworks/knotifications
 "
 DEPEND="${RDEPEND}"
 

@@ -16,11 +16,11 @@ RDEPEND="
 	dev-qt/qtdbus:5
 	dev-qt/qtwidgets:5
 	dev-qt/qtxml:5
-	kde-frameworks/kconfigwidgets
-	kde-frameworks/kcoreaddons
-	kde-frameworks/kiconthemes
-	kde-frameworks/kwidgetsaddons
-	kde-frameworks/kxmlgui
+	$(add_frameworks_dep kconfigwidgets)
+	$(add_frameworks_dep kcoreaddons)
+	$(add_frameworks_dep kiconthemes)
+	$(add_frameworks_dep kwidgetsaddons)
+	$(add_frameworks_dep kxmlgui)
 "
 DEPEND="${RDEPEND}"
 
