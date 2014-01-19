@@ -17,7 +17,7 @@ inherit kde4-meta
 
 DESCRIPTION="KDE Editor KPart"
 HOMEPAGE+=" http://kate-editor.org/about-katepart/"
-KEYWORDS=""
+KEYWORDS="~amd64"
 IUSE="debug"
 
 RESTRICT="test"

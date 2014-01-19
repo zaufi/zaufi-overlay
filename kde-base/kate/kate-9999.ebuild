@@ -12,7 +12,7 @@ inherit python-single-r1 kde4-meta
 
 DESCRIPTION="Kate is an MDI texteditor."
 HOMEPAGE="http://www.kde.org/applications/utilities/kate http://kate-editor.org"
-KEYWORDS=""
+KEYWORDS="~amd64"
 IUSE="debug python"
 
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"

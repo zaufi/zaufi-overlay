@@ -11,7 +11,7 @@ KDE_OVERRIDE_MINIMAL="4.11.0"
 inherit python-r1 portability kde4-base multilib
 
 DESCRIPTION="Python bindings for KDE4"
-KEYWORDS=""
+KEYWORDS="~amd64"
 IUSE="debug doc examples semantic-desktop test"
 HOMEPAGE="http://techbase.kde.org/Development/Languages/Python"
 
