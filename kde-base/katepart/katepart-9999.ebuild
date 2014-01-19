@@ -7,6 +7,7 @@ EAPI=5
 KDE_HANDBOOK="optional"
 KMNAME="kate"
 KMMODULE="part"
+KDE_OVERRIDE_MINIMAL="4.11.0"
 inherit kde4-meta
 
 DESCRIPTION="KDE Editor KPart"

@@ -1,33 +1,34 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
-PYTHON_COMPAT=( python{2_5,2_6,2_7,3_1,3_2,3_3} )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
 PYTHON_REQ_USE="threads"
 OPENGL_REQUIRED="always"
-KDE_OVERRIDE_MINIMAL="4.10.4"
+KDE_OVERRIDE_MINIMAL="4.11.0"
 
 inherit python-r1 portability kde4-base multilib
 
 DESCRIPTION="Python bindings for KDE4"
-KEYWORDS="~amd64"
-IUSE="debug doc examples test"
+KEYWORDS=""
+IUSE="debug doc examples semantic-desktop test"
+HOMEPAGE="http://techbase.kde.org/Development/Languages/Python"
 
-REQUIRED_USE="${PYTHON_REQUIRED_USE}"
+REQUIRED_USE="${PYTHON_REQUIRED_USE} test? ( semantic-desktop )"
 
-# blocker added due to compatibility issues and error during compile time
 RDEPEND="
 	${PYTHON_DEPS}
+	>=dev-python/PyQt4-4.9.5[${PYTHON_USEDEP},dbus,declarative,script(+),sql,svg,webkit,X]
 	>=dev-python/sip-4.14:=[${PYTHON_USEDEP}]
-	>=dev-libs/soprano-2.9.0
-	$(add_kdebase_dep kdelibs 'opengl')
-	$(add_kdebase_dep kdepimlibs)
-	$(add_kdebase_dep katepart '' 9999)
-	aqua? ( >=dev-python/PyQt4-4.9.5[${PYTHON_USEDEP},dbus,declarative,script(+),sql,svg,webkit,aqua] )
-	!aqua? ( >=dev-python/PyQt4-4.9.5[${PYTHON_USEDEP},dbus,declarative,script(+),sql,svg,webkit,X] )
+	$(add_kdebase_dep kdelibs 'opengl,semantic-desktop?')
+	semantic-desktop? (
+		$(add_kdebase_dep kdepimlibs)
+		>=dev-libs/soprano-2.9.0
+	)
 "
 DEPEND="${RDEPEND}
+	dev-lang/python-exec:0[${PYTHON_USEDEP}]
 	sys-devel/libtool
 "
 
@@ -76,6 +77,9 @@ src_configure() {
 		local mycmakeargs=(
 			-DWITH_PolkitQt=OFF
 			-DWITH_QScintilla=OFF
+			$(cmake-utils_use_with semantic-desktop Soprano)
+			$(cmake-utils_use_with semantic-desktop Nepomuk)
+			$(cmake-utils_use_with semantic-desktop KdepimLibs)
 			-DPYTHON_EXECUTABLE=${PYTHON}
 			-DPYKDEUIC4_ALTINSTALL=TRUE
 		)
