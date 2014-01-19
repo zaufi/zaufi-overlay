@@ -9,7 +9,7 @@ EGIT_REPO_URI="https://github.com/zaufi/devassistant.git"
 # TODO Check for other Python versions
 PYTHON_COMPAT=( python2_6 python2_7 python3_3 )
 
-inherit bash-completion-r1 distutils-r1 git-2
+inherit bash-completion-r1 distutils-r1 git-r3
 
 DESCRIPTION="DevAssistant: Making life easier for developers"
 HOMEPAGE="http://devassistant.org"

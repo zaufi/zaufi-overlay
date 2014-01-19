@@ -8,7 +8,7 @@ PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
 EGIT_REPO_URI="https://github.com/zaufi/paludis-hooks.git"
 # TODO It must be python-single-r1 because of paludis dependency which
 # is a single nowadays...
-inherit git-2 cmake-utils python-single-r1
+inherit git-r3 cmake-utils python-single-r1
 
 DESCRIPTION="My hooks for paludis"
 HOMEPAGE="https://github.com/zaufi/paludis-hooks"
@@ -23,10 +23,6 @@ COMMON_DEPEND="sys-apps/paludis[python,${PYTHON_USEDEP}]"
 
 DEPEND="${COMMON_DEPEND} dev-util/cmake"
 RDEPEND="${PYTHON_DEPS} ${COMMON_DEPEND} dev-libs/libxslt dev-libs/libxml2"
-
-src_unpack() {
-    git-2_src_unpack
-}
 
 src_install() {
     cmake-utils_src_install

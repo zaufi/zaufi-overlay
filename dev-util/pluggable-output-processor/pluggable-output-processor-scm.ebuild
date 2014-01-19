@@ -12,7 +12,7 @@ EGIT_REPO_URI="https://github.com/zaufi/pluggable-output-processor.git"
 PYTHON_COMPAT=( python3_{2,3} )
 DISTUTILS_SINGLE_IMPL="yes"
 
-inherit distutils-r1 git-2
+inherit distutils-r1 git-r3
 
 DESCRIPTION="Pluggable Output Processor"
 HOMEPAGE="https://github.com/zaufi/pluggable-output-processor"

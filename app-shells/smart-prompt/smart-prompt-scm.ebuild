@@ -4,7 +4,7 @@
 EAPI="5"
 
 EGIT_REPO_URI="https://github.com/zaufi/smart-prompt.git"
-inherit git-2 cmake-utils
+inherit git-r3 cmake-utils
 
 DESCRIPTION="Smart bash prompt: show various context info in a command prompt"
 HOMEPAGE="https://github.com/zaufi/smart-prompt"
@@ -21,10 +21,6 @@ RDEPEND="${COMMON_DEPEND}
     git? ( dev-vcs/git )
     subversion? ( dev-vcs/subversion )
     "
-
-src_unpack() {
-    git-2_src_unpack
-}
 
 src_configure() {
     local mycmakeargs=(

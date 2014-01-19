@@ -10,7 +10,7 @@ EGIT_REPO_URI="https://github.com/mutanabbi/chewy.git"
 # TODO Check for other Python versions
 PYTHON_COMPAT=( python3_{2,3} )
 
-inherit bash-completion-r1 distutils-r1 git-2
+inherit bash-completion-r1 distutils-r1 git-r3
 
 DESCRIPTION="CMake Helpers Easy Way sYnchronizer"
 HOMEPAGE="https://github.com/mutanabbi/chewy"
