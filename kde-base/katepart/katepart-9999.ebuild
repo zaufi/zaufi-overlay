@@ -2,6 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+# ATTENTION This ebuild will not install any header files
+# they are part of kdelibs nowadays, so if (unlikely) kate
+# will get some new KTE class/interface this ebuild must be hacked!
+# (Check history for prevous encarnations of katepart and kate ebuilds)
+
 EAPI=5
 
 KDE_HANDBOOK="optional"
