@@ -109,8 +109,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.8.3.1-empty-line-sigsegv.patch #454348
 
 	# Make it Python3 compatible
-	epatch "${FILESDIR}"/${P}-Python3-part1.patch
-	epatch "${FILESDIR}"/${P}-Python3-part2.patch
+	epatch "${FILESDIR}"/${P}-Python3-support.patch
 
 	# fix pdf doc
 	sed -i.orig -e "s:g_kowal:g kowal:" \
