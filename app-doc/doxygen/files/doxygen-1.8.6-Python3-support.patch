@@ -47,7 +47,7 @@ diff -ru doxygen-1.8.6.org/doc/language.doc doxygen-1.8.6/doc/language.doc
  Chinese Traditional, Croatian, Czech, Danish, Dutch, English,
 diff -ru doxygen-1.8.6.org/doc/translator.py doxygen-1.8.6/doc/translator.py
 --- doxygen-1.8.6.org/doc/translator.py	2013-09-18 23:57:34.000000000 +0400
-+++ doxygen-1.8.6/doc/translator.py	2014-01-28 06:22:59.000000000 +0400
++++ doxygen-1.8.6/doc/translator.py	2014-01-28 06:33:20.000000000 +0400
 @@ -68,6 +68,8 @@
  
  from __future__ import generators
@@ -264,7 +264,7 @@ diff -ru doxygen-1.8.6.org/doc/translator.py doxygen-1.8.6/doc/translator.py
          # the auxiliary file in the order of translator classes listed
          # in the translator report.
 -        fmail = open('mailto.txt', 'w')
-+        fmail = open('mailto.txt', 'w', 'utf-8')
++        fmail = codecs.open('mailto.txt', 'w', 'utf-8')
  
          # Write the list of "up-to-date" translator classes.
          if self.upToDateIdLst:
