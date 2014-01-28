@@ -1,39 +1,18 @@
-diff -ub -rub doxygen-1.8.6.org/configure doxygen-1.8.6/configure
---- doxygen-1.8.6.org/configure	2013-12-24 20:14:46.000000000 +0400
+diff -ru doxygen-1.8.6.org/configure doxygen-1.8.6/configure
+--- doxygen-1.8.6.org/configure	2014-01-28 06:21:05.000000000 +0400
 +++ doxygen-1.8.6/configure	2014-01-28 06:04:21.000000000 +0400
-@@ -564,12 +564,13 @@
-   python_dirs="$bin_dirs /usr/bin /usr/local/bin /bin /sbin"
-   python_prog=NO
-   python_found=NO
--  for i in $python_names; do
--    for j in $python_dirs; do
--      if test -x "$j/$i"; then
-+  for binary in $python_names; do
-+    for path in $python_dirs; do
-+      if test -x "$path/$binary"; then
-         python_found=YES
--        if test `$j/$i -c "import sys; print sys.version_info[0]"` = 2; then
--          python_prog="$j/$i"
-+        python_version_major=`$path/$binary -c "import sys; print(sys.version_info[0])"`
-+        if test -n "$python_version_major"; then
-+          python_prog="$path/$binary"
-           break 2
-         fi
-       fi
-@@ -579,11 +580,7 @@
+@@ -580,7 +580,7 @@
  fi
  
  if test "$f_python" = NO; then
--  if test "$python_found" = YES; then
--    echo "version should be python 2."
--  else
-     echo "not found!";
--  fi
+-    echo "not found!";
++  echo "not found!";
    echo
    exit 2
  fi
-diff -ub -rub doxygen-1.8.6.org/doc/language.doc doxygen-1.8.6/doc/language.doc
---- doxygen-1.8.6.org/doc/language.doc	2013-11-18 00:07:17.000000000 +0400
+Only in doxygen-1.8.6.org: configure.orig
+diff -ru doxygen-1.8.6.org/doc/language.doc doxygen-1.8.6/doc/language.doc
+--- doxygen-1.8.6.org/doc/language.doc	2014-01-28 06:21:05.000000000 +0400
 +++ doxygen-1.8.6/doc/language.doc	2014-01-28 06:04:04.000000000 +0400
 @@ -24,7 +24,7 @@
  configuration option \ref cfg_output_language "OUTPUT_LANGUAGE" in the 
@@ -44,9 +23,9 @@ diff -ub -rub doxygen-1.8.6.org/doc/language.doc doxygen-1.8.6/doc/language.doc
  are supported (sorted alphabetically):
  Afrikaans, Arabic, Armenian, Brazilian Portuguese, Catalan, Chinese,
  Chinese Traditional, Croatian, Czech, Danish, Dutch, English,
-diff -ub -rub doxygen-1.8.6.org/doc/translator.py doxygen-1.8.6/doc/translator.py
---- doxygen-1.8.6.org/doc/translator.py	2013-09-18 23:57:34.000000000 +0400
-+++ doxygen-1.8.6/doc/translator.py	2014-01-28 06:06:32.000000000 +0400
+diff -ru doxygen-1.8.6.org/doc/translator.py doxygen-1.8.6/doc/translator.py
+--- doxygen-1.8.6.org/doc/translator.py	2014-01-28 06:21:05.000000000 +0400
++++ doxygen-1.8.6/doc/translator.py	2014-01-28 06:22:59.000000000 +0400
 @@ -68,6 +68,8 @@
  
  from __future__ import generators
@@ -110,6 +89,15 @@ diff -ub -rub doxygen-1.8.6.org/doc/translator.py doxygen-1.8.6/doc/translator.p
  
              if status == 0:      # waiting for 'public:'
                  if tokenId == 'public':
+@@ -616,7 +618,7 @@
+                     prototype += ' ' + tokenStr
+                     uniPrototype = tokenStr  # start collecting the unified prototype
+                     status = 4
+-		elif tokenId == 'tilde':
++                elif tokenId == 'tilde':
+                     status = 4
+                 else:
+                     self.__unexpectedToken(status, tokenId, tokenLineNo)
 @@ -670,7 +672,7 @@
  
              elif status == 9:    # after semicolon, produce the dic item
@@ -346,8 +334,8 @@ diff -ub -rub doxygen-1.8.6.org/doc/translator.py doxygen-1.8.6/doc/translator.p
                  maintainers = self.__maintainersDic[obj.classId]
  
              lang = obj.langReadable
-diff -ub -rub doxygen-1.8.6.org/src/configgen.py doxygen-1.8.6/src/configgen.py
---- doxygen-1.8.6.org/src/configgen.py	2013-08-08 21:22:45.000000000 +0400
+diff -ru doxygen-1.8.6.org/src/configgen.py doxygen-1.8.6/src/configgen.py
+--- doxygen-1.8.6.org/src/configgen.py	2014-01-28 06:21:05.000000000 +0400
 +++ doxygen-1.8.6/src/configgen.py	2014-01-28 06:04:21.000000000 +0400
 @@ -12,6 +12,9 @@
  # Documents produced by Doxygen are derivative works derived from the
@@ -585,16 +573,15 @@ diff -ub -rub doxygen-1.8.6.org/src/configgen.py doxygen-1.8.6/src/configgen.py
 -			print "<dl>"
 -			print ""
 -			print "<dt>\\c %s <dd>" % (name)
--		else:
--			print " \\anchor cfg_%s" % (name.lower())
--			print "<dt>\\c %s <dd>" % (name)
--		print " \\addindex %s" % (name)
--		print doc
 +			print(" \\anchor cfg_%s" % (name.lower()))
 +			print("<dl>")
 +			print("")
 +			print("<dt>\\c %s <dd>" % (name))
-+		else:
+ 		else:
+-			print " \\anchor cfg_%s" % (name.lower())
+-			print "<dt>\\c %s <dd>" % (name)
+-		print " \\addindex %s" % (name)
+-		print doc
 +			print(" \\anchor cfg_%s" % (name.lower()))
 +			print("<dt>\\c %s <dd>" % (name))
 +		print(" \\addindex %s" % (name))
@@ -881,8 +868,8 @@ diff -ub -rub doxygen-1.8.6.org/src/configgen.py doxygen-1.8.6/src/configgen.py
  
  if __name__ == '__main__':
  	main()
-diff -ub -rub doxygen-1.8.6.org/src/lang_cfg.py doxygen-1.8.6/src/lang_cfg.py
---- doxygen-1.8.6.org/src/lang_cfg.py	2013-10-21 22:09:13.000000000 +0400
+diff -ru doxygen-1.8.6.org/src/lang_cfg.py doxygen-1.8.6/src/lang_cfg.py
+--- doxygen-1.8.6.org/src/lang_cfg.py	2014-01-28 06:21:05.000000000 +0400
 +++ doxygen-1.8.6/src/lang_cfg.py	2014-01-28 06:04:21.000000000 +0400
 @@ -2,7 +2,7 @@
  
@@ -895,8 +882,8 @@ diff -ub -rub doxygen-1.8.6.org/src/lang_cfg.py doxygen-1.8.6/src/lang_cfg.py
 -            print "#define LANG_%s"%(sys.argv[x])
 +        for x in range(1, len(sys.argv)):
 +            print("#define LANG_%s"%(sys.argv[x]))
-diff -ub -rub doxygen-1.8.6.org/src/languages.py doxygen-1.8.6/src/languages.py
---- doxygen-1.8.6.org/src/languages.py	2013-10-21 22:09:13.000000000 +0400
+diff -ru doxygen-1.8.6.org/src/languages.py doxygen-1.8.6/src/languages.py
+--- doxygen-1.8.6.org/src/languages.py	2014-01-28 06:21:05.000000000 +0400
 +++ doxygen-1.8.6/src/languages.py	2014-01-28 06:04:04.000000000 +0400
 @@ -15,7 +15,7 @@
  # generating file is lang_cfg.py
