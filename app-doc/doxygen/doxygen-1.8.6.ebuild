@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/app-doc/doxygen/doxygen-1.8.5.ebuild,v 1.2 2013/11/06 07:50:09 xarthisius Exp $
 
 EAPI=4
-PYTHON_COMPAT=( python{2_6,2_7} )
+PYTHON_COMPAT=( python{2_6,2_7,3_3} )
 
 inherit eutils fdo-mime flag-o-matic python-any-r1 qt4-r2 toolchain-funcs
 
@@ -108,6 +108,10 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.8.1-prefix-misc-alt.patch
 	epatch "${FILESDIR}"/${PN}-1.8.3.1-empty-line-sigsegv.patch #454348
 
+	# Make it Python3 compatible
+	epatch "${FILESDIR}"/${P}-Python3-part1.patch
+	epatch "${FILESDIR}"/${P}-Python3-part2.patch
+
 	# fix pdf doc
 	sed -i.orig -e "s:g_kowal:g kowal:" \
 		doc/maintainers.txt || die
@@ -149,6 +153,7 @@ src_configure() {
 	export LINK_SHLIB="${QMAKE_CXX}"
 
 	if use qt4 ; then
+		export QTDIR=/usr
 		pushd addon/doxywizard &> /dev/null
 		eqmake4 doxywizard.pro -o Makefile.doxywizard
 		popd &> /dev/null
