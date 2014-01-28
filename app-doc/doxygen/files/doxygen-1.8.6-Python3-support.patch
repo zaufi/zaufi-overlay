@@ -1,0 +1,942 @@
+diff -ub -rub doxygen-1.8.6.org/configure doxygen-1.8.6/configure
+--- doxygen-1.8.6.org/configure	2013-12-24 20:14:46.000000000 +0400
++++ doxygen-1.8.6/configure	2014-01-28 06:04:21.000000000 +0400
+@@ -564,12 +564,13 @@
+   python_dirs="$bin_dirs /usr/bin /usr/local/bin /bin /sbin"
+   python_prog=NO
+   python_found=NO
+-  for i in $python_names; do
+-    for j in $python_dirs; do
+-      if test -x "$j/$i"; then
++  for binary in $python_names; do
++    for path in $python_dirs; do
++      if test -x "$path/$binary"; then
+         python_found=YES
+-        if test `$j/$i -c "import sys; print sys.version_info[0]"` = 2; then
+-          python_prog="$j/$i"
++        python_version_major=`$path/$binary -c "import sys; print(sys.version_info[0])"`
++        if test -n "$python_version_major"; then
++          python_prog="$path/$binary"
+           break 2
+         fi
+       fi
+@@ -579,11 +580,7 @@
+ fi
+ 
+ if test "$f_python" = NO; then
+-  if test "$python_found" = YES; then
+-    echo "version should be python 2."
+-  else
+     echo "not found!";
+-  fi
+   echo
+   exit 2
+ fi
+diff -ub -rub doxygen-1.8.6.org/doc/language.doc doxygen-1.8.6/doc/language.doc
+--- doxygen-1.8.6.org/doc/language.doc	2013-11-18 00:07:17.000000000 +0400
++++ doxygen-1.8.6/doc/language.doc	2014-01-28 06:04:04.000000000 +0400
+@@ -24,7 +24,7 @@
+ configuration option \ref cfg_output_language "OUTPUT_LANGUAGE" in the 
+ configuration file (with default name and known as Doxyfile).
+ 
+-Currently (version 1.8.5), 40 languages
++Currently (version 1.8.6), 40 languages
+ are supported (sorted alphabetically):
+ Afrikaans, Arabic, Armenian, Brazilian Portuguese, Catalan, Chinese,
+ Chinese Traditional, Croatian, Czech, Danish, Dutch, English,
+diff -ub -rub doxygen-1.8.6.org/doc/translator.py doxygen-1.8.6/doc/translator.py
+--- doxygen-1.8.6.org/doc/translator.py	2013-09-18 23:57:34.000000000 +0400
++++ doxygen-1.8.6/doc/translator.py	2014-01-28 06:06:32.000000000 +0400
+@@ -68,6 +68,8 @@
+ 
+ from __future__ import generators
+ import codecs
++import functools
++import locale
+ import os
+ import re
+ import sys
+@@ -237,7 +239,7 @@
+ 
+         # Open the file for reading and extracting tokens until the eof.
+         # Initialize the finite automaton.
+-        f = open(self.fname)
++        f = codecs.open(self.fname, 'r', 'utf-8')
+         lineNo = 0
+         line = ''         # init -- see the pos initialization below
+         linelen = 0       # init
+@@ -276,7 +278,7 @@
+                     # If it is an unknown item, it can still be recognized
+                     # here. Keywords and separators are the example.
+                     if tokenId == 'unknown':
+-                        if tokenDic.has_key(tokenStr):
++                        if tokenStr in tokenDic:
+                             tokenId = tokenDic[tokenStr]
+                         elif tokenStr.isdigit():
+                             tokenId = 'num'
+@@ -329,7 +331,7 @@
+                     tokenStr = c
+                     tokenLineNo = lineNo
+                     status = 8
+-                elif tokenDic.has_key(c):  # known one-char token
++                elif c in tokenDic:      # known one-char token
+                     tokenId = tokenDic[c]
+                     tokenStr = c
+                     tokenLineNo = lineNo
+@@ -424,7 +426,7 @@
+                 if c.isspace():
+                     pos += 1
+                     status = 0           # tokenId may be determined later
+-                elif tokenDic.has_key(c):  # separator, don't move pos
++                elif c in tokenDic:      # separator, don't move pos
+                     status = 0
+                 else:
+                     tokenStr += c        # collect
+@@ -457,7 +459,7 @@
+ 
+             # Always assume that the previous tokens were processed. Get
+             # the next one.
+-            tokenId, tokenStr, tokenLineNo = tokenIterator.next()
++            tokenId, tokenStr, tokenLineNo = next(tokenIterator)
+ 
+             # Process the token and never return back.
+             if status == 0:    # waiting for the 'class' keyword.
+@@ -588,7 +590,7 @@
+         while status != 777:
+ 
+             # Get the next token.
+-            tokenId, tokenStr, tokenLineNo = tokenIterator.next()
++            tokenId, tokenStr, tokenLineNo = next(tokenIterator)
+ 
+             if status == 0:      # waiting for 'public:'
+                 if tokenId == 'public':
+@@ -670,7 +672,7 @@
+ 
+             elif status == 9:    # after semicolon, produce the dic item
+                 if tokenId == 'semic':
+-                    assert(not resultDic.has_key(uniPrototype))
++                    assert(uniPrototype not in resultDic)
+                     resultDic[uniPrototype] = prototype
+                     status = 2
+                 else:
+@@ -752,7 +754,7 @@
+ 
+         # Eat the rest of the source to cause closing the file.
+         while tokenId != 'eof':
+-            tokenId, tokenStr, tokenLineNo = tokenIterator.next()
++            tokenId, tokenStr, tokenLineNo = next(tokenIterator)
+ 
+         # Return the resulting dictionary with 'uniPrototype -> prototype'.
+         return resultDic
+@@ -800,7 +802,7 @@
+         while status != 777:
+ 
+             # Get the next token.
+-            tokenId, tokenStr, tokenLineNo = tokenIterator.next()
++            tokenId, tokenStr, tokenLineNo = next(tokenIterator)
+ 
+             if status == 0:      # waiting for 'public:'
+                 if tokenId == 'public':
+@@ -912,7 +914,7 @@
+                             sys.stderr.write(msg)
+                             assert False
+ 
+-                        assert(not self.prototypeDic.has_key(uniPrototype))
++                        assert(uniPrototype not in self.prototypeDic)
+                         # Insert new dictionary item.
+                         self.prototypeDic[uniPrototype] = prototype
+                         status = 2      # body consumed
+@@ -1056,12 +1058,12 @@
+                 # For the required methods, update the dictionary of methods
+                 # implemented by the adapter.
+                 for protoUni in self.prototypeDic:
+-                    if reqDic.has_key(protoUni):
++                    if protoUni in reqDic:
+                         # This required method will be marked as implemented
+                         # by this adapter class. This implementation assumes
+                         # that newer adapters do not reimplement any required
+                         # methods already implemented by older adapters.
+-                        assert(not adaptDic.has_key(protoUni))
++                        assert(protoUni not in adaptDic)
+                         adaptDic[protoUni] = (version, self.classId)
+ 
+                 # Clear the dictionary object and the information related
+@@ -1094,7 +1096,7 @@
+         # Eat the rest of the source to cause closing the file.
+         while True:
+             try:
+-                t = tokenIterator.next()
++                t = next(tokenIterator)
+             except StopIteration:
+                 break
+ 
+@@ -1106,7 +1108,7 @@
+         # Build the list of obsolete methods.
+         self.obsoleteMethods = []
+         for p in myDic:
+-            if not reqDic.has_key(p):
++            if p not in reqDic:
+                 self.obsoleteMethods.append(p)
+ 
+         # Build the list of missing methods and the list of implemented
+@@ -1114,7 +1116,7 @@
+         self.missingMethods = []
+         self.implementedMethods = []
+         for p in reqDic:
+-            if myDic.has_key(p):
++            if p in myDic:
+                 self.implementedMethods.append(p)
+             else:
+                 self.missingMethods.append(p)
+@@ -1133,7 +1135,7 @@
+                 adaptMinVersion = '9.9.99'
+                 adaptMinClass = 'TranslatorAdapter_9_9_99'
+                 for uniProto in self.missingMethods:
+-                    if adaptDic.has_key(uniProto):
++                    if uniProto in adaptDic:
+                         version, cls = adaptDic[uniProto]
+                         if version < adaptMinVersion:
+                             adaptMinVersion = version
+@@ -1386,7 +1388,9 @@
+         self.langLst = []
+         for obj in self.__translDic.values():
+             self.langLst.append((obj.langReadable, obj))
+-        self.langLst.sort(lambda a, b: cmp(a[0], b[0]))
++        def _sort_by_first_item_in_tuple(t1, t2):
++            return locale.strcoll(t1[0], t2[0])
++        self.langLst.sort(key=functools.cmp_to_key(_sort_by_first_item_in_tuple))
+ 
+         # Create the list with readable language names. If the language has
+         # also the English-based version, modify the item by appending
+@@ -1400,7 +1404,7 @@
+             # of the English-based object. If the object exists, modify the
+             # name for the readable list of supported languages.
+             classIdEn = obj.classId + 'En'
+-            if self.__translDic.has_key(classIdEn):
++            if classIdEn in self.__translDic:
+                 name += ' (+En)'
+ 
+             # Append the result name of the language, possibly with note.
+@@ -1424,7 +1428,7 @@
+         for name, obj in self.langLst:
+             if obj.status == 'En':
+                 classId = obj.classId[:-2]
+-                if self.__translDic.has_key(classId):
++                if classId in self.__translDic:
+                     self.numLang -= 1    # the couple will be counted as one
+ 
+         # Extract the version of Doxygen.
+@@ -1472,11 +1476,11 @@
+         probably used should be checked first and the resulting reduced
+         dictionary should be used for checking the next files (speed up).
+         """
+-        lst_in = dic.keys()   # identifiers to be searched for
++        lst_in = list(dic.keys())   # identifiers to be searched for
+ 
+         # Read content of the file as one string.
+         assert os.path.isfile(fname)
+-        f = open(fname)
++        f = codecs.open(fname, 'r', 'utf-8')
+         cont = f.read()
+         f.close()
+ 
+@@ -1553,7 +1557,7 @@
+         output = os.path.join(self.doc_path, self.translatorReportFileName)
+ 
+         # Open the textual report file for the output.
+-        f = open(output, 'w')
++        f = codecs.open(output, 'w', 'utf-8')
+ 
+         # Output the information about the version.
+         f.write('(' + self.doxVersion + ')\n\n')
+@@ -1581,7 +1585,7 @@
+         # The e-mail addresses of the maintainers will be collected to
+         # the auxiliary file in the order of translator classes listed
+         # in the translator report.
+-        fmail = open('mailto.txt', 'w')
++        fmail = open('mailto.txt', 'w', 'utf-8')
+ 
+         # Write the list of "up-to-date" translator classes.
+         if self.upToDateIdLst:
+@@ -1670,7 +1674,7 @@
+                         to_remove[adaptClassId] = True
+ 
+                 if to_remove:
+-                    lst = to_remove.keys()
++                    lst = list(to_remove.keys())
+                     lst.sort()
+                     plural = len(lst) > 1
+                     note = 'Note: The adapter class'
+@@ -1716,7 +1720,7 @@
+                 f.write('\n' + '=' * 70 + '\n')
+                 f.write(fill(s) + '\n\n')
+ 
+-                keys = dic.keys()
++                keys = list(dic.keys())
+                 keys.sort()
+                 for key in keys:
+                     f.write('  ' + dic[key] + '\n')
+@@ -1726,7 +1730,7 @@
+         f.write('\n' + '=' * 70)
+         f.write('\nDetails for translators (classes sorted alphabetically):\n')
+ 
+-        cls = self.__translDic.keys()
++        cls = list(self.__translDic.keys())
+         cls.sort()
+ 
+         for c in cls:
+@@ -1779,7 +1783,7 @@
+                     inside = False
+                 else:
+                     # If it is the first maintainer, create the empty list.
+-                    if not self.__maintainersDic.has_key(classId):
++                    if classId not in self.__maintainersDic:
+                         self.__maintainersDic[classId] = []
+ 
+                     # Split the information about the maintainer and append
+@@ -1914,7 +1918,7 @@
+                 # The marked adresses (they start with the mark '[unreachable]',
+                 # '[resigned]', whatever '[xxx]') will not be displayed at all.
+                 # Only the mark will be used instead.
+-                rexMark = re.compile(ur'(?P<mark>\[.*?\])')
++                rexMark = re.compile(u'(?P<mark>\\[.*?\])')
+                 le = []
+                 for maintainer in self.__maintainersDic[obj.classId]:
+                     address = maintainer[1]
+@@ -1940,21 +1944,21 @@
+         htmlTable = htmlTableTpl % (''.join(trlst))
+ 
+         # Define templates for LaTeX table parts of the documentation.
+-        latexTableTpl = ur'''
+-            \latexonly
+-            \footnotesize
+-            \begin{longtable}{|l|l|l|l|}
+-              \hline
+-              {\bf Language} & {\bf Maintainer} & {\bf Contact address} & {\bf Status} \\
+-              \hline
++        latexTableTpl = u'''
++            \\latexonly
++            \\footnotesize
++            \\begin{longtable}{|l|l|l|l|}
++              \\hline
++              {\\bf Language} & {\\bf Maintainer} & {\\bf Contact address} & {\\bf Status} \\\\
++              \\hline
+             %s
+-              \hline
+-            \end{longtable}
+-            \normalsize
+-            \endlatexonly
++              \\hline
++            \\end{longtable}
++            \\normalsize
++            \\endlatexonly
+             '''
+         latexTableTpl = dedent(latexTableTpl)
+-        latexLineTpl = u'\n' + r'  %s & %s & {\tt\tiny %s} & %s \\'
++        latexLineTpl = u'\n' + '  %s & %s & {\\tt\\tiny %s} & %s \\\\'
+ 
+         # Loop through transl objects in the order of sorted readable names
+         # and add generate the content of the LaTeX table.
+@@ -1965,7 +1969,7 @@
+             # in the table is placed explicitly above the first
+             # maintainer. Prepare the arguments for the LaTeX row template.
+             maintainers = []
+-            if self.__maintainersDic.has_key(obj.classId):
++            if obj.classId in self.__maintainersDic:
+                 maintainers = self.__maintainersDic[obj.classId]
+ 
+             lang = obj.langReadable
+diff -ub -rub doxygen-1.8.6.org/src/configgen.py doxygen-1.8.6/src/configgen.py
+--- doxygen-1.8.6.org/src/configgen.py	2013-08-08 21:22:45.000000000 +0400
++++ doxygen-1.8.6/src/configgen.py	2014-01-28 06:04:21.000000000 +0400
+@@ -12,6 +12,9 @@
+ # Documents produced by Doxygen are derivative works derived from the
+ # input used in their production; they are not affected by this license.
+ #
++
++from __future__ import print_function
++
+ import xml.dom.minidom
+ import sys
+ import re
+@@ -112,7 +115,7 @@
+ 		if (n.nodeName == "value"):
+ 			if n.nodeType == Node.ELEMENT_NODE:
+ 				name = n.getAttribute('name')
+-				print "  %s->addValue(\"%s\");" % (var, name)
++				print("  %s->addValue(\"%s\");" % (var, name))
+ 
+ 
+ def parseHeader(node,objName):
+@@ -123,15 +126,15 @@
+ 				if (n.getAttribute('doxyfile') != "0"):
+ 					doc += parseDocs(n)
+ 	docC = transformDocs(doc)
+-	print "  %s->setHeader(" % (objName)
++	print("  %s->setHeader(" % (objName))
+ 	rng = len(docC)
+ 	for i in range(rng):
+ 		line = docC[i]
+ 		if i != rng - 1:  # since we go from 0 to rng-1
+-			print "              \"%s\\n\"" % (line)
++			print("              \"%s\\n\"" % (line))
+ 		else:
+-			print "              \"%s\"" % (line)
+-	print "             );"
++			print("              \"%s\"" % (line))
++	print("             );")
+ 
+ 
+ def prepCDocs(node):
+@@ -225,8 +228,8 @@
+ 	setting = node.getAttribute('setting')
+ 	docC = prepCDocs(node);
+ 	if len(setting) > 0:
+-		print "#if %s" % (setting)
+-	print "  //----"
++		print("#if %s" % (setting))
++	print("  //----")
+ 	if type == 'bool':
+ 		if len(adefval) > 0:
+ 			enabled = adefval
+@@ -234,106 +237,106 @@
+ 			enabled = "TRUE"
+ 		else:
+ 			enabled = "FALSE"
+-		print "  cb = cfg->addBool("
+-		print "             \"%s\"," % (name)
++		print("  cb = cfg->addBool(")
++		print("             \"%s\"," % (name))
+ 		rng = len(docC)
+ 		for i in range(rng):
+ 			line = docC[i]
+ 			if i != rng - 1:  # since we go from 0 to rng-1
+-				print "              \"%s\\n\"" % (line)
++				print("              \"%s\\n\"" % (line))
+ 			else:
+-				print "              \"%s\"," % (line)
+-		print "              %s" % (enabled)
+-		print "             );"
++				print("              \"%s\"," % (line))
++		print("              %s" % (enabled))
++		print("             );")
+ 		if depends != '':
+-			print "  cb->addDependency(\"%s\");" % (depends)
++			print("  cb->addDependency(\"%s\");" % (depends))
+ 	elif type == 'string':
+-		print "  cs = cfg->addString("
+-		print "              \"%s\"," % (name)
++		print("  cs = cfg->addString(")
++		print("              \"%s\"," % (name))
+ 		rng = len(docC)
+ 		for i in range(rng):
+ 			line = docC[i]
+ 			if i != rng - 1:  # since we go from 0 to rng-1
+-				print "              \"%s\\n\"" % (line)
++				print("              \"%s\\n\"" % (line))
+ 			else:
+-				print "              \"%s\"" % (line)
+-		print "             );"
++				print("              \"%s\"" % (line))
++		print("             );")
+ 		if defval != '':
+-			print "  cs->setDefaultValue(\"%s\");" % (defval)
++			print("  cs->setDefaultValue(\"%s\");" % (defval))
+ 		if format == 'file':
+-			print "  cs->setWidgetType(ConfigString::File);"
++			print("  cs->setWidgetType(ConfigString::File);")
+ 		elif format == 'dir':
+-			print "  cs->setWidgetType(ConfigString::Dir);"
++			print("  cs->setWidgetType(ConfigString::Dir);")
+ 		if depends != '':
+-			print "  cs->addDependency(\"%s\");" % (depends)
++			print("  cs->addDependency(\"%s\");" % (depends))
+ 	elif type == 'enum':
+-		print "  ce = cfg->addEnum("
+-		print "              \"%s\"," % (name)
++		print("  ce = cfg->addEnum(")
++		print("              \"%s\"," % (name))
+ 		rng = len(docC)
+ 		for i in range(rng):
+ 			line = docC[i]
+ 			if i != rng - 1:  # since we go from 0 to rng-1
+-				print "              \"%s\\n\"" % (line)
++				print("              \"%s\\n\"" % (line))
+ 			else:
+-				print "              \"%s\"," % (line)
+-		print "              \"%s\"" % (defval)
+-		print "             );"
++				print("              \"%s\"," % (line))
++		print("              \"%s\"" % (defval))
++		print("             );")
+ 		addValues("ce", node)
+ 		if depends != '':
+-			print "  ce->addDependency(\"%s\");" % (depends)
++			print("  ce->addDependency(\"%s\");" % (depends))
+ 	elif type == 'int':
+ 		minval = node.getAttribute('minval')
+ 		maxval = node.getAttribute('maxval')
+-		print "  ci = cfg->addInt("
+-		print "              \"%s\"," % (name)
++		print("  ci = cfg->addInt(")
++		print("              \"%s\"," % (name))
+ 		rng = len(docC)
+ 		for i in range(rng):
+ 			line = docC[i]
+ 			if i != rng - 1:  # since we go from 0 to rng-1
+-				print "              \"%s\\n\"" % (line)
++				print("              \"%s\\n\"" % (line))
+ 			else:
+-				print "              \"%s\"," % (line)
+-		print "              %s,%s,%s" % (minval, maxval, defval)
+-		print "             );"
++				print("              \"%s\"," % (line))
++		print("              %s,%s,%s" % (minval, maxval, defval))
++		print("             );")
+ 		if depends != '':
+-			print "  ci->addDependency(\"%s\");" % (depends)
++			print("  ci->addDependency(\"%s\");" % (depends))
+ 	elif type == 'list':
+-		print "  cl = cfg->addList("
+-		print "              \"%s\"," % (name)
++		print("  cl = cfg->addList(")
++		print("              \"%s\"," % (name))
+ 		rng = len(docC)
+ 		for i in range(rng):
+ 			line = docC[i]
+ 			if i != rng - 1:  # since we go from 0 to rng-1
+-				print "              \"%s\\n\"" % (line)
++				print("              \"%s\\n\"" % (line))
+ 			else:
+-				print "              \"%s\"" % (line)
+-		print "             );"
++				print("              \"%s\"" % (line))
++		print("             );")
+ 		addValues("cl", node)
+ 		if depends != '':
+-			print "  cl->addDependency(\"%s\");" % (depends)
++			print("  cl->addDependency(\"%s\");" % (depends))
+ 		if format == 'file':
+-			print "  cl->setWidgetType(ConfigList::File);"
++			print("  cl->setWidgetType(ConfigList::File);")
+ 		elif format == 'dir':
+-			print "  cl->setWidgetType(ConfigList::Dir);"
++			print("  cl->setWidgetType(ConfigList::Dir);")
+ 		elif format == 'filedir':
+-			print "  cl->setWidgetType(ConfigList::FileAndDir);"
++			print("  cl->setWidgetType(ConfigList::FileAndDir);")
+ 	elif type == 'obsolete':
+-		print "  cfg->addObsolete(\"%s\");" % (name)
++		print("  cfg->addObsolete(\"%s\");" % (name))
+ 	if len(setting) > 0:
+-		print "#else"
+-		print "  cfg->addDisabled(\"%s\");" % (name)
+-		print "#endif"
++		print("#else")
++		print("  cfg->addDisabled(\"%s\");" % (name))
++		print("#endif")
+ 
+ 
+ def parseGroups(node):
+ 	name = node.getAttribute('name')
+ 	doc = node.getAttribute('docs')
+-	print "%s%s" % ("  //-----------------------------------------",
+-					"----------------------------------")
+-	print "  cfg->addInfo(\"%s\",\"%s\");" % (name, doc)
+-	print "%s%s" % ("  //-----------------------------------------",
+-					"----------------------------------")
+-	print
++	print("%s%s" % ("  //-----------------------------------------",
++					"----------------------------------"))
++	print("  cfg->addInfo(\"%s\",\"%s\");" % (name, doc))
++	print("%s%s" % ("  //-----------------------------------------",
++					"----------------------------------"))
++	print()
+ 	for n in node.childNodes:
+ 		if n.nodeType == Node.ELEMENT_NODE:
+ 			parseOption(n)
+@@ -345,16 +348,16 @@
+ 			name = n.getAttribute('id')
+ 			docC = prepCDocs(n);
+ 			if type != 'obsolete':
+-				print "  doc->add("
+-				print "              \"%s\"," % (name)
++				print("  doc->add(")
++				print("              \"%s\"," % (name))
+ 				rng = len(docC)
+ 				for i in range(rng):
+ 					line = docC[i]
+ 					if i != rng - 1:  # since we go from 0 to rng-1
+-						print "              \"%s\\n\"" % (line)
++						print("              \"%s\\n\"" % (line))
+ 					else:
+-						print "              \"%s\"" % (line)
+-				print "          );"
++						print("              \"%s\"" % (line))
++				print("          );")
+ 
+ def parseOptionDoc(node, first):
+ 	# Handling part for documentation
+@@ -373,52 +376,52 @@
+ 					if n.nodeType == Node.ELEMENT_NODE:
+ 						doc += parseDocs(n)
+ 		if (first):
+-			print " \\anchor cfg_%s" % (name.lower())
+-			print "<dl>"
+-			print ""
+-			print "<dt>\\c %s <dd>" % (name)
+-		else:
+-			print " \\anchor cfg_%s" % (name.lower())
+-			print "<dt>\\c %s <dd>" % (name)
+-		print " \\addindex %s" % (name)
+-		print doc
++			print(" \\anchor cfg_%s" % (name.lower()))
++			print("<dl>")
++			print("")
++			print("<dt>\\c %s <dd>" % (name))
++		else:
++			print(" \\anchor cfg_%s" % (name.lower()))
++			print("<dt>\\c %s <dd>" % (name))
++		print(" \\addindex %s" % (name))
++		print(doc)
+ 		if (type == 'enum'):
+ 			values = collectValues(node)
+-			print ""
+-			print "Possible values are: "
++			print("")
++			print("Possible values are: ")
+ 			rng = len(values)
+ 			for i in range(rng):
+ 				val = values[i]
+ 				if i == rng - 2:
+-					print "%s and " % (val)
++					print("%s and " % (val))
+ 				elif i == rng - 1:
+-					print "%s." % (val)
++					print("%s." % (val))
+ 				else:
+-					print "%s, " % (val)
++					print("%s, " % (val))
+ 			if (defval != ""):
+-				print ""
+-				print ""
+-				print "The default value is: <code>%s</code>." % (defval)
+-			print ""
++				print("")
++				print("")
++				print("The default value is: <code>%s</code>." % (defval))
++			print("")
+ 		elif (type == 'int'):
+ 			minval = node.getAttribute('minval')
+ 			maxval = node.getAttribute('maxval')
+-			print ""
+-			print ""
+-			print "%s: %s%s%s, %s: %s%s%s, %s: %s%s%s." % (
++			print("")
++			print("")
++			print("%s: %s%s%s, %s: %s%s%s, %s: %s%s%s." % (
+ 					 " Minimum value", "<code>", minval, "</code>", 
+ 					 "maximum value", "<code>", maxval, "</code>",
+-					 "default value", "<code>", defval, "</code>")
+-			print ""
++					 "default value", "<code>", defval, "</code>"))
++			print("")
+ 		elif (type == 'bool'):
+-			print ""
+-			print ""
++			print("")
++			print("")
+ 			if (node.hasAttribute('altdefval')):
+-				print "The default value is: system dependent."
++				print("The default value is: system dependent.")
+ 			else:
+-				print "The default value is: <code>%s</code>." % (
+-					"YES" if (defval == "1") else "NO")
+-			print ""
++				print("The default value is: <code>%s</code>." % (
++					"YES" if (defval == "1") else "NO"))
++			print("")
+ 		elif (type == 'list'):
+ 			if format == 'string':
+ 				values = collectValues(node)
+@@ -426,62 +429,62 @@
+ 				for i in range(rng):
+ 					val = values[i]
+ 					if i == rng - 2:
+-						print "%s and " % (val)
++						print("%s and " % (val))
+ 					elif i == rng - 1:
+-						print "%s." % (val)
++						print("%s." % (val))
+ 					else:
+-						print "%s, " % (val)
+-			print ""
++						print("%s, " % (val))
++			print("")
+ 		elif (type == 'string'):
+ 			if format == 'dir':
+ 				if defval != '':
+-					print ""
+-					print "The default directory is: <code>%s</code>." % (
+-						defval)
++					print("")
++					print("The default directory is: <code>%s</code>." % (
++						defval))
+ 			elif format == 'file':
+ 				abspath = node.getAttribute('abspath')
+ 				if defval != '':
+-					print ""
++					print("")
+ 					if abspath != '1':
+-						print "The default file is: <code>%s</code>." % (
+-							defval)
++						print("The default file is: <code>%s</code>." % (
++							defval))
+ 					else:
+-						print "%s: %s%s%s." % (
++						print("%s: %s%s%s." % (
+ 							"The default file (with absolute path) is",
+-							"<code>",defval,"</code>")
++							"<code>",defval,"</code>"))
+ 				else:
+ 					if abspath == '1':
+-						print ""
+-						print "The file has to be specified with full path."
++						print("")
++						print("The file has to be specified with full path.")
+ 			else: # format == 'string':
+ 				if defval != '':
+-					print ""
+-					print "The default value is: <code>%s</code>." % (
+-						defval)
+-			print ""
++					print("")
++					print("The default value is: <code>%s</code>." % (
++						defval))
++			print("")
+ 		# depends handling
+ 		if (node.hasAttribute('depends')):
+ 			depends = node.getAttribute('depends')
+-			print ""
+-			print "%s \\ref cfg_%s \"%s\" is set to \\c YES." % (
+-				"This tag requires that the tag", depends.lower(), depends.upper())
++			print("")
++			print("%s \\ref cfg_%s \"%s\" is set to \\c YES." % (
++				"This tag requires that the tag", depends.lower(), depends.upper()))
+ 		return False
+ 
+ 
+ def parseGroupsDoc(node):
+ 	name = node.getAttribute('name')
+ 	doc = node.getAttribute('docs')
+-	print "\section config_%s %s" % (name.lower(), doc)
++	print("\section config_%s %s" % (name.lower(), doc))
+ 	# Start of list has been moved to the first option for better
+ 	# anchor placement
+-	#  print "<dl>"
+-	#  print ""
++	#  print("<dl>")
++	#  print("")
+ 	first = True
+ 	for n in node.childNodes:
+ 		if n.nodeType == Node.ELEMENT_NODE:
+ 			first = parseOptionDoc(n, first)
+ 	if (not first):
+-		print "</dl>"
++		print("</dl>")
+ 
+ 
+ def parseGroupsList(node, commandsList):
+@@ -512,7 +515,7 @@
+ 			if (n.nodeName == "docs"):
+ 				if (n.getAttribute('documentation') != "0"):
+ 					doc += parseDocs(n)
+-	print doc
++	print(doc)
+ 
+ 
+ def parseFooterDoc(node):
+@@ -522,7 +525,7 @@
+ 			if (n.nodeName == "docs"):
+ 				if (n.getAttribute('documentation') != "0"):
+ 					doc += parseDocs(n)
+-	print doc
++	print(doc)
+ 
+ 
+ def main():
+@@ -531,16 +534,14 @@
+ 	try:
+ 		doc = xml.dom.minidom.parse(sys.argv[2])
+ 	except Exception as inst:
+-		print >> sys.stderr
+-		print >> sys.stderr, inst
+-		print >> sys.stderr
++		print("\n%s\n" % inst, file=sys.stderr)
+ 		sys.exit(1)
+ 	elem = doc.documentElement
+ 	if (sys.argv[1] == "-doc"):
+-		print "/* WARNING: This file is generated!"
+-		print " * Do not edit this file, but edit config.xml instead and run"
+-		print " * python configgen.py -doc config.xml to regenerate this file!"
+-		print " */"
++		print("/* WARNING: This file is generated!")
++		print(" * Do not edit this file, but edit config.xml instead and run")
++		print(" * python configgen.py -doc config.xml to regenerate this file!")
++		print(" */")
+ 		# process header
+ 		for n in elem.childNodes:
+ 			if n.nodeType == Node.ELEMENT_NODE:
+@@ -552,10 +553,10 @@
+ 			if n.nodeType == Node.ELEMENT_NODE:
+ 				if (n.nodeName == "group"):
+ 					commandsList = parseGroupsList(n, commandsList)
+-		print "\\secreflist"
++		print("\\secreflist")
+ 		for x in sorted(commandsList):
+-			print "\\refitem cfg_%s %s" % (x.lower(), x)
+-		print "\\endsecreflist"
++			print("\\refitem cfg_%s %s" % (x.lower(), x))
++		print("\\endsecreflist")
+ 		# process groups and options
+ 		for n in elem.childNodes:
+ 			if n.nodeType == Node.ELEMENT_NODE:
+@@ -567,24 +568,24 @@
+ 				if (n.nodeName == "footer"):
+ 					parseFooterDoc(n)
+ 	elif (sys.argv[1] == "-cpp"):
+-		print "/* WARNING: This file is generated!"
+-		print " * Do not edit this file, but edit config.xml instead and run"
+-		print " * python configgen.py -cpp config.xml to regenerate this file!"
+-		print " */"
+-		print ""
+-		print "#include \"configoptions.h\""
+-		print "#include \"config.h\""
+-		print "#include \"portable.h\""
+-		print "#include \"settings.h\""
+-		print ""
+-		print "void addConfigOptions(Config *cfg)"
+-		print "{"
+-		print "  ConfigString *cs;"
+-		print "  ConfigEnum   *ce;"
+-		print "  ConfigList   *cl;"
+-		print "  ConfigInt    *ci;"
+-		print "  ConfigBool   *cb;"
+-		print ""
++		print("/* WARNING: This file is generated!")
++		print(" * Do not edit this file, but edit config.xml instead and run")
++		print(" * python configgen.py -cpp config.xml to regenerate this file!")
++		print(" */")
++		print("")
++		print("#include \"configoptions.h\"")
++		print("#include \"config.h\"")
++		print("#include \"portable.h\"")
++		print("#include \"settings.h\"")
++		print("")
++		print("void addConfigOptions(Config *cfg)")
++		print("{")
++		print("  ConfigString *cs;")
++		print("  ConfigEnum   *ce;")
++		print("  ConfigList   *cl;")
++		print("  ConfigInt    *ci;")
++		print("  ConfigBool   *cb;")
++		print("")
+ 		# process header
+ 		for n in elem.childNodes:
+ 			if n.nodeType == Node.ELEMENT_NODE:
+@@ -594,17 +595,17 @@
+ 			if n.nodeType == Node.ELEMENT_NODE:
+ 				if (n.nodeName == "group"):
+ 					parseGroups(n)
+-		print "}"
++		print("}")
+ 	elif (sys.argv[1] == "-wiz"):
+-		print "/* WARNING: This file is generated!"
+-		print " * Do not edit this file, but edit config.xml instead and run"
+-		print " * python configgen.py -wiz config.xml to regenerate this file!"
+-		print " */"
+-		print "#include \"configdoc.h\""
+-		print "#include \"docintf.h\""
+-		print ""
+-		print "void addConfigDocs(DocIntf *doc)"
+-		print "{"
++		print("/* WARNING: This file is generated!")
++		print(" * Do not edit this file, but edit config.xml instead and run")
++		print(" * python configgen.py -wiz config.xml to regenerate this file!")
++		print(" */")
++		print("#include \"configdoc.h\"")
++		print("#include \"docintf.h\"")
++		print("")
++		print("void addConfigDocs(DocIntf *doc)")
++		print("{")
+ 		for n in elem.childNodes:
+ 			if n.nodeType == Node.ELEMENT_NODE:
+ 				if (n.nodeName == "header"):
+@@ -613,7 +614,7 @@
+ 			if n.nodeType == Node.ELEMENT_NODE:
+ 				if (n.nodeName == "group"):
+ 					parseGroupCDocs(n)
+-		print "}"
++		print("}")
+ 
+ if __name__ == '__main__':
+ 	main()
+diff -ub -rub doxygen-1.8.6.org/src/lang_cfg.py doxygen-1.8.6/src/lang_cfg.py
+--- doxygen-1.8.6.org/src/lang_cfg.py	2013-10-21 22:09:13.000000000 +0400
++++ doxygen-1.8.6/src/lang_cfg.py	2014-01-28 06:04:21.000000000 +0400
+@@ -2,7 +2,7 @@
+ 
+ if (len(sys.argv) > 0):
+     if (sys.argv[1] == "ENONLY"):
+-        print "#define ENGLISH_ONLY"
++        print("#define ENGLISH_ONLY")
+     else:
+-        for x in xrange(1, len(sys.argv)):
+-            print "#define LANG_%s"%(sys.argv[x])
++        for x in range(1, len(sys.argv)):
++            print("#define LANG_%s"%(sys.argv[x]))
+diff -ub -rub doxygen-1.8.6.org/src/languages.py doxygen-1.8.6/src/languages.py
+--- doxygen-1.8.6.org/src/languages.py	2013-10-21 22:09:13.000000000 +0400
++++ doxygen-1.8.6/src/languages.py	2014-01-28 06:04:04.000000000 +0400
+@@ -15,7 +15,7 @@
+ # generating file is lang_cfg.py
+ # the rules file has to output lang_cfg.h
+ #
+-print """\
++print("""\
+ <?xml version="1.0" encoding="utf-8"?>
+ <VisualStudioToolFile
+         Name="languages"
+@@ -52,7 +52,7 @@
+                                                />
+                                        </Values>
+                                </EnumProperty>
+-"""
++""")
+ #
+ # generate loop, English is mandatory (so cannot be chosen)
+ #
+@@ -76,7 +76,7 @@
+         l1 = l.replace("-","")
+         # capatalize first letter
+         l = l.title()
+-        print """\
++        print("""\
+                                    <EnumProperty
+                                            Name="%s"
+                                            DisplayName="Use %s"
+@@ -96,11 +96,11 @@
+                                                    />
+                                            </Values>
+                                    </EnumProperty>
+-        """ % (l1, l, l, l, f[1], l)
++        """ % (l1, l, l, l, f[1], l))
+ 
+-print """\
++print("""\
+                         </Properties>
+                 </CustomBuildRule>
+         </Rules>
+ </VisualStudioToolFile>
+-"""
++""")
