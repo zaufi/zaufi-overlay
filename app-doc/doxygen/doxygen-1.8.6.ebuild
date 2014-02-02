@@ -52,19 +52,19 @@ get_langs() {
 	for lingua in ${LINGUAS}; do
 		if has ${lingua} "${LANGS[@]}"; then
 			case ${lingua} in
-				hy) lingua=am ;;
-			    pt_BR) lingua=br ;;
-				zh*) lingua=cn ;;
-				cs) lingua=cz ;;
-				da) lingua=dk ;;
-				el*) lingua=gr ;;
-				ja*) lingua=jp ;;
-				ko) lingua=kr ;;
-				nb) lingua=no ;;
-				sl) lingua=si ;;
-			    tr*) lingua=tr ;;
-			    uk) lingua=ua ;;
-			    af) lingua=za ;;
+			hy) lingua=am ;;
+			pt_BR) lingua=br ;;
+			zh*) lingua=cn ;;
+			cs) lingua=cz ;;
+			da) lingua=dk ;;
+			el*) lingua=gr ;;
+			ja*) lingua=jp ;;
+			ko) lingua=kr ;;
+			nb) lingua=no ;;
+			sl) lingua=si ;;
+			tr*) lingua=tr ;;
+			uk) lingua=ua ;;
+			af) lingua=za ;;
 			esac
 			has ${lingua} "${my_linguas[@]}" ||
 				my_linguas+=(${lingua})
