@@ -8,7 +8,7 @@ inherit npm
 
 DESCRIPTION="ECMAScript parsing infrastructure for multipurpose analysis."
 HOMEPAGE="https://npmjs.org/package/esprima"
-SRC_URI="http://registry.npmjs.org/${PN}/${PV}/${P}.tgz"
+SRC_URI="http://registry.npmjs.org/${PN}/-/${P}.tgz"
 
 LICENSE="BSD"
 SLOT="0"
