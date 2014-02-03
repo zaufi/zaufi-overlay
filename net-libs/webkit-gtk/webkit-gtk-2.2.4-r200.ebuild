@@ -230,9 +230,8 @@ src_configure() {
 		--disable-gtk-doc \
 		--disable-gtk-doc-html \
 		--disable-gtk-doc-pdf \
+		--enable-dependency-tracking \
 		--enable-optimizations \
-		--disable-dependency-tracking \
-		--disable-maintainer-mode \
 		$(usex aqua "--with-font-backend=pango --with-target=quartz" "")
 		${myconf}
 }
