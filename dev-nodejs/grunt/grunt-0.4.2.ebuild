@@ -30,6 +30,8 @@ RDEPEND=">=dev-nodejs/async-0.1.22
 	>=dev-nodejs/underscore_string-2.2
 	>=dev-nodejs/which-1.0.5
 	>=dev-nodejs/js-yaml-2.0.2
+	>=dev-nodejs/exit-0.1.2
+	>=dev-nodejs/getobject-0.1.0
 	>=net-libs/nodejs-0.8.10
 	${DEPEND}"
 
