@@ -196,7 +196,9 @@ src_configure() {
 
 	local myconf=""
 
-	if has_version "virtual/rubygems[ruby_targets_ruby20]"; then
+	if has_version "virtual/rubygems[ruby_targets_ruby21]"; then
+		myconf="${myconf} RUBY=$(type -P ruby21)"
+	elif has_version "virtual/rubygems[ruby_targets_ruby20]"; then
 		myconf="${myconf} RUBY=$(type -P ruby20)"
 	elif has_version "virtual/rubygems[ruby_targets_ruby19]"; then
 		myconf="${myconf} RUBY=$(type -P ruby19)"
@@ -226,7 +228,11 @@ src_configure() {
 		--with-gtk=2.0 \
 		--disable-webkit2 \
 		--disable-gtk-doc \
-		--enable-dependency-tracking \
+		--disable-gtk-doc-html \
+		--disable-gtk-doc-pdf \
+		--enable-optimizations \
+		--disable-dependency-tracking \
+		--disable-maintainer-mode \
 		$(usex aqua "--with-font-backend=pango --with-target=quartz" "")
 		${myconf}
 }
