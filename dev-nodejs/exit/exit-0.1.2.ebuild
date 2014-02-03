@@ -7,6 +7,7 @@ EAPI=4
 inherit npm
 
 DESCRIPTION="A replacement for process.exit that ensures stdio are fully drained before exiting."
+HOMEPAGE="https://github.com/cowboy/node-exit"
 
 LICENSE="MIT"
 SLOT="0"

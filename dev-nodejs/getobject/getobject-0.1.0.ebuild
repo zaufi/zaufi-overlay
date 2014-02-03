@@ -7,6 +7,7 @@ EAPI=4
 inherit npm
 
 DESCRIPTION="get.and.set.deep.objects.easily = true"
+HOMEPAGE="https://github.com/cowboy/node-getobject"
 
 LICENSE="MIT"
 SLOT="0"

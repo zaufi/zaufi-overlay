@@ -3,13 +3,11 @@
 # $Header: $
 
 EAPI=4
-REV="1"
 
 inherit npm
 
 DESCRIPTION="Adds colors to your node.js console"
 HOMEPAGE="https://npmjs.org/package/colors"
-SRC_URI="http://registry.npmjs.org/${PN}/-/${P}-${REV}.tgz"
 
 LICENSE="MIT"
 SLOT="0"
