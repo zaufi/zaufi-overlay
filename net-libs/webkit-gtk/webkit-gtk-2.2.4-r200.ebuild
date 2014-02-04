@@ -176,6 +176,10 @@ src_prepare() {
 	# Do not build unittests unless requested, upstream bug #????
 	#epatch "${FILESDIR}"/${PN}-2.2.2-unittests-build.patch
 
+	# Apply a patch to make sure target dirs are present before
+	# some sources get generated/copied
+	epatch "${FILESDIR}/${P}-parallel-build-fixes.patch"
+
 	# Prevent maintainer mode from being triggered during make
 	AT_M4DIR=Source/autotools eautoreconf
 }
@@ -197,14 +201,16 @@ src_configure() {
 	local myconf=""
 
 	if has_version "virtual/rubygems[ruby_targets_ruby21]"; then
-		myconf="${myconf} RUBY=$(type -P ruby21)"
+		myconf="RUBY=$(type -P ruby21)"
 	elif has_version "virtual/rubygems[ruby_targets_ruby20]"; then
-		myconf="${myconf} RUBY=$(type -P ruby20)"
+		myconf="RUBY=$(type -P ruby20)"
 	elif has_version "virtual/rubygems[ruby_targets_ruby19]"; then
-		myconf="${myconf} RUBY=$(type -P ruby19)"
+		myconf="RUBY=$(type -P ruby19)"
 	else
-		myconf="${myconf} RUBY=$(type -P ruby18)"
+		myconf="RUBY=$(type -P ruby18)"
 	fi
+
+	eval "export ${myconf}"
 
 	# TODO: Check Web Audio support
 	# should somehow let user select between them?
@@ -230,10 +236,14 @@ src_configure() {
 		--disable-gtk-doc \
 		--disable-gtk-doc-html \
 		--disable-gtk-doc-pdf \
-		--enable-dependency-tracking \
-		--enable-optimizations \
 		$(usex aqua "--with-font-backend=pango --with-target=quartz" "")
-		${myconf}
+}
+
+src_compile() {
+	# Generate a bunch of sources in a single `make` process
+	emake -j1 all-built-sources-local
+	# Run parallel build for everything else
+	emake
 }
 
 src_test() {
