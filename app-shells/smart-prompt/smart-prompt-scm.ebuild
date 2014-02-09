@@ -18,6 +18,7 @@ COMMON_DEPEND=">=app-shells/bash-4.0"
 
 DEPEND="${COMMON_DEPEND} dev-util/cmake"
 RDEPEND="${COMMON_DEPEND}
+    dev-util/dialog
     git? ( dev-vcs/git )
     subversion? ( dev-vcs/subversion )
     "
