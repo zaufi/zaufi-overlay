@@ -40,6 +40,7 @@ src_install() {
 
     # Symlink hooks into configuration dirs
     local auto_patch="${EPREFIX}/usr/share/paludis/hooks/auto-patch.bash"
+    local config_cache_cleaner="${EPREFIX}/usr/share/paludis/hooks/config-cache-cleaner.bash.bash"
     local filesystem_manager="${EPREFIX}/usr/share/paludis/hooks/filesystem-manager.bash"
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_compile_pre
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_compile_post
@@ -48,6 +49,8 @@ src_install() {
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_install_pre
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_unpack_post
     dosym ${auto_patch} ${PALUDIS_CONFIG_DIR}/hooks/install_all_post
+    dosym ${config_cache_cleaner} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_configure_pre
+    dosym ${config_cache_cleaner} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_install_post
     dosym ${filesystem_manager} ${PALUDIS_CONFIG_DIR}/hooks/ebuild_install_post
     python_fix_shebang ${D}/usr/libexec/cave/commands/print-ebuild-path
 }
