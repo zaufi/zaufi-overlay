@@ -169,6 +169,13 @@ src_prepare() {
 
 	use java && append-cppflags $(java-pkg_get-jni-cflags)
 
+	# 2.36.0 has assertion failure w/ some graphite flags:
+	# dot: mincross.c:1077: install_in_rank: Assertion `
+	# (((Agraphinfo_t*)(((Agobj_t*)(g))->data))->rank)[r].n <= 
+	# (((Agraphinfo_t*)(((Agobj_t*)(g))->data))->rank)[r].an' failed.
+	# So, turn graphite options OFF
+	filter-flags -floop* -fgraphite* -ftree-loop* -fivopts
+
 	eautoreconf
 }
 
