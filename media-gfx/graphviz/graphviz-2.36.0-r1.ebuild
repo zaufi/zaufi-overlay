@@ -205,6 +205,7 @@ src_configure() {
 		--without-visio"
 
 	# Bindings:
+	local -r with_python=`sed 's,_,,' <<<${PYTHON_SINGLE_TARGET}`
 	myconf="${myconf}
 		$(use_enable guile)
 		--disable-io
@@ -213,7 +214,7 @@ src_configure() {
 		--disable-ocaml
 		$(use_enable perl)
 		--disable-php
-		$(use_enable python)
+		$(use_enable python ${with_python})
 		--disable-r
 		$(use_enable ruby)
 		--disable-sharp
