@@ -39,7 +39,7 @@ src_install() {
     keepdir "${EPREFIX}"/var/db/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre,unpack_post}
 
     # Symlink hooks into configuration dirs
-    local -r auto_patch="${EPREFIX}"/usr/share/paludis/hooks/auto-patch.bash
+    local -r auto_patch="${EPREFIX}"/usr/share/${PN}/auto-patch.bash
     local -r config_cache_cleaner="${EPREFIX}"/usr/share/${PN}/config-cache-cleaner.bash
     local -r filesystem_manager="${EPREFIX}"/usr/share/${PN}/filesystem-manager.bash
     local -r workdir_tmpfs="${EPREFIX}"/usr/share/${PN}/workdir-tmpfs.bash
