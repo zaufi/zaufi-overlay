@@ -42,7 +42,7 @@ src_install() {
     local auto_patch="${EPREFIX}"/usr/share/paludis/hooks/auto-patch.bash
     local config_cache_cleaner="${EPREFIX}"/usr/share/paludis/hooks/config-cache-cleaner.bash
     local filesystem_manager="${EPREFIX}"/usr/share/paludis/hooks/filesystem-manager.bash
-    local workdir_mounter="${EPREFIX}"/usr/share/paludis/hooks/workdir-tmpfs-mount.bash
+    local workdir_tmpfs="${EPREFIX}"/usr/share/paludis/hooks/workdir-tmpfs.bash
     dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_compile_pre
     dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_compile_post
     dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_configure_post
@@ -53,9 +53,9 @@ src_install() {
     dosym "${config_cache_cleaner}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_configure_pre
     dosym "${config_cache_cleaner}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_configure_post
     dosym "${filesystem_manager}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_install_post
-    dosym "${workdir_mounter}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_init_pre
-    dosym "${workdir_mounter}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_tidyup_post
-    dosym "${workdir_mounter}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_tidyup_pre
-    dosym "${workdir_mounter}" "${PALUDIS_CONFIG_DIR}"/hooks/install_fail
+    dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_init_pre
+    dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_tidyup_post
+    dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_tidyup_pre
+    dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/install_fail
     python_fix_shebang "${D}"/usr/libexec/cave/commands/print-ebuild-path
 }
