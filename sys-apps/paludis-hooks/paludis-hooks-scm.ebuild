@@ -53,7 +53,7 @@ src_install() {
     dosym "${config_cache_cleaner}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_configure_pre
     dosym "${config_cache_cleaner}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_configure_post
     dosym "${filesystem_manager}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_install_post
-    dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_init_pre
+    dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_init_post
     dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_tidyup_post
     dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_tidyup_pre
     dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/install_fail
