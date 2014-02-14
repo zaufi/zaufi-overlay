@@ -22,7 +22,7 @@ KEYWORDS="~alpha ~amd64 ~hppa ~ppc ~sparc ~x86"
 COMMON_DEPEND="sys-apps/paludis[python,${PYTHON_USEDEP}]"
 
 DEPEND="${COMMON_DEPEND} dev-util/cmake"
-RDEPEND="${PYTHON_DEPS} ${COMMON_DEPEND} sys-apps/grep dev-libs/libxslt dev-libs/libxml2"
+RDEPEND="${PYTHON_DEPS} ${COMMON_DEPEND} virtual/awk sys-apps/grep dev-libs/libxslt dev-libs/libxml2"
 
 src_install() {
     cmake-utils_src_install
