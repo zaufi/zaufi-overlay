@@ -34,7 +34,7 @@ src_install() {
 
     # Create all necessary directories
     keepdir "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_{compile,configure,init,install,tidyup,unpack}_{pre,post}
-    keepdir "${PALUDIS_CONFIG_DIR}"/hooks/install_all_post
+    keepdir "${PALUDIS_CONFIG_DIR}"/hooks/install_{all_post,fail}
     # Create 'empty' directories for autopatch hook
     keepdir "${EPREFIX}"/var/db/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre,unpack_post}
 
@@ -54,6 +54,8 @@ src_install() {
     dosym "${config_cache_cleaner}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_configure_post
     dosym "${filesystem_manager}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_install_post
     dosym "${workdir_mounter}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_init_pre
+    dosym "${workdir_mounter}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_tidyup_post
     dosym "${workdir_mounter}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_tidyup_pre
+    dosym "${workdir_mounter}" "${PALUDIS_CONFIG_DIR}"/hooks/install_fail
     python_fix_shebang "${D}"/usr/libexec/cave/commands/print-ebuild-path
 }
