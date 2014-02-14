@@ -1,0 +1,154 @@
+diff -u -r graphviz-2.36.0.org/config/config_python.py graphviz-2.36.0/config/config_python.py
+--- graphviz-2.36.0.org/config/config_python.py	2014-01-12 02:59:44.000000000 +0400
++++ graphviz-2.36.0/config/config_python.py	2014-02-14 20:55:05.000000000 +0400
+@@ -2,11 +2,11 @@
+ from distutils import sysconfig
+ 
+ if sys.argv[1] == "archlib":
+-    print sysconfig.get_python_lib(1,1)
++    print(sysconfig.get_python_lib(1,1))
+ elif sys.argv[1] == "lib":
+-    print sysconfig.get_python_lib(0,1)
++    print(sysconfig.get_python_lib(0,1))
+ elif sys.argv[1] == "archsitelib":
+-    print sysconfig.get_python_lib(1,0)
++    print(sysconfig.get_python_lib(1,0))
+ elif sys.argv[1] == "sitelib":
+-    print sysconfig.get_python_lib(0,0)
++    print(sysconfig.get_python_lib(0,0))
+ 
+diff -u -r graphviz-2.36.0.org/configure.ac graphviz-2.36.0/configure.ac
+--- graphviz-2.36.0.org/configure.ac	2014-01-12 02:59:44.000000000 +0400
++++ graphviz-2.36.0/configure.ac	2014-02-14 21:12:22.000000000 +0400
+@@ -1169,7 +1169,7 @@
+       if test "x$PYTHON" = "x"; then
+ 	use_python="No (python is too old)"
+       else
+-        PYTHON_PREFIX=`$PYTHON -c "import sys; print sys.prefix"`
++        PYTHON_PREFIX=`$PYTHON -c "import sys; print(sys.prefix)"`
+         PYTHON_INCLUDES=-I$PYTHON_PREFIX/include/python$PYTHON_VERSION_SHORT
+         PYTHON_LIBS="-lpython$PYTHON_VERSION_SHORT"
+         PYTHON_INSTALL_DIR="`$PYTHON $srcdir/config/config_python.py archsitelib`"
+@@ -1233,7 +1233,7 @@
+       if test "x$PYTHON23" = "x"; then
+ 	use_python23="No (python2.3 is too old)"
+       else
+-        PYTHON23_PREFIX=`$PYTHON23 -c "import sys; print sys.prefix"`
++        PYTHON23_PREFIX=`$PYTHON23 -c "import sys; print(sys.prefix)"`
+         PYTHON23_INCLUDES=-I$PYTHON23_PREFIX/include/python$PYTHON23_VERSION_SHORT
+         PYTHON23_LIBS="-lpython$PYTHON_VERSION_SHORT"
+         PYTHON23_INSTALL_DIR="`$PYTHON23 $srcdir/config/config_python.py archsitelib`"
+@@ -1297,7 +1297,7 @@
+       if test "x$PYTHON24" = "x"; then
+ 	use_python24="No (python2.4 is too old)"
+       else
+-        PYTHON24_PREFIX=`$PYTHON24 -c "import sys; print sys.prefix"`
++        PYTHON24_PREFIX=`$PYTHON24 -c "import sys; print(sys.prefix)"`
+         PYTHON24_INCLUDES=-I$PYTHON24_PREFIX/include/python$PYTHON24_VERSION_SHORT
+         PYTHON24_LIBS="-lpython$PYTHON_VERSION_SHORT"
+         PYTHON24_INSTALL_DIR="`$PYTHON24 $srcdir/config/config_python.py archsitelib`"
+@@ -1361,7 +1361,7 @@
+       if test "x$PYTHON25" = "x"; then
+ 	use_python25="No (python2.5 is too old)"
+       else
+-        PYTHON25_PREFIX=`$PYTHON25 -c "import sys; print sys.prefix"`
++        PYTHON25_PREFIX=`$PYTHON25 -c "import sys; print(sys.prefix)"`
+         PYTHON25_INCLUDES=-I$PYTHON25_PREFIX/include/python$PYTHON25_VERSION_SHORT
+         PYTHON24_LIBS="-lpython$PYTHON_VERSION_SHORT"
+         PYTHON25_INSTALL_DIR="`$PYTHON25 $srcdir/config/config_python.py archsitelib`"
+@@ -1425,7 +1425,7 @@
+       if test "x$PYTHON26" = "x"; then
+ 	use_python26="No (python2.6 is too old)"
+       else
+-        PYTHON26_PREFIX=`$PYTHON26 -c "import sys; print sys.prefix"`
++        PYTHON26_PREFIX=`$PYTHON26 -c "import sys; print(sys.prefix)"`
+         PYTHON26_INCLUDES=-I$PYTHON26_PREFIX/include/python$PYTHON26_VERSION_SHORT
+         PYTHON24_LIBS="-lpython$PYTHON_VERSION_SHORT"
+         PYTHON26_INSTALL_DIR="`$PYTHON26 $srcdir/config/config_python.py archsitelib`"
+@@ -1489,7 +1489,7 @@
+       if test "x$PYTHON27" = "x"; then
+ 	use_python27="No (python2.7 is too old)"
+       else
+-        PYTHON27_PREFIX=`$PYTHON27 -c "import sys; print sys.prefix"`
++        PYTHON27_PREFIX=`$PYTHON27 -c "import sys; print(sys.prefix)"`
+         PYTHON27_INCLUDES=-I$PYTHON27_PREFIX/include/python$PYTHON27_VERSION_SHORT
+         PYTHON24_LIBS="-lpython$PYTHON_VERSION_SHORT"
+         PYTHON27_INSTALL_DIR="`$PYTHON27 $srcdir/config/config_python.py archsitelib`"
+@@ -1513,6 +1513,69 @@
+ AM_CONDITIONAL(WITH_PYTHON27, [test "x$use_python27" = "xYes"])
+ 
+ dnl -----------------------------------
++dnl INCLUDES and LIBS for PYTHON33
++
++AC_ARG_ENABLE(python33,
++  [AS_HELP_STRING([--enable-python33=no],[python33 language bindings])],
++  [], [enable_python33=no])
++
++if test "x$enable_python33" != "xyes"; then
++  use_python33="No (disabled by default - for multiversion installs)"
++else
++  if test "x$use_swig" != "xYes"; then
++    use_python33="No (swig not available)"
++  else
++    if test `$SWIG -help 2>&1 | $EGREP -c '\-python *- Generate'` = 0; then
++      use_python33="No (swig does not support -python option)"
++    else
++      AC_CHECK_PROG(PYTHON33,python3.3,python3.3)
++      if test "x$PYTHON33" = "x"; then
++        use_python33="No (python33 not available)"
++      else
++        PYTHON33_VERSION=`$PYTHON33 -V 2>&1 | $EGREP Python | cut -d ' ' -f 2`
++        if test "x$PYTHON33_VERSION" = "x"; then
++          PYTHON33=
++        else
++          PYTHON33_VERSION_MAJOR=`echo $PYTHON33_VERSION | cut -d '.' -f 1`
++          PYTHON33_VERSION_MINOR=`echo $PYTHON33_VERSION | cut -d '.' -f 2`
++          PYTHON33_VERSION_SHORT=$PYTHON33_VERSION_MAJOR.$PYTHON33_VERSION_MINOR
++          if test $PYTHON33_VERSION_MAJOR -eq 3; then
++            if test $PYTHON33_VERSION_MINOR -lt 3; then
++               PYTHON33=
++            fi
++          else
++            PYTHON33=
++          fi
++        fi
++      fi
++      if test "x$PYTHON33" = "x"; then
++        # TODO REALLY?
++        use_python33="No (python3.3 is too old ;-)"
++      else
++        PYTHON33_PREFIX=`$PYTHON33 -c "import sys; print(sys.prefix)"`
++        PYTHON33_INCLUDES=-I$PYTHON33_PREFIX/include/python$PYTHON33_VERSION_SHORT
++        PYTHON33_LIBS="-lpython$PYTHON_VERSION_SHORT"
++        PYTHON33_INSTALL_DIR="`$PYTHON33 $srcdir/config/config_python.py archsitelib`"
++        save_CPPFLAGS=$CPPFLAGS
++        CPPFLAGS="$CPPFLAGS $PYTHON33_INCLUDES"
++        AC_CHECK_HEADER(Python.h,,[
++          use_python33="No (missing header)"
++          PYTHON33=
++        ])
++        CPPFLAGS=$save_CPPFLAGS
++        if test "x$PYTHON33" != "x"; then
++          use_python33="Yes"
++          AC_SUBST([PYTHON33_INSTALL_DIR])
++          AC_SUBST([PYTHON33_INCLUDES])
++          AC_SUBST([PYTHON33_LIBS])
++        fi
++      fi
++    fi
++  fi
++fi
++AM_CONDITIONAL(WITH_PYTHON33, [test "x$use_python33" = "xYes"])
++
++dnl -----------------------------------
+ dnl INCLUDES and LIBS for R
+ 
+ AC_ARG_ENABLE(r,
+@@ -3385,6 +3448,7 @@
+ echo "  gv_python25:   $use_python25"
+ echo "  gv_python26:   $use_python26"
+ echo "  gv_python27:   $use_python27"
++echo "  gv_python33:   $use_python33"
+ echo "  gv_R:          $use_r"
+ echo "  gv_ruby:       $use_ruby"
+ echo "  gv_tcl:        $use_gv_tcl"
