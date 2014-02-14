@@ -137,7 +137,8 @@ pkg_setup() {
 src_prepare() {
 	epatch \
 		"${FILESDIR}"/${PN}-2.34.0-Xaw-configure.patch \
-		"${FILESDIR}"/${PN}-2.34.0-dot-pangocairo-link.patch
+		"${FILESDIR}"/${PN}-2.34.0-dot-pangocairo-link.patch \
+		"${FILESDIR}"/${P}-python3-compat.patch
 
 	# ToDo: Do the same thing for examples and/or
 	#       write a patch for a configuration-option
