@@ -5,7 +5,7 @@
 EAPI=5
 PYTHON_COMPAT=( python{2_6,2_7,3_3} )
 
-inherit autotools eutils flag-o-matic java-pkg-opt-2 multilib python-single-r1
+inherit autotools eutils flag-o-matic java-pkg-opt-2 multilib python-r1
 
 DESCRIPTION="Open Source Graph Visualization Software"
 HOMEPAGE="http://www.graphviz.org/"
@@ -129,8 +129,6 @@ REQUIRED_USE="
 #   with flags enabled at configure time
 
 pkg_setup() {
-	use python && python-single-r1_pkg_setup
-
 	java-pkg-opt-2_pkg_setup
 }
 
@@ -212,7 +210,6 @@ src_configure() {
 		--without-visio"
 
 	# Bindings:
-	local -r with_python=`sed 's,_,,' <<<${PYTHON_SINGLE_TARGET}`
 	myconf="${myconf}
 		$(use_enable guile)
 		--disable-io
@@ -221,11 +218,17 @@ src_configure() {
 		--disable-ocaml
 		$(use_enable perl)
 		--disable-php
-		$(use_enable python ${with_python})
 		--disable-r
 		$(use_enable ruby)
 		--disable-sharp
 		$(use_enable tcl)"
+	if use python; then
+		_prepare_python_configure_params() {
+			local -r _current_python=$(sed 's,\.,,' <<<${EPYTHON})
+			eval "myconf=\"${myconf} $(use_enable python ${_current_python})\""
+		}
+		python_foreach_impl _prepare_python_configure_params
+	fi
 
 	econf \
 		--enable-ltdl \
@@ -251,9 +254,12 @@ src_install() {
 
 	dodoc AUTHORS ChangeLog NEWS README
 
-	use python && python_optimize \
-		"${D}$(python_get_sitedir)" \
-		"${D}/usr/$(get_libdir)/graphviz/python"
+	if use python; then
+		_compile_python_bytecode() {
+			python_optimize "${D}$(python_get_sitedir)"
+		}
+		python_foreach_impl _compile_python_bytecode
+	fi
 }
 
 pkg_postinst() {

@@ -19,7 +19,7 @@ diff -u -r graphviz-2.36.0.org/config/config_python.py graphviz-2.36.0/config/co
  
 diff -u -r graphviz-2.36.0.org/configure.ac graphviz-2.36.0/configure.ac
 --- graphviz-2.36.0.org/configure.ac	2014-01-12 02:59:44.000000000 +0400
-+++ graphviz-2.36.0/configure.ac	2014-02-14 21:12:22.000000000 +0400
++++ graphviz-2.36.0/configure.ac	2014-02-17 03:38:39.000000000 +0400
 @@ -1169,7 +1169,7 @@
        if test "x$PYTHON" = "x"; then
  	use_python="No (python is too old)"
@@ -29,56 +29,73 @@ diff -u -r graphviz-2.36.0.org/configure.ac graphviz-2.36.0/configure.ac
          PYTHON_INCLUDES=-I$PYTHON_PREFIX/include/python$PYTHON_VERSION_SHORT
          PYTHON_LIBS="-lpython$PYTHON_VERSION_SHORT"
          PYTHON_INSTALL_DIR="`$PYTHON $srcdir/config/config_python.py archsitelib`"
-@@ -1233,7 +1233,7 @@
+@@ -1233,9 +1233,9 @@
        if test "x$PYTHON23" = "x"; then
  	use_python23="No (python2.3 is too old)"
        else
 -        PYTHON23_PREFIX=`$PYTHON23 -c "import sys; print sys.prefix"`
 +        PYTHON23_PREFIX=`$PYTHON23 -c "import sys; print(sys.prefix)"`
          PYTHON23_INCLUDES=-I$PYTHON23_PREFIX/include/python$PYTHON23_VERSION_SHORT
-         PYTHON23_LIBS="-lpython$PYTHON_VERSION_SHORT"
+-        PYTHON23_LIBS="-lpython$PYTHON_VERSION_SHORT"
++        PYTHON23_LIBS="-lpython$PYTHON23_VERSION_SHORT"
          PYTHON23_INSTALL_DIR="`$PYTHON23 $srcdir/config/config_python.py archsitelib`"
-@@ -1297,7 +1297,7 @@
+         save_CPPFLAGS=$CPPFLAGS
+         CPPFLAGS="$CPPFLAGS $PYTHON23_INCLUDES"
+@@ -1297,9 +1297,9 @@
        if test "x$PYTHON24" = "x"; then
  	use_python24="No (python2.4 is too old)"
        else
 -        PYTHON24_PREFIX=`$PYTHON24 -c "import sys; print sys.prefix"`
 +        PYTHON24_PREFIX=`$PYTHON24 -c "import sys; print(sys.prefix)"`
          PYTHON24_INCLUDES=-I$PYTHON24_PREFIX/include/python$PYTHON24_VERSION_SHORT
-         PYTHON24_LIBS="-lpython$PYTHON_VERSION_SHORT"
+-        PYTHON24_LIBS="-lpython$PYTHON_VERSION_SHORT"
++        PYTHON24_LIBS="-lpython$PYTHON24_VERSION_SHORT"
          PYTHON24_INSTALL_DIR="`$PYTHON24 $srcdir/config/config_python.py archsitelib`"
-@@ -1361,7 +1361,7 @@
+         save_CPPFLAGS=$CPPFLAGS
+         CPPFLAGS="$CPPFLAGS $PYTHON24_INCLUDES"
+@@ -1361,9 +1361,9 @@
        if test "x$PYTHON25" = "x"; then
  	use_python25="No (python2.5 is too old)"
        else
 -        PYTHON25_PREFIX=`$PYTHON25 -c "import sys; print sys.prefix"`
 +        PYTHON25_PREFIX=`$PYTHON25 -c "import sys; print(sys.prefix)"`
          PYTHON25_INCLUDES=-I$PYTHON25_PREFIX/include/python$PYTHON25_VERSION_SHORT
-         PYTHON24_LIBS="-lpython$PYTHON_VERSION_SHORT"
+-        PYTHON24_LIBS="-lpython$PYTHON_VERSION_SHORT"
++        PYTHON24_LIBS="-lpython$PYTHON25_VERSION_SHORT"
          PYTHON25_INSTALL_DIR="`$PYTHON25 $srcdir/config/config_python.py archsitelib`"
-@@ -1425,7 +1425,7 @@
+         save_CPPFLAGS=$CPPFLAGS
+         CPPFLAGS="$CPPFLAGS $PYTHON25_INCLUDES"
+@@ -1425,9 +1425,9 @@
        if test "x$PYTHON26" = "x"; then
  	use_python26="No (python2.6 is too old)"
        else
 -        PYTHON26_PREFIX=`$PYTHON26 -c "import sys; print sys.prefix"`
 +        PYTHON26_PREFIX=`$PYTHON26 -c "import sys; print(sys.prefix)"`
          PYTHON26_INCLUDES=-I$PYTHON26_PREFIX/include/python$PYTHON26_VERSION_SHORT
-         PYTHON24_LIBS="-lpython$PYTHON_VERSION_SHORT"
+-        PYTHON24_LIBS="-lpython$PYTHON_VERSION_SHORT"
++        PYTHON24_LIBS="-lpython$PYTHON26_VERSION_SHORT"
          PYTHON26_INSTALL_DIR="`$PYTHON26 $srcdir/config/config_python.py archsitelib`"
-@@ -1489,7 +1489,7 @@
+         save_CPPFLAGS=$CPPFLAGS
+         CPPFLAGS="$CPPFLAGS $PYTHON26_INCLUDES"
+@@ -1489,9 +1489,9 @@
        if test "x$PYTHON27" = "x"; then
  	use_python27="No (python2.7 is too old)"
        else
 -        PYTHON27_PREFIX=`$PYTHON27 -c "import sys; print sys.prefix"`
 +        PYTHON27_PREFIX=`$PYTHON27 -c "import sys; print(sys.prefix)"`
          PYTHON27_INCLUDES=-I$PYTHON27_PREFIX/include/python$PYTHON27_VERSION_SHORT
-         PYTHON24_LIBS="-lpython$PYTHON_VERSION_SHORT"
+-        PYTHON24_LIBS="-lpython$PYTHON_VERSION_SHORT"
++        PYTHON27_LIBS="-lpython$PYTHON27_VERSION_SHORT"
          PYTHON27_INSTALL_DIR="`$PYTHON27 $srcdir/config/config_python.py archsitelib`"
-@@ -1513,6 +1513,69 @@
+         save_CPPFLAGS=$CPPFLAGS
+         CPPFLAGS="$CPPFLAGS $PYTHON27_INCLUDES"
+@@ -1513,6 +1513,71 @@
  AM_CONDITIONAL(WITH_PYTHON27, [test "x$use_python27" = "xYes"])
  
  dnl -----------------------------------
 +dnl INCLUDES and LIBS for PYTHON33
++dnl TODO This is a really stupid way to do that!
++dnl Better (and reliable) to use `pkg-config`!
 +
 +AC_ARG_ENABLE(python33,
 +  [AS_HELP_STRING([--enable-python33=no],[python33 language bindings])],
@@ -119,7 +136,7 @@ diff -u -r graphviz-2.36.0.org/configure.ac graphviz-2.36.0/configure.ac
 +      else
 +        PYTHON33_PREFIX=`$PYTHON33 -c "import sys; print(sys.prefix)"`
 +        PYTHON33_INCLUDES=-I$PYTHON33_PREFIX/include/python$PYTHON33_VERSION_SHORT
-+        PYTHON33_LIBS="-lpython$PYTHON_VERSION_SHORT"
++        PYTHON33_LIBS="-lpython$PYTHON33_VERSION_SHORT"
 +        PYTHON33_INSTALL_DIR="`$PYTHON33 $srcdir/config/config_python.py archsitelib`"
 +        save_CPPFLAGS=$CPPFLAGS
 +        CPPFLAGS="$CPPFLAGS $PYTHON33_INCLUDES"
@@ -144,7 +161,7 @@ diff -u -r graphviz-2.36.0.org/configure.ac graphviz-2.36.0/configure.ac
  dnl INCLUDES and LIBS for R
  
  AC_ARG_ENABLE(r,
-@@ -3385,6 +3448,7 @@
+@@ -3385,6 +3450,7 @@
  echo "  gv_python25:   $use_python25"
  echo "  gv_python26:   $use_python26"
  echo "  gv_python27:   $use_python27"
@@ -152,3 +169,288 @@ diff -u -r graphviz-2.36.0.org/configure.ac graphviz-2.36.0/configure.ac
  echo "  gv_R:          $use_r"
  echo "  gv_ruby:       $use_ruby"
  echo "  gv_tcl:        $use_gv_tcl"
+diff -u -r graphviz-2.36.0.org/tclpkg/gv/Makefile.am graphviz-2.36.0/tclpkg/gv/Makefile.am
+--- graphviz-2.36.0.org/tclpkg/gv/Makefile.am	2014-01-12 02:59:44.000000000 +0400
++++ graphviz-2.36.0/tclpkg/gv/Makefile.am	2014-02-16 23:20:37.000000000 +0400
+@@ -168,18 +168,7 @@
+ gv_php.cpp: gv.i
+ 	$(SWIG) -c++ -php5 -o gv_php.cpp $(srcdir)/gv.i
+ 
+-pkgpythondir = $(pkglibdir)/python
+-PYTHON_data = gv.py
+-nodist_libgv_python_la_SOURCES = gv_python.cpp $(PYTHON_data)
+-libgv_python_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
+-libgv_python_la_LIBADD = $(BASELIBS) $(PYTHON_LIBS)
+-libgv_python_la_LDFLAGS = -module -avoid-version
+-libgv_python_la_CPPFLAGS = $(BASECPPFLAGS) $(PYTHON_INCLUDES)
+-$(PYTHON_data): gv_python.cpp
+-gv_python.cpp: gv.i
+-	$(SWIG) -c++ -python -o gv_python.cpp $(srcdir)/gv.i
+-
+-pkgpython23dir = $(pkglibdir)/python23
++pkgpython23dir = $(libdir)/python2.3/site-packages
+ PYTHON23_data = gv.py
+ nodist_libgv_python23_la_SOURCES = gv_python23.cpp $(PYTHON23_data)
+ libgv_python23_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
+@@ -190,7 +179,7 @@
+ gv_python23.cpp: gv.i
+ 	$(SWIG) -c++ -python -classic -o gv_python23.cpp $(srcdir)/gv.i
+ 
+-pkgpython24dir = $(pkglibdir)/python24
++pkgpython24dir = $(libdir)/python2.4/site-packages
+ PYTHON24_data = gv.py
+ nodist_libgv_python24_la_SOURCES = gv_python24.cpp $(PYTHON24_data)
+ libgv_python24_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
+@@ -201,7 +190,7 @@
+ gv_python24.cpp: gv.i
+ 	$(SWIG) -c++ -python -classic -o gv_python24.cpp $(srcdir)/gv.i
+ 
+-pkgpython25dir = $(pkglibdir)/python25
++pkgpython25dir = $(libdir)/python2.5/site-packages
+ PYTHON25_data = gv.py
+ nodist_libgv_python25_la_SOURCES = gv_python25.cpp $(PYTHON25_data)
+ libgv_python25_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
+@@ -212,7 +201,7 @@
+ gv_python25.cpp: gv.i
+ 	$(SWIG) -c++ -python -classic -o gv_python25.cpp $(srcdir)/gv.i
+ 
+-pkgpython26dir = $(pkglibdir)/python26
++pkgpython26dir = $(libdir)/python2.6/site-packages
+ PYTHON26_data = gv.py
+ nodist_libgv_python26_la_SOURCES = gv_python26.cpp $(PYTHON26_data)
+ libgv_python26_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
+@@ -223,7 +212,7 @@
+ gv_python26.cpp: gv.i
+ 	$(SWIG) -c++ -python -o gv_python26.cpp $(srcdir)/gv.i
+ 
+-pkgpython27dir = $(pkglibdir)/python27
++pkgpython27dir = $(libdir)/python2.7/site-packages
+ PYTHON27_data = gv.py
+ nodist_libgv_python27_la_SOURCES = gv_python27.cpp $(PYTHON27_data)
+ libgv_python27_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
+@@ -234,6 +223,17 @@
+ gv_python27.cpp: gv.i
+ 	$(SWIG) -c++ -python -o gv_python27.cpp $(srcdir)/gv.i
+ 
++pkgpython33dir = $(libdir)/python3.3/site-packages
++PYTHON33_data = gv.py
++nodist_libgv_python33_la_SOURCES = gv_python33.cpp $(PYTHON33_data)
++libgv_python33_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
++libgv_python33_la_LIBADD = $(BASELIBS) $(PYTHON33_LIBS)
++libgv_python33_la_LDFLAGS = -module -avoid-version
++libgv_python33_la_CPPFLAGS = $(BASECPPFLAGS) $(PYTHON33_INCLUDES)
++# $(PYTHON33_data): gv_python33.cpp
++gv_python33.cpp: gv.i
++	$(SWIG) -c++ -python -o gv_python33.cpp $(srcdir)/gv.i
++
+ pkgRdir = $(pkglibdir)/R
+ R_data = 
+ nodist_libgv_R_la_SOURCES = gv_R.cpp $(R_data)
+@@ -267,7 +267,7 @@
+ gv_tcl.cpp: gv.i
+ 	$(SWIG) -c++ -tcl -namespace -o gv_tcl.cpp $(srcdir)/gv.i
+ 
+-pkginclude_HEADERS = gv.i gv.cpp
++pkginclude_HEADERS = 
+ pkglib_LTLIBRARIES = 
+ man_MANS =
+ pdf_DATA = 
+@@ -337,47 +337,39 @@
+ DEVTSTS += test_php
+ endif
+ if WITH_PYTHON
+-pkgpython_DATA = $(PYTHON_data)
+ py_mans = gv.3python
+ py_data = gv.3python.pdf
+-pkgpython_LTLIBRARIES = libgv_python.la
+-DEVTSTS += test_python
+ endif
+ if WITH_PYTHON23
+ pkgpython23_DATA = $(PYTHON23_data)
+-py_mans = gv.3python
+-py_data = gv.3python.pdf
+ pkgpython23_LTLIBRARIES = libgv_python23.la
+ #DEVTSTS += test_python23
+ endif
+ if WITH_PYTHON24
+ pkgpython24_DATA = $(PYTHON24_data)
+-py_mans = gv.3python
+-py_data = gv.3python.pdf
+ pkgpython24_LTLIBRARIES = libgv_python24.la
+ #DEVTSTS += test_python24
+ endif
+ if WITH_PYTHON25
+ pkgpython25_DATA = $(PYTHON25_data)
+-py_mans = gv.3python
+-py_data = gv.3python.pdf
+ pkgpython25_LTLIBRARIES = libgv_python25.la
+ #DEVTSTS += test_python25
+ endif
+ if WITH_PYTHON26
+ pkgpython26_DATA = $(PYTHON26_data)
+-py_mans = gv.3python
+-py_data = gv.3python.pdf
+ pkgpython26_LTLIBRARIES = libgv_python26.la
+ #DEVTSTS += test_python26
+ endif
+ if WITH_PYTHON27
+ pkgpython27_DATA = $(PYTHON27_data)
+-py_mans = gv.3python
+-py_data = gv.3python.pdf
+ pkgpython27_LTLIBRARIES = libgv_python27.la
+ #DEVTSTS += test_python27
+ endif
++if WITH_PYTHON33
++pkgpython33_DATA = $(PYTHON33_data)
++pkgpython33_LTLIBRARIES = libgv_python33.la
++#DEVTSTS += test_python27
++endif
+ man_MANS += $(py_mans)
+ pdf_DATA += $(py_data)
+ if WITH_R
+@@ -468,9 +460,6 @@
+ if WITH_PHP
+ 	(cd $(DESTDIR)$(pkgphpdir);   rm -f gv.so;  $(LN_S) libgv_php.so gv.so;)
+ endif
+-if WITH_PYTHON
+-	(cd $(DESTDIR)$(pkgpythondir); rm -f _gv.so; $(LN_S) libgv_python.so _gv.so;)
+-endif
+ if WITH_PYTHON23
+ 	(cd $(DESTDIR)$(pkgpython23dir); rm -f _gv.so; $(LN_S) libgv_python23.so _gv.so;)
+ endif
+@@ -486,6 +475,9 @@
+ if WITH_PYTHON27
+ 	(cd $(DESTDIR)$(pkgpython27dir); rm -f _gv.so; $(LN_S) libgv_python27.so _gv.so;)
+ endif
++if WITH_PYTHON33
++	(cd $(DESTDIR)$(pkgpython33dir); rm -f _gv.so; $(LN_S) libgv_python33.so _gv.so;)
++endif
+ if WITH_R
+ 	(cd $(DESTDIR)$(pkgRdir);   rm -f gv.so;  $(LN_S) libgv_R.so gv.so;)
+ endif
+@@ -604,11 +596,12 @@
+ 	gv_perl.cpp $(PERL_data) \
+ 	gv_php.cpp $(PHP_data) \
+ 	gv_python.cpp $(PYTHON_data) gv.pyc \
+-	gv_python23.cpp $(PYTHON23_data) gv.pyc \
+-	gv_python24.cpp $(PYTHON24_data) gv.pyc \
+-	gv_python25.cpp $(PYTHON25_data) gv.pyc \
+-	gv_python26.cpp $(PYTHON26_data) gv.pyc \
+-	gv_python27.cpp $(PYTHON27_data) gv.pyc \
++	gv_python23.cpp $(PYTHON23_data) \
++	gv_python24.cpp $(PYTHON24_data) \
++	gv_python25.cpp $(PYTHON25_data) \
++	gv_python26.cpp $(PYTHON26_data) \
++	gv_python27.cpp $(PYTHON27_data) \
++	gv_python33.cpp $(PYTHON27_data) \
+ 	gv_R.cpp $(R_data) \
+ 	gv_ruby.cpp $(RUBY_data) \
+ 	gv_tcl.cpp $(TCL_data) pkgIndex.tcl
+diff -u -r graphviz-2.36.0.org/tclpkg/Makefile.am graphviz-2.36.0/tclpkg/Makefile.am
+--- graphviz-2.36.0.org/tclpkg/Makefile.am	2014-01-12 02:59:44.000000000 +0400
++++ graphviz-2.36.0/tclpkg/Makefile.am	2014-02-16 22:46:24.000000000 +0400
+@@ -10,12 +10,6 @@
+ pkgocamldir = $(pkglibdir)/ocaml
+ pkgperldir = $(pkglibdir)/perl
+ pkgphpdir = $(pkglibdir)/php
+-pkgpythondir = $(pkglibdir)/python
+-pkgpython23dir = $(pkglibdir)/python23
+-pkgpython24dir = $(pkglibdir)/python24
+-pkgpython25dir = $(pkglibdir)/python25
+-pkgpython26dir = $(pkglibdir)/python26
+-pkgpython27dir = $(pkglibdir)/python27
+ pkgRdir = $(pkglibdir)/R
+ pkgrubydir = $(pkglibdir)/ruby
+ pkgtcldir = $(pkglibdir)/tcl
+@@ -76,72 +70,6 @@
+ 		echo "Skipping system installation of php binding."; \
+ 	fi
+ endif
+-if WITH_PYTHON
+-	-mkdir -p $(DESTDIR)@PYTHON_INSTALL_DIR@;
+-	if test -w $(DESTDIR)@PYTHON_INSTALL_DIR@; then \
+-		(cd $(DESTDIR)@PYTHON_INSTALL_DIR@; \
+-			cp -f $(DESTDIR)$(pkgpythondir)/libgv_python.so _gv.so; \
+-			cp -f $(DESTDIR)$(pkgpythondir)/gv.py gv.py;) \
+-	else \
+-		echo "Warning: @PYTHON_INSTALL_DIR@ is not writable."; \
+-		echo "Skipping system installation of python binding."; \
+-	fi
+-endif
+-if WITH_PYTHON23
+-	-mkdir -p $(DESTDIR)@PYTHON23_INSTALL_DIR@;
+-	if test -w $(DESTDIR)@PYTHON23_INSTALL_DIR@; then \
+-		(cd $(DESTDIR)@PYTHON23_INSTALL_DIR@; \
+-			cp -f $(DESTDIR)$(pkgpython23dir)/libgv_python23.so _gv.so; \
+-			cp -f $(DESTDIR)$(pkgpython23dir)/gv.py gv.py;) \
+-	else \
+-		echo "Warning: @PYTHON23_INSTALL_DIR@ is not writable."; \
+-		echo "Skipping system installation of python23 binding."; \
+-	fi
+-endif
+-if WITH_PYTHON24
+-	-mkdir -p $(DESTDIR)@PYTHON24_INSTALL_DIR@;
+-	if test -w $(DESTDIR)@PYTHON24_INSTALL_DIR@; then \
+-		(cd $(DESTDIR)@PYTHON24_INSTALL_DIR@; \
+-			cp -f $(DESTDIR)$(pkgpython24dir)/libgv_python24.so _gv.so; \
+-			cp -f $(DESTDIR)$(pkgpython24dir)/gv.py gv.py;) \
+-	else \
+-		echo "Warning: @PYTHON24_INSTALL_DIR@ is not writable."; \
+-		echo "Skipping system installation of python24 binding."; \
+-	fi
+-endif
+-if WITH_PYTHON25
+-	-mkdir -p $(DESTDIR)@PYTHON25_INSTALL_DIR@;
+-	if test -w $(DESTDIR)@PYTHON25_INSTALL_DIR@; then \
+-		(cd $(DESTDIR)@PYTHON25_INSTALL_DIR@; \
+-			cp -f $(DESTDIR)$(pkgpython25dir)/libgv_python25.so _gv.so; \
+-			cp -f $(DESTDIR)$(pkgpython25dir)/gv.py gv.py;) \
+-	else \
+-		echo "Warning: @PYTHON25_INSTALL_DIR@ is not writable."; \
+-		echo "Skipping system installation of python25 binding."; \
+-	fi
+-endif
+-if WITH_PYTHON26
+-	-mkdir -p $(DESTDIR)@PYTHON26_INSTALL_DIR@;
+-	if test -w $(DESTDIR)@PYTHON26_INSTALL_DIR@; then \
+-		(cd $(DESTDIR)@PYTHON26_INSTALL_DIR@; \
+-			cp -f $(DESTDIR)$(pkgpython26dir)/libgv_python26.so _gv.so; \
+-			cp -f $(DESTDIR)$(pkgpython26dir)/gv.py gv.py;) \
+-	else \
+-		echo "Warning: @PYTHON26_INSTALL_DIR@ is not writable."; \
+-		echo "Skipping system installation of python26 binding."; \
+-	fi
+-endif
+-if WITH_PYTHON27
+-	-mkdir -p $(DESTDIR)@PYTHON27_INSTALL_DIR@;
+-	if test -w $(DESTDIR)@PYTHON27_INSTALL_DIR@; then \
+-		(cd $(DESTDIR)@PYTHON27_INSTALL_DIR@; \
+-			cp -f $(DESTDIR)$(pkgpython27dir)/libgv_python27.so _gv.so; \
+-			cp -f $(DESTDIR)$(pkgpython27dir)/gv.py gv.py;) \
+-	else \
+-		echo "Warning: @PYTHON27_INSTALL_DIR@ is not writable."; \
+-		echo "Skipping system installation of python27 binding."; \
+-	fi
+-endif
+ if WITH_RUBY
+ 	-mkdir -p $(DESTDIR)@RUBY_INSTALL_DIR@;
+ 	if test -w $(DESTDIR)@RUBY_INSTALL_DIR@; then \
+@@ -178,18 +106,6 @@
+ 	-rm -rf $(DESTDIR)@PERL_INSTALL_DIR@/gv.so $(DESTDIR)@PERL_INSTALL_DIR@/gv.pm;
+ 	-rm -rf $(DESTDIR)$(pkgphpdir);
+ 	-rm -rf $(DESTDIR)@PHP_INSTALL_DIR@/gv.so $(DESTDIR)@PHP_INSTALL_DATADIR@/gv.php;
+-	-rm -rf $(DESTDIR)$(pkgpythondir);
+-	-rm -rf $(DESTDIR)@PYTHON_INSTALL_DIR@/_gv.so $(DESTDIR)@PYTHON_INSTALL_DIR@/gv.py;
+-	-rm -rf $(DESTDIR)$(pkgpython23dir);
+-	-rm -rf $(DESTDIR)@PYTHON23_INSTALL_DIR@/_gv.so $(DESTDIR)@PYTHON_INSTALL_DIR@/gv.py;
+-	-rm -rf $(DESTDIR)$(pkgpython24dir);
+-	-rm -rf $(DESTDIR)@PYTHON24_INSTALL_DIR@/_gv.so $(DESTDIR)@PYTHON_INSTALL_DIR@/gv.py;
+-	-rm -rf $(DESTDIR)$(pkgpython25dir);
+-	-rm -rf $(DESTDIR)@PYTHON25_INSTALL_DIR@/_gv.so $(DESTDIR)@PYTHON_INSTALL_DIR@/gv.py;
+-	-rm -rf $(DESTDIR)$(pkgpython26dir);
+-	-rm -rf $(DESTDIR)@PYTHON26_INSTALL_DIR@/_gv.so $(DESTDIR)@PYTHON_INSTALL_DIR@/gv.py;
+-	-rm -rf $(DESTDIR)$(pkgpython27dir);
+-	-rm -rf $(DESTDIR)@PYTHON27_INSTALL_DIR@/_gv.so $(DESTDIR)@PYTHON_INSTALL_DIR@/gv.py;
+ 	-rm -rf $(DESTDIR)$(pkgRdir);
+ 	-rm -rf $(DESTDIR)$(pkgrubydir);
+ 	-rm -rf $(DESTDIR)@RUBY_INSTALL_DIR@/gv.so;
