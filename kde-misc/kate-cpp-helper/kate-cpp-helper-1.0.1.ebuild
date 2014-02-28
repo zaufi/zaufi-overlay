@@ -7,7 +7,7 @@ EAPI=5
 inherit kde4-base
 
 DESCRIPTION="Kate C++ Helper plugin"
-HOMEPAGE="http://github.com/zaufi/kate-cpp-helper-plugin"
+HOMEPAGE="http://zaufi.github.io/kate-cpp-helper-plugin.html"
 SRC_URI="https://github.com/zaufi/kate-cpp-helper-plugin/archive/version-${PV}.tar.gz -> KateCppHelperPlugin-${PV}.tar.gz"
 
 IUSE=""

@@ -9,7 +9,7 @@ inherit kde4-base
 MY_PV=${PV}
 
 DESCRIPTION="Kate C++ Helper plugin"
-HOMEPAGE="http://github.com/zaufi/kate-cpp-helper-plugin"
+HOMEPAGE="http://zaufi.github.io/kate-cpp-helper-plugin.html"
 SRC_URI="https://github.com/zaufi/kate-cpp-helper-plugin/archive/version-${MY_PV}.tar.gz"
 
 IUSE=""

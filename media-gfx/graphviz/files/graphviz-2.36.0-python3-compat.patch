@@ -171,8 +171,8 @@ diff -u -r graphviz-2.36.0.org/configure.ac graphviz-2.36.0/configure.ac
  echo "  gv_tcl:        $use_gv_tcl"
 diff -u -r graphviz-2.36.0.org/tclpkg/gv/Makefile.am graphviz-2.36.0/tclpkg/gv/Makefile.am
 --- graphviz-2.36.0.org/tclpkg/gv/Makefile.am	2014-01-12 02:59:44.000000000 +0400
-+++ graphviz-2.36.0/tclpkg/gv/Makefile.am	2014-02-16 23:20:37.000000000 +0400
-@@ -168,18 +168,7 @@
++++ graphviz-2.36.0/tclpkg/gv/Makefile.am	2014-02-17 05:41:34.000000000 +0400
+@@ -168,71 +168,71 @@
  gv_php.cpp: gv.i
  	$(SWIG) -c++ -php5 -o gv_php.cpp $(srcdir)/gv.i
  
@@ -188,64 +188,93 @@ diff -u -r graphviz-2.36.0.org/tclpkg/gv/Makefile.am graphviz-2.36.0/tclpkg/gv/M
 -	$(SWIG) -c++ -python -o gv_python.cpp $(srcdir)/gv.i
 -
 -pkgpython23dir = $(pkglibdir)/python23
+-PYTHON23_data = gv.py
+-nodist_libgv_python23_la_SOURCES = gv_python23.cpp $(PYTHON23_data)
 +pkgpython23dir = $(libdir)/python2.3/site-packages
- PYTHON23_data = gv.py
- nodist_libgv_python23_la_SOURCES = gv_python23.cpp $(PYTHON23_data)
++PYTHON23_data = $(builddir)/gv.py
++nodist_libgv_python23_la_SOURCES = gv_python23.cpp
  libgv_python23_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
-@@ -190,7 +179,7 @@
+ libgv_python23_la_LIBADD = $(BASELIBS) $(PYTHON23_LIBS)
+ libgv_python23_la_LDFLAGS = -module -avoid-version
+ libgv_python23_la_CPPFLAGS = $(BASECPPFLAGS) $(PYTHON23_INCLUDES)
+ # $(PYTHON23_data): gv_python23.cpp
  gv_python23.cpp: gv.i
- 	$(SWIG) -c++ -python -classic -o gv_python23.cpp $(srcdir)/gv.i
+-	$(SWIG) -c++ -python -classic -o gv_python23.cpp $(srcdir)/gv.i
++	$(SWIG) -c++ -python -o $@ $<
  
 -pkgpython24dir = $(pkglibdir)/python24
+-PYTHON24_data = gv.py
+-nodist_libgv_python24_la_SOURCES = gv_python24.cpp $(PYTHON24_data)
 +pkgpython24dir = $(libdir)/python2.4/site-packages
- PYTHON24_data = gv.py
- nodist_libgv_python24_la_SOURCES = gv_python24.cpp $(PYTHON24_data)
++PYTHON24_data = $(builddir)/gv.py
++nodist_libgv_python24_la_SOURCES = gv_python24.cpp
  libgv_python24_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
-@@ -201,7 +190,7 @@
+ libgv_python24_la_LIBADD = $(BASELIBS) $(PYTHON24_LIBS)
+ libgv_python24_la_LDFLAGS = -module -avoid-version
+ libgv_python24_la_CPPFLAGS = $(BASECPPFLAGS) $(PYTHON24_INCLUDES)
+ # $(PYTHON24_data): gv_python24.cpp
  gv_python24.cpp: gv.i
- 	$(SWIG) -c++ -python -classic -o gv_python24.cpp $(srcdir)/gv.i
+-	$(SWIG) -c++ -python -classic -o gv_python24.cpp $(srcdir)/gv.i
++	$(SWIG) -c++ -python -o $@ $<
  
 -pkgpython25dir = $(pkglibdir)/python25
+-PYTHON25_data = gv.py
+-nodist_libgv_python25_la_SOURCES = gv_python25.cpp $(PYTHON25_data)
 +pkgpython25dir = $(libdir)/python2.5/site-packages
- PYTHON25_data = gv.py
- nodist_libgv_python25_la_SOURCES = gv_python25.cpp $(PYTHON25_data)
++PYTHON25_data = $(builddir)/gv.py
++nodist_libgv_python25_la_SOURCES = gv_python25.cpp
  libgv_python25_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
-@@ -212,7 +201,7 @@
+ libgv_python25_la_LIBADD = $(BASELIBS) $(PYTHON25_LIBS)
+ libgv_python25_la_LDFLAGS = -module -avoid-version
+ libgv_python25_la_CPPFLAGS = $(BASECPPFLAGS) $(PYTHON25_INCLUDES)
+ # $(PYTHON25_data): gv_python25.cpp
  gv_python25.cpp: gv.i
- 	$(SWIG) -c++ -python -classic -o gv_python25.cpp $(srcdir)/gv.i
+-	$(SWIG) -c++ -python -classic -o gv_python25.cpp $(srcdir)/gv.i
++	$(SWIG) -c++ -python -o $@ $<
  
 -pkgpython26dir = $(pkglibdir)/python26
+-PYTHON26_data = gv.py
+-nodist_libgv_python26_la_SOURCES = gv_python26.cpp $(PYTHON26_data)
 +pkgpython26dir = $(libdir)/python2.6/site-packages
- PYTHON26_data = gv.py
- nodist_libgv_python26_la_SOURCES = gv_python26.cpp $(PYTHON26_data)
++PYTHON26_data = $(builddir)/gv.py
++nodist_libgv_python26_la_SOURCES = gv_python26.cpp
  libgv_python26_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
-@@ -223,7 +212,7 @@
+ libgv_python26_la_LIBADD = $(BASELIBS) $(PYTHON26_LIBS)
+ libgv_python26_la_LDFLAGS = -module -avoid-version
+ libgv_python26_la_CPPFLAGS = $(BASECPPFLAGS) $(PYTHON26_INCLUDES)
+ # $(PYTHON26_data): gv_python26.cpp
  gv_python26.cpp: gv.i
- 	$(SWIG) -c++ -python -o gv_python26.cpp $(srcdir)/gv.i
+-	$(SWIG) -c++ -python -o gv_python26.cpp $(srcdir)/gv.i
++	$(SWIG) -c++ -python -o $@ $<
  
 -pkgpython27dir = $(pkglibdir)/python27
+-PYTHON27_data = gv.py
+-nodist_libgv_python27_la_SOURCES = gv_python27.cpp $(PYTHON27_data)
 +pkgpython27dir = $(libdir)/python2.7/site-packages
- PYTHON27_data = gv.py
- nodist_libgv_python27_la_SOURCES = gv_python27.cpp $(PYTHON27_data)
++PYTHON27_data = $(builddir)/gv.py
++nodist_libgv_python27_la_SOURCES = gv_python27.cpp
  libgv_python27_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
-@@ -234,6 +223,17 @@
+ libgv_python27_la_LIBADD = $(BASELIBS) $(PYTHON27_LIBS)
+ libgv_python27_la_LDFLAGS = -module -avoid-version
+ libgv_python27_la_CPPFLAGS = $(BASECPPFLAGS) $(PYTHON27_INCLUDES)
+ # $(PYTHON27_data): gv_python27.cpp
  gv_python27.cpp: gv.i
- 	$(SWIG) -c++ -python -o gv_python27.cpp $(srcdir)/gv.i
- 
+-	$(SWIG) -c++ -python -o gv_python27.cpp $(srcdir)/gv.i
++	$(SWIG) -c++ -python -o $@ $<
++
 +pkgpython33dir = $(libdir)/python3.3/site-packages
-+PYTHON33_data = gv.py
-+nodist_libgv_python33_la_SOURCES = gv_python33.cpp $(PYTHON33_data)
++PYTHON33_data = $(builddir)/gv.py
++nodist_libgv_python33_la_SOURCES = gv_python33.cpp
 +libgv_python33_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
 +libgv_python33_la_LIBADD = $(BASELIBS) $(PYTHON33_LIBS)
 +libgv_python33_la_LDFLAGS = -module -avoid-version
 +libgv_python33_la_CPPFLAGS = $(BASECPPFLAGS) $(PYTHON33_INCLUDES)
 +# $(PYTHON33_data): gv_python33.cpp
 +gv_python33.cpp: gv.i
-+	$(SWIG) -c++ -python -o gv_python33.cpp $(srcdir)/gv.i
-+
++	$(SWIG) -c++ -python -o $@ $<
+ 
  pkgRdir = $(pkglibdir)/R
  R_data = 
- nodist_libgv_R_la_SOURCES = gv_R.cpp $(R_data)
 @@ -267,7 +267,7 @@
  gv_tcl.cpp: gv.i
  	$(SWIG) -c++ -tcl -namespace -o gv_tcl.cpp $(srcdir)/gv.i
@@ -255,7 +284,7 @@ diff -u -r graphviz-2.36.0.org/tclpkg/gv/Makefile.am graphviz-2.36.0/tclpkg/gv/M
  pkglib_LTLIBRARIES = 
  man_MANS =
  pdf_DATA = 
-@@ -337,47 +337,39 @@
+@@ -337,47 +337,38 @@
  DEVTSTS += test_php
  endif
  if WITH_PYTHON
@@ -303,12 +332,11 @@ diff -u -r graphviz-2.36.0.org/tclpkg/gv/Makefile.am graphviz-2.36.0/tclpkg/gv/M
 +if WITH_PYTHON33
 +pkgpython33_DATA = $(PYTHON33_data)
 +pkgpython33_LTLIBRARIES = libgv_python33.la
-+#DEVTSTS += test_python27
 +endif
  man_MANS += $(py_mans)
  pdf_DATA += $(py_data)
  if WITH_R
-@@ -468,9 +460,6 @@
+@@ -468,9 +459,6 @@
  if WITH_PHP
  	(cd $(DESTDIR)$(pkgphpdir);   rm -f gv.so;  $(LN_S) libgv_php.so gv.so;)
  endif
@@ -318,7 +346,7 @@ diff -u -r graphviz-2.36.0.org/tclpkg/gv/Makefile.am graphviz-2.36.0/tclpkg/gv/M
  if WITH_PYTHON23
  	(cd $(DESTDIR)$(pkgpython23dir); rm -f _gv.so; $(LN_S) libgv_python23.so _gv.so;)
  endif
-@@ -486,6 +475,9 @@
+@@ -486,6 +474,9 @@
  if WITH_PYTHON27
  	(cd $(DESTDIR)$(pkgpython27dir); rm -f _gv.so; $(LN_S) libgv_python27.so _gv.so;)
  endif
@@ -328,7 +356,7 @@ diff -u -r graphviz-2.36.0.org/tclpkg/gv/Makefile.am graphviz-2.36.0/tclpkg/gv/M
  if WITH_R
  	(cd $(DESTDIR)$(pkgRdir);   rm -f gv.so;  $(LN_S) libgv_R.so gv.so;)
  endif
-@@ -604,11 +596,12 @@
+@@ -604,11 +595,12 @@
  	gv_perl.cpp $(PERL_data) \
  	gv_php.cpp $(PHP_data) \
  	gv_python.cpp $(PYTHON_data) gv.pyc \
