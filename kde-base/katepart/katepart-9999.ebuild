@@ -33,7 +33,7 @@ src_prepare() {
 
 src_configure() {
 	local mycmakeargs=(
-		"-DKDE4_BUILD_TESTS=OFF"
+		"-DKDE4_BUILD_TESTS=OFF -DBUILD_KTEXTEDITOR=1"
 	)
 
 	kde4-meta_src_configure
