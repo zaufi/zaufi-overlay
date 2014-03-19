@@ -7,6 +7,7 @@ PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
 PYTHON_REQ_USE="threads"
 OPENGL_REQUIRED="always"
 KDE_OVERRIDE_MINIMAL="4.11.0"
+EGIT_MIRROR=http://anongit.kde.org
 
 inherit python-r1 portability kde4-base multilib
 
