@@ -26,6 +26,8 @@ RESTRICT="test"
 # bug 392993
 
 KMEXTRA="
+	part
+	ktexteditor
 	addons/ktexteditor
 "
 src_prepare() {
