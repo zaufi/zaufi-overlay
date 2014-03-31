@@ -9,8 +9,7 @@ inherit eutils java-utils-2
 MY_PN="${PN/apache-/}"
 MY_P="${MY_PN}-${PV}"
 
-DESCRIPTION="ZooKeeper is a high-performance coordination service for
-distributed applications."
+DESCRIPTION="ZooKeeper is a high-performance coordination service for distributed applications."
 HOMEPAGE="http://hadoop.apache.org/"
 SRC_URI="mirror://apache/${MY_PN}/${MY_P}/${MY_P}.tar.gz"
 
