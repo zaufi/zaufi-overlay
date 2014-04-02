@@ -9,7 +9,7 @@ EAPI=5
 EGIT_REPO_URI="https://github.com/zaufi/pluggable-output-processor.git"
 # ATTENTION This package is Python3 only!
 # 2.5h <-- Increment this wasted time counter if your are dare to make it Python2 compatible!
-PYTHON_COMPAT=( python3_{2,3} )
+PYTHON_COMPAT=( python3_{2,3,4} )
 DISTUTILS_SINGLE_IMPL="yes"
 
 inherit distutils-r1 git-r3
