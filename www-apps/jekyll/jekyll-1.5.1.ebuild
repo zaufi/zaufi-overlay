@@ -21,7 +21,7 @@ IUSE="test"
 ruby_add_rdepend "dev-ruby/classifier
 	dev-ruby/colorator
 	dev-ruby/commander
-	>=dev-ruby/liquid-2.5*
+	>=dev-ruby/liquid-2.5
 	>=dev-ruby/listen-1.3
 	=dev-ruby/maruku-0.7.0
 	dev-ruby/pygments_rb
