@@ -11,7 +11,7 @@ SRC_URI="!tao? ( http://download.dre.vanderbilt.edu/previous_versions/ACE-${PV}.
 		!ciao? ( http://download.dre.vanderbilt.edu/previous_versions/ACE+TAO-${PV}.tar.bz2 )
 		ciao? ( http://download.dre.vanderbilt.edu/previous_versions/ACE+TAO+CIAO-${PV}.tar.bz2 )
 	)
-	doc ( http://download.dre.vanderbilt.edu/previous_versions/ACE-html-${PV}.tar.bz2 )"
+	doc? ( http://download.dre.vanderbilt.edu/previous_versions/ACE-html-${PV}.tar.bz2 )"
 
 LICENSE="ACE BSD BSD-4 BSD-2 tao? ( sun-iiop RSA )"
 SLOT="0"
