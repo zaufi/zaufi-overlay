@@ -70,9 +70,8 @@ src_install() {
 	dodoc README NEWS ChangeLog AUTHORS VERSION Release || die
 
 	# Install API docs
-	if use doc; then
-		dohtml "${WORKDIR}/html/*"
-	fi
+	cd ${WORKDIR}
+	use doc && dohtml -r "${WORKDIR}"/html/*
 }
 
 src_test() {
