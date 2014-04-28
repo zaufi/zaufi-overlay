@@ -15,7 +15,7 @@ SRC_URI="!tao? ( http://download.dre.vanderbilt.edu/previous_versions/ACE-${PV}.
 LICENSE="ACE BSD BSD-4 BSD-2 tao? ( sun-iiop RSA )"
 SLOT="0"
 KEYWORDS="amd64 ppc ppc64 x86"
-IUSE="X ipv6 tao ciao"
+IUSE="X debug ipv6 tao ciao"
 
 COMMON_DEPEND="dev-libs/openssl"
 # TODO probably more
@@ -48,6 +48,9 @@ src_compile() {
 		--enable-lib-all \
 		$(use_with X) \
 		$(use_enable ipv6) \
+		$(use_enable debug) \
+		$(use_enable debug logging) \
+		$(use_enable !debug optimize) \
 		|| die "econf died"
 	# --with-qos needs ACE_HAS_RAPI
 	emake static_libs=1 || die "emake failed"
