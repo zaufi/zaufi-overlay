@@ -67,7 +67,7 @@ src_install() {
 
 	# Install some docs
 	cd "${S}"
-	dodoc README NEWS ChangeLog AUTHORS VERSION Release || die
+	dodoc README NEWS FAQ COPYING ChangeLog AUTHORS THANKS VERSION || die
 
 	# Install API docs
 	cd ${WORKDIR}
