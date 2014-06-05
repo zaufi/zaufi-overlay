@@ -41,5 +41,6 @@ src_prepare() {
 src_install() {
 	emake DESTDIR="${ED}" install
 	python_optimize "${D%/}$(python_get_sitedir)" "${ED%/}/usr/share/yum-cli"
+	python_fix_shebang "${ED%}/usr/bin/yum"
 	rm -r "${ED%/}/etc/rc.d" || die
 }
