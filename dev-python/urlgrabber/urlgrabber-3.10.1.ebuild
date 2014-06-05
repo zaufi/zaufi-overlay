@@ -24,8 +24,9 @@ PATCHES="${FILESDIR}/${P}-python3-fixes.patch"
 
 src_install()
 {
-    distutils-r1_python_install_all
-    python_replicate_script "${D}/usr/bin/urlgrabber" "${D}/usr/libexec/urlgrabber-ext-down"
+    distutils-r1_src_install
+    python_scriptinto /usr/libexec
+    python_foreach_impl python_doexe "${S}/scripts/urlgrabber-ext-down"
 }
 
 # Entire testsuite relies on connecting to the i'net
