@@ -21,7 +21,7 @@ KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
 IUSE="test"
 
 RDEPEND="${PYTHON_DEPS}
-	app-arch/rpm[${PYTHON_USEDEP}]
+	app-arch/rpm[python,${PYTHON_USEDEP}]
 	dev-python/sqlitecachec[${PYTHON_USEDEP}]
 	dev-libs/libxml2[python,${PYTHON_USEDEP}]
 	dev-python/urlgrabber[${PYTHON_USEDEP}]"
