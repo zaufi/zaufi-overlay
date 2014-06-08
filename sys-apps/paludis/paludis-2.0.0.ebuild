@@ -102,7 +102,7 @@ src_configure() {
 		--enable-visibility
 		--with-config-framework=eselect
 		--with-environments=default,portage
-		--with-repositories=e,repository,unavailable,unpackaged
+		--with-repositories=e,fake,repository,unavailable,unpackaged
 		--with-vim-install-dir=/usr/share/vim/vimfiles
 	)
 
