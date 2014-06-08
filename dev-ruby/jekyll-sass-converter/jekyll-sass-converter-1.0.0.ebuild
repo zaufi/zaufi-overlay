@@ -4,7 +4,7 @@
 
 EAPI=5
 
-USE_RUBY="ruby18 ruby19 ruby20 ruby21 jruby"
+USE_RUBY="ruby19 ruby20 ruby21"
 
 RUBY_FAKEGEM_RECIPE_TEST="rspec"
 
@@ -24,4 +24,4 @@ SLOT="0"
 KEYWORDS="~amd64 ~arm ~ppc ~ppc64 ~x86 ~x64-macos"
 IUSE=""
 
-ruby_add_rdepend ">=dev-ruby/sass-3.2.0 <dev-ruby/sass-3.3.0"
+ruby_add_rdepend "dev-ruby/sass:0"

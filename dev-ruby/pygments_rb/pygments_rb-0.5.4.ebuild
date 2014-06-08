@@ -4,7 +4,7 @@
 
 EAPI=5
 
-USE_RUBY="ruby18 ruby19 ruby20 ruby21"
+USE_RUBY="ruby19 ruby20 ruby21"
 PYTHON_COMPAT=( python{2_5,2_6,2_7,3_2,3_3} )
 
 RUBY_FAKEGEM_NAME="pygments.rb"

@@ -1,10 +1,10 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-ruby/listen/listen-1.3.1-r1.ebuild,v 1.2 2013/12/22 18:58:20 blueness Exp $
+# $Header: $
 
 EAPI=5
 
-USE_RUBY="ruby18 ruby19 ruby20 ruby21 jruby"
+USE_RUBY="ruby19 ruby20 ruby21"
 
 RUBY_FAKEGEM_RECIPE_TEST="rspec"
 
@@ -25,3 +25,12 @@ KEYWORDS="~amd64 ~arm ~ppc ~ppc64 ~x86 ~x64-macos"
 IUSE=""
 
 ruby_add_rdepend ">=dev-ruby/coffee-script-2.2.0"
+ruby_add_bdepend "www-apps/jekyll"
+
+all_ruby_prepare() {
+	sed -i -e '/bundler/d' Rakefile || die
+	sed -i -e "/^RSpec/i \
+		require 'jekyll'"\
+		-e "/^RSpec/i \
+		require 'jekyll-coffeescript'" spec/spec_helper.rb || die
+}

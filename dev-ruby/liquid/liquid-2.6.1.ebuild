@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/dev-ruby/liquid/liquid-2.6.1.ebuild,v 1.1 2014/01/13 02:52:12 mrueg Exp $
 
 EAPI=5
-USE_RUBY="ruby18 ruby19 ruby20 ruby21 jruby"
+USE_RUBY="ruby19 ruby20 ruby21 jruby"
 
 RUBY_FAKEGEM_TASK_DOC=""
 RUBY_FAKEGEM_TASK_TEST=""

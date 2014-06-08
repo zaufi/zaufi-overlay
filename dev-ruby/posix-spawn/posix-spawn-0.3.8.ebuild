@@ -5,7 +5,7 @@
 EAPI=5
 
 # jruby → should be supported but does not work with "rake compile"
-USE_RUBY="ruby18 ruby19 ruby20 ruby21"
+USE_RUBY="ruby19 ruby20 ruby21"
 KEYWORDS="~amd64"
 
 RUBY_FAKEGEM_TASK_DOC=""
