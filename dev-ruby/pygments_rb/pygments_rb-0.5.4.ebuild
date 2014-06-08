@@ -1,11 +1,11 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/dev-ruby/pygments_rb/pygments_rb-0.5.4.ebuild,v 1.1 2014/04/07 13:10:26 mrueg Exp $
 
 EAPI=5
 
 USE_RUBY="ruby19 ruby20 ruby21"
-PYTHON_COMPAT=( python{2_5,2_6,2_7,3_2,3_3} )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3,3_4} )
 
 RUBY_FAKEGEM_NAME="pygments.rb"
 MY_P="${RUBY_FAKEGEM_NAME}-${PV}"
@@ -23,16 +23,16 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
-REQUIRED_USE="${PYTHON_REQUIRED_USE}"
+REQUIRED_USE+=" ${PYTHON_REQUIRED_USE}"
 
 RUBY_S="${MY_P}"
 
-RDEPEND="dev-python/pygments[${PYTHON_USEDEP}]
+RDEPEND+=" dev-python/pygments[${PYTHON_USEDEP}]
 	dev-python/simplejson[${PYTHON_USEDEP}]"
-DEPEND="test? ( ${RDEPEND} )"
+DEPEND+=" test? ( ${RDEPEND} )"
 
-ruby_add_rdepend "~dev-ruby/yajl-ruby-1.1.0
-	>=dev-ruby/posix-spawn-0.3.6"
+ruby_add_rdepend ">=dev-ruby/yajl-ruby-1.1
+	dev-ruby/posix-spawn"
 ruby_add_bdepend "dev-ruby/rake-compiler"
 
 pkg_setup() {

@@ -22,7 +22,7 @@ IUSE="test"
 ruby_add_rdepend "dev-ruby/classifier
 	dev-ruby/colorator
 	dev-ruby/jekyll-sass-converter
-	=dev-ruby/kramdown-1.3
+	>=dev-ruby/kramdown-1.3
 	>=dev-ruby/liquid-2.5.5
 	>=dev-ruby/listen-2.5
 	dev-ruby/mercenary
