@@ -5,7 +5,7 @@
 EAPI=5
 USE_RUBY="ruby19 ruby20 ruby21"
 
-RUBY_FAKEGEM_EXTRADOC="README.md AUTHORS CONTRIBUTERS"
+RUBY_FAKEGEM_EXTRADOC="README.md AUTHORS"
 
 RUBY_FAKEGEM_EXTRAINSTALL="data"
 
@@ -13,7 +13,7 @@ inherit ruby-fakegem
 
 DESCRIPTION="Yet-another-markdown-parser but fast, pure Ruby, using a strict syntax definition"
 HOMEPAGE="http://kramdown.rubyforge.org/"
-SRC_URI="https://github.com/gettalong/kramdown/archive/REL_$(sed 's,\.,_,g' <<<${PV}).tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/gettalong/kramdown/archive/REL_${PV//./_}.tar.gz -> ${P}.tar.gz"
 LICENSE="MIT"
 
 SLOT="0"
@@ -25,17 +25,15 @@ DEPEND=""
 
 ruby_add_bdepend "doc? ( dev-ruby/rdoc )"
 
-#all_ruby_prepare() {
-#	if ! use latex; then
-#		# Remove latex tests. They will fail gracefully when latex isn't
-#		# present at all, but not when components are missing (most
-#		# notable ucs.sty).
-#		sed -i -e '/latex -v/,/^  end/ s:^:#:' test/test_files.rb || die
-#	fi
-#}
+each_ruby_configure() {
+	mv ${PN}-REL_${PV//./_} ${P}
+}
 
 all_ruby_install() {
+	mv ${PN}-REL_${PV//./_} ${P}
+	cd ${P}
 	all_fakegem_install
 
-	doman man/man1/kramdown.1
+	# TODO How to process this man page?
+	# doman man/man1/kramdown.1.erb
 }
