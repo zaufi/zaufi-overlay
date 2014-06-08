@@ -22,7 +22,7 @@ KEYWORDS="~amd64"
 ruby_add_bdepend "test? ( dev-ruby/minitest
 		dev-ruby/multi_json )"
 
-ruby_add_rdepend "dev-ruby/parslet"
+ruby_add_rdepend "( >=dev-ruby/parslet-1.5.0 !!>dev-ruby/parslet-1.6.0 )"
 
 all_ruby_prepare() {
 	sed -i -e "s/, '~> 1.7.8'//" Gemfile || die
