@@ -5,7 +5,7 @@
 EAPI=5
 USE_RUBY="ruby19 ruby20 ruby21"
 
-inherit ruby-fakegem
+inherit eutils ruby-fakegem
 
 RUBY_FAKEGEM_EXTRADOC="CONTRIBUTING.markdown README.markdown History.markdown"
 RUBY_FAKEGEM_EXTRAINSTALL="features"
@@ -23,7 +23,7 @@ ruby_add_rdepend "dev-ruby/classifier
 	dev-ruby/colorator
 	dev-ruby/jekyll-sass-converter
 	>=dev-ruby/kramdown-1.3
-	>=dev-ruby/liquid-2.5.5
+	( >=dev-ruby/liquid-2.5.5 !!>=dev-ruby/liquid-2.6 )
 	>=dev-ruby/listen-2.5
 	dev-ruby/mercenary
 	dev-ruby/pygments_rb
@@ -42,4 +42,5 @@ ruby_add_bdepend "test? (
 
 all_ruby_prepare() {
 	sed -i -e "/simplecov/,/Coveralls/d" test/helper.rb || die
+	epatch "${FILESDIR}"/${P}-fuck-coffeescript-plugin.patch
 }

@@ -1,0 +1,13 @@
+diff -u -r jekyll-2.0.3.org/lib/jekyll.rb jekyll-2.0.3/lib/jekyll.rb
+--- jekyll-2.0.3.org/lib/jekyll.rb	2014-05-09 07:15:36.000000000 +0400
++++ jekyll-2.0.3/lib/jekyll.rb	2014-06-09 02:57:02.000000000 +0400
+@@ -70,7 +70,8 @@
+ require_all 'jekyll/tags'
+ 
+ # plugins
+-require 'jekyll-coffeescript'
++# ATTENTION Fuck this shit! Break cycle dependency...
++#require 'jekyll-coffeescript'
+ require 'jekyll-sass-converter'
+ 
+ SafeYAML::OPTIONS[:suppress_warnings] = true
