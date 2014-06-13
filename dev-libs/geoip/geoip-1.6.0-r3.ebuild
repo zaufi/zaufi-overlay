@@ -39,13 +39,16 @@ src_install() {
 	prune_libtool_files
 
 	newsbin "${FILESDIR}"/geoipupdate-r3.sh geoipupdate.sh
-	keepdir /usr/share/GeoIP
+	keepdir "${ROOT}/usr/share/GeoIP"
 }
 
 pkg_postinst() {
 	"${ROOT}"/usr/sbin/geoipupdate.sh --force
 }
 
-pkg_postrm() {
-	rm -r "${ROOT}/usr/share/GeoIP/"
+pkg_prerm() {
+	# ATTENTION Check if this is uninstall action (i.e. not just a reinstall/upgrade)
+	if [ -z "${REPLACED_BY_VERSION}" ]; then
+	    rm -r "${ROOT}"/usr/share/GeoIP/*.dat
+	fi
 }
