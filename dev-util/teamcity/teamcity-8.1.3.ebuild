@@ -4,7 +4,7 @@
 
 EAPI="5"
 
-inherit eutils
+inherit eutils user
 
 DESCRIPTION="Extensible continuous integration server"
 HOMEPAGE="http://www.jetbrains.com/teamcity/"
@@ -30,13 +30,17 @@ pkg_setup() {
 
 src_prepare() {
     cd "${S}"
-    find . \( -name \*.exe -or -name \*.bat -or -name \*.cmd \) -delete
+    find . \( -name \*.exe -or -name \*.bat -or -name \*.cmd -or -name \*.dll \) -delete
     rm  buildAgent/launcher/lib/libwrapper-solaris-x86-32.so \
         buildAgent/launcher/lib/libwrapper-solaris-sparc-32.so \
         buildAgent/launcher/lib/libwrapper-solaris-sparc-64.so \
-        buildAgent/launcher/bin/TeamCityAgentService-solaris-sparc-64 \
+        buildAgent/launcher/lib/libwrapper-macosx-ppc-32.jnilib \
+        buildAgent/launcher/lib/libwrapper-macosx-universal-32.jnilib \
+        buildAgent/launcher/bin/TeamCityAgentService-macosx-ppc-32 \
+        buildAgent/launcher/bin/TeamCityAgentService-macosx-universal-32 \
         buildAgent/launcher/bin/TeamCityAgentService-solaris-sparc-32 \
-        buildAgent/launcher/bin/TeamCityAgentService-solaris-x86-32
+        buildAgent/launcher/bin/TeamCityAgentService-solaris-sparc-64
+    rm -rf buildAgent/contrib
 }
 
 src_install() {
