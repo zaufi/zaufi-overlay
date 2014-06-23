@@ -365,7 +365,7 @@ __list_needed_subdirectories() {
 # @DESCRIPTION:
 # Meta-package build system configuration handling - commenting out targets, etc..
 kde4-meta_src_prepare() {
-	debug-print-function  ${FUNCNAME} "$@"
+	debug-print-function ${FUNCNAME} "$@"
 
 	kde4-meta_change_cmakelists
 	kde4-base_src_prepare
@@ -444,7 +444,7 @@ kde4-meta_change_cmakelists() {
 				-e 's/^#DONOTCOMPILE //g' \
 				-e '/install(.*)/I{s/^/#DONOTINSTALL /;}' \
 				-e '/^install(/,/)/I{s/^/#DONOTINSTALL /;}' \
-				-e '/kde4_install_icons(.*)/{s/^/#DONOTINSTALL /;}' || \
+				-e '/kde4_install_icons(.*)/I{s/^/#DONOTINSTALL /;}' || \
 				die "${LINENO}: sed died in the KMCOMPILEONLY section while processing ${i}"
 		_change_cmakelists_parent_dirs ${i}
 	done
@@ -503,6 +503,9 @@ kde4-meta_change_cmakelists() {
 			fi
 			;;
 		kde-runtime)
+			sed -e 's/TYPE REQUIRED/TYPE OPTIONAL/' -e '/LibGcrypt/s/REQUIRED//' -i CMakeLists.txt \
+				|| die "${LINENO}: sed died in kde-runtime dep reduction section"
+
 			# COLLISION PROTECT section
 			# Only install the kde4 script as part of kde-base/kdebase-data
 			if [[ ${PN} != kdebase-data && -f CMakeLists.txt ]]; then
@@ -517,7 +520,7 @@ kde4-meta_change_cmakelists() {
 			;;
 		kdepim)
 			# Disable hardcoded checks
-			sed -r -e '/find_package\(KdepimLibs/s/REQUIRED//' \
+			sed -r -e 's/TYPE REQUIRED/TYPE OPTIONAL/' -e '/find_package\(KdepimLibs/s/REQUIRED//' \
 				-e '/find_package\((KdepimLibs|Boost|QGpgme|Akonadi|ZLIB|Strigi|SharedDesktopOntologies|Soprano|Nepomuk)/{/macro_optional_/!s/find/macro_optional_&/}' \
 				-e '/macro_log_feature\((Boost|QGPGME|Akonadi|ZLIB|STRIGI|SHAREDDESKTOPONTOLOGIES|Soprano|Nepomuk)_FOUND/s/ TRUE / FALSE /' \
 				-e 's/if[[:space:]]*([[:space:]]*BUILD_.*)[[:space:]]*/if(1) # &/' \
@@ -572,7 +575,7 @@ kde4-meta_src_compile() {
 # Currently just calls its equivalent in kde4-base.eclass(5) if
 # I_KNOW_WHAT_I_AM_DOING is set. Use this in split ebuilds.
 kde4-meta_src_test() {
-	debug-print-function $FUNCNAME "$@"
+	debug-print-function ${FUNCNAME} "$@"
 
 	if [[ $I_KNOW_WHAT_I_AM_DOING ]]; then
 		kde4-base_src_test
@@ -585,7 +588,7 @@ kde4-meta_src_test() {
 # @DESCRIPTION:
 # Function for installing KDE4 split applications.
 kde4-meta_src_install() {
-	debug-print-function $FUNCNAME "$@"
+	debug-print-function ${FUNCNAME} "$@"
 
 	# Search ${S}/${KMMODULE} and install common documentation files found
 	local doc

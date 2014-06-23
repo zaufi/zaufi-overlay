@@ -23,7 +23,7 @@ COMMON_DEPEND="
 	>=sys-devel/gcc-4.7
 	dev-libs/libpcre[cxx]
 	sys-apps/file
-	pbins? ( >=app-arch/libarchive-3.1.2[-xattr] )
+	pbins? ( >=app-arch/libarchive-3.1.2 )
 	python? (
 		${PYTHON_DEPS}
 		>=dev-libs/boost-1.41.0[python,${PYTHON_USEDEP}] )
