@@ -7,7 +7,6 @@ KDE_HANDBOOK="optional"
 KMNAME="kate"
 KDE_OVERRIDE_MINIMAL="4.11.0"
 PYTHON_COMPAT=( python{2_7,3_2,3_3} )
-EGIT_MIRROR=http://anongit.kde.org
 
 inherit python-single-r1 kde4-meta
 
