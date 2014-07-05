@@ -108,9 +108,6 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.8.1-prefix-misc-alt.patch
 	epatch "${FILESDIR}"/${PN}-1.8.3.1-empty-line-sigsegv.patch #454348
 
-	# Make it Python3 compatible
-	epatch "${FILESDIR}"/${PN}-1.8.6-Python3-support.patch
-
 	# fix pdf doc
 	sed -i.orig -e "s:g_kowal:g kowal:" \
 		doc/maintainers.txt || die
