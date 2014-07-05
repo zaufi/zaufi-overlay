@@ -13,7 +13,7 @@ inherit kde4-base
 DESCRIPTION="KDE graphviz dot graph file viewer"
 HOMEPAGE="http://www.kde.org/applications/graphics/kgraphviewer/
 http://extragear.kde.org/apps/kgraphviewer/"
-SRC_URI="http://dev.gentoo.org/~kensington/distfiles/${P}.tar.xz"
+SRC_URI="http://ftp.funet.fi/pub/mirrors/ftp.kde.org/pub/kde/unstable/kgraphviewer/${PV}/src/${P}.tar.xz"
 
 LICENSE="GPL-2 FDL-1.2"
 SLOT="4"
