@@ -17,7 +17,7 @@ HOMEPAGE="https://github.com/mutanabbi/chewy"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-RDEPEND="${PYTHON_DEPS} sys-apps/portage[python3] virtual/python-argparse[${PYTHON_USEDEP}]"
+RDEPEND="${PYTHON_DEPS} sys-apps/portage[python3]"
 DEPEND="${RDEPEND}"
 IUSE=""
 

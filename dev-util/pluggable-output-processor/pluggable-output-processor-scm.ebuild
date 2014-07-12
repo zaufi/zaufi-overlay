@@ -22,7 +22,6 @@ KEYWORDS="~amd64 ~x86"
 RDEPEND="
     ${PYTHON_DEPS}
     sys-apps/portage[python3]
-    virtual/python-argparse[${PYTHON_USEDEP}]
     dev-python/termcolor[${PYTHON_USEDEP}]
     app-admin/eselect
   "
