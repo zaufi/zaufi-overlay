@@ -7,7 +7,7 @@ EAPI=5
 CMAKE_REMOVE_MODULES="no"
 PYTHON_COMPAT=( python{2_7,3_3,3_4} )
 
-inherit bash-completion-r1 elisp-common toolchain-funcs eutils versionator cmake-utils virtualx python-any-r1
+inherit bash-completion-r1 python-any-r1 elisp-common toolchain-funcs eutils versionator cmake-utils virtualx
 
 DESCRIPTION="Cross platform Make"
 HOMEPAGE="http://www.cmake.org/"
@@ -20,7 +20,7 @@ IUSE="doc emacs ncurses qt4 qt5"
 
 REQUIRED_USE="?? ( qt4 qt5 )"
 
-DEPEND="
+RDEPEND="
 	>=app-arch/libarchive-2.8.0:=
 	>=dev-libs/expat-2.0.1
 	>=net-misc/curl-7.20.0-r1[ssl]
@@ -37,9 +37,10 @@ DEPEND="
 		dev-qt/qtgui:5
 		dev-qt/qtwidgets:5
 	)
-	doc? ( dev-python/sphinx[${PYTHON_USEDEP}] )
 "
-RDEPEND="${DEPEND}"
+DEPEND="${RDEPEND}
+	doc? ( dev-python/sphinx ${PYTHON_DEPS} )
+"
 
 SITEFILE="50${PN}-gentoo.el"
 
@@ -60,6 +61,10 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-3.0.0-prefix-dirs.patch
 )
 
+python_check_deps() {
+	use doc && has_version "dev-python/sphinx[${PYTHON_USEDEP}]"
+}
+
 cmake_src_bootstrap() {
 	# Cleanup args to extract only JOBS.
 	# Because bootstrap does not know anything else.
@@ -77,9 +82,10 @@ cmake_src_bootstrap() {
 	fi
 
 	tc-export CC CXX LD
+
 	local need_doc
 	if use doc; then
-		need_doc="-sphinx-html"
+		need_doc='--sphinx-html'
 	fi
 
 	# bootstrap script isn't exactly /bin/sh compatible
@@ -147,6 +153,10 @@ src_configure() {
 			$(cmake-utils_use_find_package qt5 Qt5Widgets)
 		)
 	fi
+	
+	if use doc; then
+		mycmakeargs+=( -DSPHINX_HTML=ON )
+	fi
 
 	cmake-utils_src_configure
 }
@@ -168,10 +178,6 @@ src_install() {
 		elisp-site-file-install "${FILESDIR}/${SITEFILE}"
 	fi
 
-	if use doc; then
-		dohtml -r Utilities/Sphinx/html -x Utilities/Sphinx/html/_sources
-	fi
-
 	insinto /usr/share/vim/vimfiles/syntax
 	doins Auxiliary/cmake-syntax.vim
 
@@ -184,6 +190,9 @@ src_install() {
 	dobashcomp Auxiliary/bash-completion/{${PN},ctest,cpack}
 
 	rm -rf "${D}/usr/share/cmake/{completions,editors}" || die
+
+	# Remove useless docs source files
+	use doc && rm -rf "${D}/usr/share/doc/${PF}/html/_sources" || die
 }
 
 pkg_postinst() {
