@@ -18,6 +18,7 @@ inherit ruby-fakegem
 DESCRIPTION="Default pagination generator for Jekyll."
 HOMEPAGE="https://github.com/jekyll/jekyll-paginate"
 SRC_URI="https://github.com/jekyll/jekyll-paginate/archive/v${PV}.tar.gz -> ${P}-git.tgz"
+RESTRICT=mirror
 
 LICENSE="MIT"
 SLOT="0"

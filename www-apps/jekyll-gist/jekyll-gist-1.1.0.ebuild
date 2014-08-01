@@ -18,6 +18,7 @@ inherit ruby-fakegem
 DESCRIPTION="Liquid tag for displaying GitHub Gists in Jekyll sites: {% gist %}."
 HOMEPAGE="https://github.com/jekyll/jekyll-gist"
 SRC_URI="https://github.com/jekyll/jekyll-gist/archive/v${PV}.tar.gz -> ${P}-git.tgz"
+RESTRICT=mirror
 
 LICENSE="MIT"
 SLOT="0"
