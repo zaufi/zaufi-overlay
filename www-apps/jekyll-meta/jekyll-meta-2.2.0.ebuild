@@ -9,9 +9,10 @@ HOMEPAGE="https://zaufi.github.io/#I-will-post-about-this-crap-later"
 
 KEYWORDS="~amd64 ~arm ~ppc ~ppc64 ~x86 ~x64-macos"
 IUSE=""
+SLOT="0"
 
 RDEPEND="
-    www-apps/jekyll-${PV}
+    =www-apps/jekyll-${PV}
     www-apps/jekyll-watch
     www-apps/jekyll-gist
     www-apps/jekyll-paginate
