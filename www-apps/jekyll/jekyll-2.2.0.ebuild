@@ -42,5 +42,4 @@ ruby_add_bdepend "test? (
 
 all_ruby_prepare() {
 	sed -i -e "/simplecov/,/Coveralls/d" test/helper.rb || die
-	epatch "${FILESDIR}"/${PN}-2.0.3-fuck-coffeescript-plugin.patch
 }
