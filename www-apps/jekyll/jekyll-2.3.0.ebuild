@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/www-apps/jekyll/jekyll-2.3.0.ebuild,v 1.2 2014/08/16 13:09:59 mrueg Exp $
 
 EAPI=5
-USE_RUBY="ruby{19,20,21}"
+USE_RUBY="ruby19 ruby20 ruby21"
 
 inherit ruby-fakegem
 
