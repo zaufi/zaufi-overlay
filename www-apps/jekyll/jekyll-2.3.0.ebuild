@@ -28,7 +28,6 @@ ruby_add_rdepend "dev-ruby/classifier-reborn
 	>=dev-ruby/redcarpet-3.1
 	>=dev-ruby/safe_yaml-1
 	dev-ruby/toml
-	www-apps/jekyll-coffeescript
 	www-apps/jekyll-gist
 	www-apps/jekyll-paginate
 	www-apps/jekyll-sass-converter
@@ -49,5 +48,6 @@ ruby_add_bdepend "test? (
 all_ruby_prepare() {
 	sed -i -e "/simplecov/,+2d" test/helper.rb || die
 	sed -i -e "1igem 'test-unit'" test/helper.rb || die
-
+	# Fuck this cycle depended shit!
+	sed -i -e "/jekyll-coffeescript/d" lib/jekyll.rb || die
 }
