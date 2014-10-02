@@ -99,7 +99,6 @@ src_configure() {
 		$(use_enable test gtest)
 
 		--enable-vim
-		--enable-visibility
 		--with-config-framework=eselect
 		--with-environments=default,portage
 		--with-repositories=e,fake,repository,unavailable,unpackaged
