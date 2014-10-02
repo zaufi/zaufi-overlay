@@ -6,7 +6,7 @@ EAPI=5
 
 DESCRIPTION="clang API documentation"
 HOMEPAGE="http://clang.llvm.org/"
-SRC_URI="http://llvm.org/releases/${PV}/cfe-${PV}.src.tar.gz"
+SRC_URI="http://llvm.org/releases/${PV}/cfe-${PV}.src.tar.xz"
 
 LICENSE="UoI-NCSA"
 SLOT="0"
