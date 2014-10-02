@@ -6,7 +6,7 @@ EAPI=5
 
 DESCRIPTION="clang API documentation"
 HOMEPAGE="http://clang.llvm.org/"
-SRC_URI="http://llvm.org/releases/${PV}/clang-${PV}.src.tar.gz"
+SRC_URI="http://llvm.org/releases/${PV}/cfe-${PV}.src.tar.gz"
 
 LICENSE="UoI-NCSA"
 SLOT="0"
@@ -16,13 +16,14 @@ IUSE=""
 DEPEND="app-doc/doxygen[dot]"
 RDEPEND=""
 
-S=${WORKDIR}/clang-${PV}
+S=${WORKDIR}/cfe-${PV}.src
 
 src_configure() {
     # Render `preconfigured' doxygen configuration file
     sed -e "s,@S@,${S}," \
         -e "s,@DST@,${D}/usr/share/doc/${PF}," \
-        "${FILESDIR}"/clang-${PV}-doxygen.cfg.in > "${S}"/docs/doxygen.cfg || die
+        -e "s,@PV@,${PV}," \
+        "${FILESDIR}"/doxygen.cfg.in > "${S}"/docs/doxygen.cfg || die
     # Make destination dir before "compile"
     mkdir -p ${D}/usr/share/doc/${PF} || die
 }
