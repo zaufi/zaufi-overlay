@@ -17,8 +17,8 @@
 # builds (default), in-source builds and an implementation of the well-known use_enable
 # and use_with functions for CMake.
 
-if [[ ${___ECLASS_ONCE_CMAKE_UTILS} != "recur -_+^+_- spank" ]] ; then
-___ECLASS_ONCE_CMAKE_UTILS="recur -_+^+_- spank"
+if [[ -z ${_CMAKE_UTILS_ECLASS} ]]; then
+_CMAKE_UTILS_ECLASS=1
 
 
 # @ECLASS-VARIABLE: BUILD_DIR
@@ -58,7 +58,7 @@ ___ECLASS_ONCE_CMAKE_UTILS="recur -_+^+_- spank"
 # @ECLASS-VARIABLE: CMAKE_MIN_VERSION
 # @DESCRIPTION:
 # Specify the minimum required CMake version.
-: ${CMAKE_MIN_VERSION:=2.8.9}
+: ${CMAKE_MIN_VERSION:=2.8.12}
 
 # @ECLASS-VARIABLE: CMAKE_REMOVE_MODULES
 # @DESCRIPTION:
@@ -118,9 +118,9 @@ case ${WANT_CMAKE} in
 esac
 inherit toolchain-funcs multilib flag-o-matic eutils
 
-case ${EAPI:-0} in
+case ${EAPI} in
 	2|3|4|5) : ;;
-	*) die "EAPI=${EAPI} is not supported" ;;
+	*) die "EAPI=${EAPI:-0} is not supported" ;;
 esac
 
 CMAKE_EXPF="src_prepare src_configure src_compile src_test src_install"
@@ -236,6 +236,21 @@ _generator_to_use() {
 	esac
 
 	echo ${generator_name}
+}
+
+# @FUNCTION: comment_add_subdirectory
+# @USAGE: <subdirectory>
+# @DESCRIPTION:
+# Comment out an add_subdirectory call in CMakeLists.txt in the current directory
+comment_add_subdirectory() {
+        if [[ -z ${1} ]]; then
+                die "comment_add_subdirectory must be passed the directory name to comment"
+        fi
+
+        if [[ -e "CMakeLists.txt" ]]; then
+                sed -e "/add_subdirectory[[:space:]]*([[:space:]]*${1//\//\\/}[[:space:]]*)/s/^/#DONOTCOMPILE /" \
+                        -i CMakeLists.txt || die "failed to comment add_subdirectory(${1})"
+        fi
 }
 
 # @FUNCTION: cmake-utils_use_with
@@ -647,7 +662,7 @@ enable_cmake-utils_src_install() {
 # @DESCRIPTION:
 # Apply ebuild and user patches.
 cmake-utils_src_prepare() {
-	_execute_optionaly "src_prepare" "$@"
+	_execute_optionally "src_prepare" "$@"
 }
 
 # @FUNCTION: cmake-utils_src_configure
@@ -655,7 +670,7 @@ cmake-utils_src_prepare() {
 # General function for configuring with cmake. Default behaviour is to start an
 # out-of-source build.
 cmake-utils_src_configure() {
-	_execute_optionaly "src_configure" "$@"
+	_execute_optionally "src_configure" "$@"
 }
 
 # @FUNCTION: cmake-utils_src_compile
@@ -663,25 +678,25 @@ cmake-utils_src_configure() {
 # General function for compiling with cmake.
 # Automatically detects the build type. All arguments are passed to emake.
 cmake-utils_src_compile() {
-	_execute_optionaly "src_compile" "$@"
+	_execute_optionally "src_compile" "$@"
 }
 
 # @FUNCTION: cmake-utils_src_test
 # @DESCRIPTION:
 # Function for testing the package. Automatically detects the build type.
 cmake-utils_src_test() {
-	_execute_optionaly "src_test" "$@"
+	_execute_optionally "src_test" "$@"
 }
 
 # @FUNCTION: cmake-utils_src_install
 # @DESCRIPTION:
 # Function for installing the package. Automatically detects the build type.
 cmake-utils_src_install() {
-	_execute_optionaly "src_install" "$@"
+	_execute_optionally "src_install" "$@"
 }
 
 # Optionally executes phases based on WANT_CMAKE variable/USE flag.
-_execute_optionaly() {
+_execute_optionally() {
 	local phase="$1" ; shift
 	if [[ ${WANT_CMAKE} = always ]]; then
 		enable_cmake-utils_${phase} "$@"

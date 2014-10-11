@@ -2,8 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit versionator
-
 # @ECLASS: kde4-functions.eclass
 # @MAINTAINER:
 # kde@gentoo.org
@@ -12,15 +10,17 @@ inherit versionator
 # This eclass contains all functions shared by the different eclasses,
 # for KDE 4 ebuilds.
 
-if [[ ${___ECLASS_ONCE_KDE4_FUNCTIONS} != "recur -_+^+_- spank" ]] ; then
-___ECLASS_ONCE_KDE4_FUNCTIONS="recur -_+^+_- spank"
+if [[ -z ${_KDE4_FUNCTIONS_ECLASS} ]]; then
+_KDE4_FUNCTIONS_ECLASS=1
+
+inherit versionator
 
 # @ECLASS-VARIABLE: EAPI
 # @DESCRIPTION:
 # Currently kde4 eclasses support EAPI 4 and 5.
-case ${EAPI:-0} in
+case ${EAPI} in
 	4|5) : ;;
-	*) die "EAPI=${EAPI} is not supported" ;;
+	*) die "EAPI=${EAPI:-0} is not supported" ;;
 esac
 
 # @ECLASS-VARIABLE: KDE_OVERRIDE_MINIMAL
@@ -37,12 +37,12 @@ esac
 # This gets set to a non-zero value when a package is considered a kde or
 # kdevelop ebuild.
 if [[ ${CATEGORY} = kde-base ]]; then
-	debug-print "${ECLASS}: KDEBASE ebuild recognized"
 	KDEBASE=kde-base
 elif [[ ${KMNAME-${PN}} = kdevelop ]]; then
-	debug-print "${ECLASS}: KDEVELOP ebuild recognized"
 	KDEBASE=kdevelop
 fi
+
+debug-print "${ECLASS}: ${KDEBASE} ebuild recognized"
 
 # determine the build type
 if [[ ${PV} = *9999* ]]; then
@@ -119,21 +119,6 @@ buildsycoca() {
 			find "${EROOT}${x}" -type d -print0 | xargs -0 chmod 755
 		fi
 	done
-}
-
-# @FUNCTION: comment_add_subdirectory
-# @USAGE: subdirectory
-# @DESCRIPTION:
-# Comment out an add_subdirectory call in CMakeLists.txt in the current directory
-comment_add_subdirectory() {
-	if [[ -z ${1} ]]; then
-		die "comment_add_subdirectory must be passed the directory name to comment"
-	fi
-
-	if [[ -a "CMakeLists.txt" ]]; then
-	        sed -e "/add_subdirectory[[:space:]]*([[:space:]]*${1}[[:space:]]*)/s/^/#DONOTCOMPILE /" \
-			-i CMakeLists.txt || die "failed to comment add_subdirectory(${1})"
-	fi
 }
 
 # @FUNCTION: comment_all_add_subdirectory
@@ -216,6 +201,14 @@ enable_selected_doc_linguas() {
 
 			# Disable subdirectories recursively
 			comment_all_add_subdirectory "${handbookdir}"
+
+			# In certain packages, the default handbook is en_US instead of the usual en. Since there is no en_US 'translation',
+			# it makes no sense to add to KDE_LINGUAS which causes this type of handbook to not be installed.
+			if [[ -d "${handbookdir}/en_US" && ! -d "${handbookdir}/en" ]]; then
+				mv "${handbookdir}/en_US" "${handbookdir}/en" || die
+				sed -e "s/en_US/en/" -i "${handbookdir}/CMakeLists.txt"
+			fi
+
 			# Add requested translations
 			local lingua
 			for lingua in en ${KDE_LINGUAS}; do
