@@ -24,4 +24,4 @@ DEPEND="
 	>=dev-lib/boost-1.49
 	>=dev-lib/xapian-1.2.12
 	>=sys-devel/clang-3.3"
-RDEPEND="${DEPEND} >=sys-devel/gcc-4.8"
+RDEPEND="${DEPEND} >=sys-devel/gcc-4.9"
