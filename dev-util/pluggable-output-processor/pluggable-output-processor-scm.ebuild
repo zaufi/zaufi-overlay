@@ -21,7 +21,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 RDEPEND="
     ${PYTHON_DEPS}
-    sys-apps/portage[python3]
+    >=sys-apps/portage-2.2.12[python3(+)]
     dev-python/termcolor[${PYTHON_USEDEP}]
     app-admin/eselect
   "
