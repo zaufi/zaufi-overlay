@@ -23,8 +23,7 @@ SLOT="0"
 LICENSE="MIT"
 KEYWORDS="~amd64 ~ppc ~ppc64"
 
-ruby_add_rdepend ">=dev-ruby/timers-1.0.0
-	!!>=dev-ruby/timers-3"
+ruby_add_rdepend "dev-ruby/timers:2"
 
 all_ruby_prepare() {
 	rm Gemfile .rspec || die
