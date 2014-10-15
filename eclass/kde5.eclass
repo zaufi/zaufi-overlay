@@ -73,17 +73,6 @@ fi
 # generate and install KDE handbook.
 : ${KDE_HANDBOOK:=false}
 
-# @ECLASS-VARIABLE: KDE_NLS
-# @DESCRIPTION:
-# If set to "false", do nothing.
-# Otherwise, add "nls" to IUSE, generate and install translations based on
-# the LINGUAS environment variable.
-if [[ ${CATEGORY} = kde-frameworks ]]; then
-	: ${KDE_NLS:=true}
-else
-	: ${KDE_NLS:=false}
-fi
-
 # @ECLASS-VARIABLE: KDE_TEST
 # @DESCRIPTION:
 # If set to "false", do nothing.
@@ -123,6 +112,10 @@ case ${KDE_AUTODEPS} in
 		RDEPEND+=" >=kde-frameworks/kf-env-2"
 		COMMONDEPEND+="	>=dev-qt/qtcore-${QT_MINIMAL}:5"
 
+		if [[ ${CATEGORY} = kde-base ]]; then
+			RDEPEND+=" !kde-base/kde-l10n:4"
+		fi
+
 		unset ecm_version
 		;;
 esac
@@ -160,13 +153,6 @@ case ${KDE_HANDBOOK} in
 		;;
 esac
 
-case ${KDE_NLS} in
-	false)	;;
-	*)
-		IUSE+=" nls"
-		;;
-esac
-
 case ${KDE_TEST} in
 	false)	;;
 	*)
@@ -181,6 +167,10 @@ unset COMMONDEPEND
 
 if [[ -n ${KMNAME} && ${KMNAME} != ${PN} && ${KDE_BUILD_TYPE} = release ]]; then
 	S=${WORKDIR}/${KMNAME}-${PV}
+fi
+
+if [[ ${CATEGORY} = kde-base && ${PN} != breeze && ${PN} != oxygen && ${PN} != plasma-nm && ${PV} = 5.1.0.1 ]]; then
+	S=${WORKDIR}/${PN}-5.1.0
 fi
 
 # Determine fetch location for released tarballs
@@ -220,6 +210,9 @@ _calculate_src_uri() {
 					SRC_URI="mirror://kde/unstable/plasma/${PV}/${_kmname}-${PV}.tar.xz"
 					RESTRICT+=" mirror"
 					;;
+				5.1.0.1)
+					# Plasma 5 stable releases
+					SRC_URI="mirror://kde/stable/plasma/5.1.0/${_kmname}-${PV}.tar.xz" ;;
 				*)
 					# Plasma 5 stable releases
 					SRC_URI="mirror://kde/stable/plasma/${PV}/${_kmname}-${PV}.tar.xz" ;;
@@ -335,7 +328,7 @@ kde5_src_prepare() {
 
 	# enable only the requested translations
 	# when required
-	if [[ ${KDE_BUILD_TYPE} = release ]] && use_if_iuse nls ; then
+	if [[ ${KDE_BUILD_TYPE} = release ]] ; then
 		for lang in $(ls po) ; do
 			if ! has ${lang} ${LINGUAS} ; then
 				rm -rf po/${lang}
