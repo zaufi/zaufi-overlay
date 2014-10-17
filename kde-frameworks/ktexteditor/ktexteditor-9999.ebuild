@@ -5,6 +5,7 @@
 EAPI=5
 
 VIRTUALX_REQUIRED="test"
+FRAMEWORKS_MINIMAL="5.3.0"
 inherit kde5
 
 DESCRIPTION="Framework providing a full text editor component"
