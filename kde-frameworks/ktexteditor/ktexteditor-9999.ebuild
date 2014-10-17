@@ -9,7 +9,7 @@ inherit kde5
 
 DESCRIPTION="Framework providing a full text editor component"
 LICENSE="LGPL-2+"
-KEYWORDS=""
+KEYWORDS="~amd64"
 IUSE="git"
 
 RDEPEND="
