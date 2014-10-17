@@ -5,7 +5,8 @@
 EAPI=5
 
 VIRTUALX_REQUIRED="test"
-FRAMEWORKS_MINIMAL="5.3.0"
+KDE_DOXYGEN="true"
+FRAMEWORKS_VERSION="5.3.0"
 inherit kde5
 
 DESCRIPTION="Framework providing a full text editor component"
@@ -14,23 +15,23 @@ KEYWORDS="~amd64"
 IUSE="git"
 
 RDEPEND="
-	$(add_frameworks_dep karchive)
-	$(add_frameworks_dep kcodecs)
-	$(add_frameworks_dep kcompletion)
-	$(add_frameworks_dep kconfig)
-	$(add_frameworks_dep kconfigwidgets)
-	$(add_frameworks_dep kcoreaddons)
-	$(add_frameworks_dep kguiaddons)
-	$(add_frameworks_dep ki18n)
-	$(add_frameworks_dep kiconthemes)
-	$(add_frameworks_dep kio)
-	$(add_frameworks_dep kitemviews)
-	$(add_frameworks_dep kjobwidgets)
-	$(add_frameworks_dep kparts)
-	$(add_frameworks_dep ktextwidgets)
-	$(add_frameworks_dep kwidgetsaddons)
-	$(add_frameworks_dep kxmlgui)
-	$(add_frameworks_dep sonnet)
+	$(add_frameworks_dep karchive "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep kcodecs "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep kcompletion "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep kconfig "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep kconfigwidgets "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep kcoreaddons "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep kguiaddons "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep ki18n "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep kiconthemes "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep kio "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep kitemviews "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep kjobwidgets "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep kparts "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep ktextwidgets "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep kwidgetsaddons "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep kxmlgui "" "${FRAMEWORKS_VERSION")
+	$(add_frameworks_dep sonnet "" "${FRAMEWORKS_VERSION")
 	dev-qt/qtgui:5
 	dev-qt/qtprintsupport:5
 	dev-qt/qtscript:5
