@@ -148,15 +148,15 @@ src_configure() {
 	export LINK="${QMAKE_LINK}"
 	export LINK_SHLIB="${QMAKE_CXX}"
 
+	./configure --prefix "${EPREFIX}/usr" ${my_conf} \
+			|| die
+
 	if use qt4 ; then
 		export QTDIR=/usr
 		pushd addon/doxywizard &> /dev/null
 		eqmake4 doxywizard.pro -o Makefile.doxywizard
 		popd &> /dev/null
 	fi
-
-	./configure --prefix "${EPREFIX}/usr" ${my_conf} \
-			|| die
 }
 
 src_compile() {
