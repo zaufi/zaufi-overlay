@@ -26,7 +26,7 @@ esac
 # @ECLASS-VARIABLE: FRAMEWORKS_MINIMAL
 # @DESCRIPTION:
 # Minimal Frameworks version to require for the package.
-#: ${FRAMEWORKS_MINIMAL:=5.3.0}
+: ${FRAMEWORKS_MINIMAL:=5.3.0}
 
 # @ECLASS-VARIABLE: KDEBASE
 # @DESCRIPTION:
@@ -118,11 +118,7 @@ add_frameworks_dep() {
 	if [[ -n ${3} ]]; then
 		version=${3}
 	elif [[ ${CATEGORY} = kde-frameworks ]]; then
-		if [[ -z "${FRAMEWORKS_MINIMAL}" ]]; then
-			version=${PV}
-		else
-			version=${FRAMEWORKS_MINIMAL}
-		fi
+		version=$(get_version_component_range 1-2)
 	elif [[ ${CATEGORY} = kde-base ]]; then
 		case $(get_kde_version) in
 			5.1) version=5.3.0 ;;
