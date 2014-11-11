@@ -7,7 +7,7 @@ EAPI=5
 
 EGIT_REPO_URI="https://github.com/zaufi/devassistant.git"
 # TODO Check for other Python versions
-PYTHON_COMPAT=( python2_6 python2_7 python3_3 )
+PYTHON_COMPAT=( python{2_6,2_7,3_3,3_4} )
 
 inherit bash-completion-r1 distutils-r1 git-r3
 

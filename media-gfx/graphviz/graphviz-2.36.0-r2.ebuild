@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/media-gfx/graphviz/graphviz-2.36.0.ebuild,v 1.2 2014/02/06 12:19:14 kensington Exp $
 
 EAPI=5
-PYTHON_COMPAT=( python{2_6,2_7,3_3} )
+PYTHON_COMPAT=( python{2_6,2_7,3_3,3_4} )
 
 inherit autotools eutils flag-o-matic java-pkg-opt-2 multilib python-r1
 

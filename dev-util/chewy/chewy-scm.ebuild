@@ -8,7 +8,7 @@ EAPI=5
 
 EGIT_REPO_URI="https://github.com/mutanabbi/chewy.git"
 # TODO Check for other Python versions
-PYTHON_COMPAT=( python3_{2,3} )
+PYTHON_COMPAT=( python3_{3,4} )
 
 inherit bash-completion-r1 distutils-r1 git-r3
 
