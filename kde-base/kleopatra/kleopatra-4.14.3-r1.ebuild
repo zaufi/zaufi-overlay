@@ -42,6 +42,9 @@ src_unpack() {
 src_prepare() {
 	# Wrap all boost #include due a bug:
 	# https://bugreports.qt.io/browse/QTBUG-22829
-	find . -name '*.h' -o -name '*.cpp' -exec sed -f ${FILESDIR}/wrap-boost-headers.sed -i {} +
+	ebegin "Wrapping #include <boost/...> into #ifndef Q_MOC_RUN/#endif"
+	for i in `find . -name '*.h' -o -name '*.cpp'`; do
+	    sed -f "${FILESDIR}/wrap-boost-headers.sed" -i "${i}"
+	eend $?
 	kde4-meta_src_prepare
 }
