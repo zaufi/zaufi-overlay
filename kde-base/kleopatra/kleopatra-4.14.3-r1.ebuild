@@ -45,6 +45,7 @@ src_prepare() {
 	ebegin "Wrapping #include <boost/...> into #ifndef Q_MOC_RUN/#endif"
 	for i in `find . -name '*.h' -o -name '*.cpp'`; do
 	    sed -f "${FILESDIR}/wrap-boost-headers.sed" -i "${i}"
+	done
 	eend $?
 	kde4-meta_src_prepare
 }
