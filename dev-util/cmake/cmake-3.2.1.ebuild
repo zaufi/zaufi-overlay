@@ -46,7 +46,6 @@ SITEFILE="50${PN}-gentoo.el"
 CMAKE_BINARY="${S}/Bootstrap.cmk/cmake"
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-2.6.3-no-duplicates-in-rpath.patch
 	"${FILESDIR}"/${PN}-2.8.10-darwin-bundle.patch
 	"${FILESDIR}"/${PN}-2.8.10-libform.patch
 	"${FILESDIR}"/${PN}-2.8.10.2-FindPythonLibs.patch
