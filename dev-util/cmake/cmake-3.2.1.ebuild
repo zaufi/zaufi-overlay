@@ -22,7 +22,7 @@ RDEPEND="
 	>=app-arch/libarchive-2.8.0:=
 	>=dev-libs/expat-2.0.1
 	>=net-misc/curl-7.20.0-r1[ssl]
-	dev-lib/jsoncpp
+	dev-libs/jsoncpp
 	sys-libs/zlib
 	virtual/pkgconfig
 	emacs? ( virtual/emacs )
