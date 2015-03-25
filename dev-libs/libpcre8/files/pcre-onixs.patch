@@ -718,8 +718,8 @@ diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
    STRING(TOUPPER "${CMAKE_BUILD_TYPE}" buildtype)
 diff -u -Nrub pcre-8.36.org/pcre-config.cmake.in pcre-8.36/pcre-config.cmake.in
 --- pcre-8.36.org/pcre-config.cmake.in	1970-01-01 07:00:00.000000000 +0700
-+++ pcre-8.36/pcre-config.cmake.in	2015-03-17 21:20:20.000000000 +0700
-@@ -0,0 +1,65 @@
++++ pcre-8.36/pcre-config.cmake.in	2015-03-25 13:25:13.000000000 +0700
+@@ -0,0 +1,67 @@
 +# - Find PCRE Libraries package
 +
 +@PACKAGE_INIT@
@@ -767,10 +767,12 @@ diff -u -Nrub pcre-8.36.org/pcre-config.cmake.in pcre-8.36/pcre-config.cmake.in
 +    endif()
 +endforeach()
 +
-+message(STATUS "Found PCRE: ${PCRE_VERSION}")
-+foreach(module ${_PCRE_FOUND_COMPONENTS})
-+    message(STATUS "  ${module}")
-+endforeach()
++if(NOT PCRE_FIND_QUIETLY)
++    message(STATUS "Found PCRE: ${PCRE_VERSION}")
++    foreach(module ${_PCRE_FOUND_COMPONENTS})
++        message(STATUS "  ${module}")
++    endforeach()
++endif()
 +
 +if(_PCRE_NOTFOUND_MESSAGE)
 +    set(pcre_NOT_FOUND_MESSAGE "${_PCRE_NOTFOUND_MESSAGE}")
