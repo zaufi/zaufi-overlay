@@ -1,6 +1,97 @@
+diff -u -Nrub pcre-8.36.org/cmake/MacroSetupMSVCRuntime.cmake pcre-8.36/cmake/MacroSetupMSVCRuntime.cmake
+--- pcre-8.36.org/cmake/MacroSetupMSVCRuntime.cmake	1970-01-01 07:00:00.000000000 +0700
++++ pcre-8.36/cmake/MacroSetupMSVCRuntime.cmake	2014-07-10 02:47:13.000000000 +0700
+@@ -0,0 +1,87 @@
++# - Configure MSVC runtime library compiler options
++# Configure corresponding compiler options to use static or dynamic MSVC runtime
++#
++# Synopsis:
++#   setup_msvc_runtime(<STATIC|SHARED> [VARIABLES <LIST-OF-VARS-TO-FIX>])
++#
++# List of variables w/ compiler options always includes the follwing:
++#     CMAKE_C_FLAGS_DEBUG
++#     CMAKE_C_FLAGS_MINSIZEREL
++#     CMAKE_C_FLAGS_RELEASE
++#     CMAKE_C_FLAGS_RELWITHDEBINFO
++#     CMAKE_CXX_FLAGS_DEBUG
++#     CMAKE_CXX_FLAGS_MINSIZEREL
++#     CMAKE_CXX_FLAGS_RELEASE
++#     CMAKE_CXX_FLAGS_RELWITHDEBINFO
++#
++# You can add others if there is some other "profile" has configured.
++#
++
++#=============================================================================
++# Copyright 2014 by Alex Turbov <i.zaufi@gmail.com>
++#
++# Distributed under the OSI-approved BSD License (the "License");
++# see accompanying file LICENSE for details.
++#
++# This software is distributed WITHOUT ANY WARRANTY; without even the
++# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
++# See the License for more information.
++#=============================================================================
++# (To distribute this file outside of this repository, substitute the full
++#  License text for the above reference.)
++
++include(CMakeParseArguments)
++
++if(NOT WIN32 OR NOT MSVC)
++    message(FATAL_ERROR "No need to use setup_msvc_runtime for non Windows/MSVC")
++endif()
++
++macro(setup_msvc_runtime runtime_type)
++    set(options)
++    set(one_value_args)
++    set(multi_value_args VARIABLES)
++    cmake_parse_arguments(setup_msvc_runtime "${options}" "${one_value_args}" "${multi_value_args}" ${ARGN})
++
++    string(TOUPPER "${runtime_type}" _setup_msvc_runtime_type)
++    if(_setup_msvc_runtime_type STREQUAL "SHARED")
++        set(_setup_msvc_runtime_what "/MT")
++        set(_setup_msvc_runtime_repl "/MD")
++        message(STATUS "Forcing use of dynamically-linked runtime")
++    elseif(_setup_msvc_runtime_type STREQUAL "STATIC")
++        set(_setup_msvc_runtime_what "/MD")
++        set(_setup_msvc_runtime_repl "/MT")
++        message(STATUS "Forcing use of statically-linked runtime")
++    else()
++        message(FATAL_ERROR "Invalid RUNTIME option value ${setup_msvc_runtime_RUNTIME}")
++    endif()
++
++    # Add predefined profiles
++    list(
++        APPEND setup_msvc_runtime_VARIABLES
++            CMAKE_C_FLAGS_DEBUG
++            CMAKE_C_FLAGS_MINSIZEREL
++            CMAKE_C_FLAGS_RELEASE
++            CMAKE_C_FLAGS_RELWITHDEBINFO
++            CMAKE_CXX_FLAGS_DEBUG
++            CMAKE_CXX_FLAGS_MINSIZEREL
++            CMAKE_CXX_FLAGS_RELEASE
++            CMAKE_CXX_FLAGS_RELWITHDEBINFO
++      )
++
++    foreach(variable ${setup_msvc_runtime_VARIABLES})
++        if(${variable} MATCHES "${_setup_msvc_runtime_what}")
++            string(
++              REGEX REPLACE
++                    "${_setup_msvc_runtime_what}"
++                    "${_setup_msvc_runtime_repl}"
++                ${variable}
++                "${${variable}}"
++              )
++        endif()
++    endforeach()
++endmacro()
++
++# X-Chewy-RepoBase: https://raw.githubusercontent.com/mutanabbi/chewy-cmake-rep/master/
++# X-Chewy-Path: MacroSetupMSVCRuntime.cmake
++# X-Chewy-Version: 1.0
++# X-Chewy-Description: Configure MSVC runtime library compiler options
 diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
---- pcre-8.36.org/CMakeLists.txt	2014-01-31 18:32:09.000000000 +0400
-+++ pcre-8.36/CMakeLists.txt	2015-03-18 15:09:35.000000000 +0300
+--- pcre-8.36.org/CMakeLists.txt	2014-01-31 21:32:09.000000000 +0700
++++ pcre-8.36/CMakeLists.txt	2015-03-25 11:47:42.000000000 +0700
 @@ -65,12 +65,17 @@
  #            so it has been removed.
  # 2013-10-08 PH got rid of the "source" command, which is a bash-ism (use ".")
@@ -45,7 +136,16 @@ diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
  SET(PCRE_EBCDIC OFF CACHE BOOL
      "Use EBCDIC coding instead of ASCII. (This is rarely used outside of mainframe systems.)")
  
-@@ -248,9 +258,9 @@
+@@ -187,6 +197,8 @@
+ ENDIF(MINGW)
+ 
+ IF(MSVC)
++  SET(MSVC_RUNTIME "shared" CACHE STRING "MSVC runtime to use: static (default) or shared")
++
+   OPTION(INSTALL_MSVC_PDB
+          "ON=Install .pdb files built by MSVC, if generated"
+          OFF)
+@@ -248,9 +260,9 @@
          SET(pcre_have_ulong_long 1)
  ENDIF(HAVE_UNSIGNED_LONG_LONG)
  
@@ -57,7 +157,7 @@ diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
  
  IF(NOT PCRE_BUILD_PCRE8 AND NOT PCRE_BUILD_PCRE16 AND NOT PCRE_BUILD_PCRE32)
          MESSAGE(FATAL_ERROR "At least one of PCRE_BUILD_PCRE8, PCRE_BUILD_PCRE16 or PCRE_BUILD_PCRE32 must be enabled")
-@@ -533,52 +543,52 @@
+@@ -533,52 +545,52 @@
  )
  ENDIF(PCRE_BUILD_PCRE32)
  
@@ -146,16 +246,38 @@ diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
  
  # Build setup
  
-@@ -595,289 +605,141 @@
-   SET(CMAKE_DEBUG_POSTFIX "d")
- ENDIF(WIN32)
+@@ -589,295 +601,157 @@
+ ENDIF(MSVC)
  
+ SET(CMAKE_INCLUDE_CURRENT_DIR 1)
+-# needed to make sure to not link debug libs
+-# against release libs and vice versa
+-IF(WIN32)
+-  SET(CMAKE_DEBUG_POSTFIX "d")
+-ENDIF(WIN32)
+ 
+-SET(targets)
 +IF(NOT CMAKE_BUILD_TYPE)
 +    SET(CMAKE_BUILD_TYPE "Debug")
 +ENDIF()
-+STRING(TOUPPER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_UPCASE)
-+SET(CMAKE_${CMAKE_BUILD_TYPE_UPCASE}_POSTFIX "${CMAKE_${CMAKE_BUILD_TYPE_UPCASE}_POSTFIX}-${PCRE_MAJOR}.${PCRE_MINOR}")
- SET(targets)
++
++# NOTE Append version suffix to all library targets, so this build may coexists w/ a system-wide
++IF(UNIX)
++    STRING(TOUPPER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_UPCASE)
++    SET(CMAKE_${CMAKE_BUILD_TYPE_UPCASE}_POSTFIX "${CMAKE_${CMAKE_BUILD_TYPE_UPCASE}_POSTFIX}-${PCRE_MAJOR}.${PCRE_MINOR}")
++    SET(targets)
++ENDIF(UNIX)
++
++# Set desired runtime
++IF(MSVC)
++    INCLUDE(MacroSetupMSVCRuntime)
++    STRING(TOUPPER "${MSVC_RUNTIME}" MSVC_RUNTIME)
++    SETUP_MSVC_RUNTIME(${MSVC_RUNTIME})
++ENDIF(MSVC)
++
++# NOTE @OnixS: All libraries (even static) would have PIC
++# TODO It is not quite good...
++set(CMAKE_POSITION_INDEPENDENT_CODE ON)
  
  # Libraries
  # pcre
@@ -280,9 +402,9 @@ diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
 +        TARGET_LINK_LIBRARIES(pcrecpp PUBLIC pcre)
 +    ENDIF(BUILD_SHARED_LIBS)
 +ENDIF(PCRE_BUILD_PCRECPP)
-+
  
 -  IF(MINGW AND NOT PCRE_STATIC)
++
 +IF(MINGW)
      IF(NON_STANDARD_LIB_PREFIX)
 -      SET_TARGET_PROPERTIES(pcrecpp
@@ -535,7 +657,7 @@ diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
          # Remove pcrecpp.3
          FOREACH(man ${man3})
                  GET_FILENAME_COMPONENT(man_tmp ${man} NAME)
-@@ -886,29 +748,46 @@
+@@ -886,29 +760,46 @@
                  ENDIF(NOT man_tmp STREQUAL "pcrecpp.3")
          ENDFOREACH(man ${man3})
          SET(man3 ${man3_new})
@@ -595,8 +717,8 @@ diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
  IF(PCRE_SHOW_REPORT)
    STRING(TOUPPER "${CMAKE_BUILD_TYPE}" buildtype)
 diff -u -Nrub pcre-8.36.org/pcre-config.cmake.in pcre-8.36/pcre-config.cmake.in
---- pcre-8.36.org/pcre-config.cmake.in	1970-01-01 03:00:00.000000000 +0300
-+++ pcre-8.36/pcre-config.cmake.in	2015-03-17 17:20:20.000000000 +0300
+--- pcre-8.36.org/pcre-config.cmake.in	1970-01-01 07:00:00.000000000 +0700
++++ pcre-8.36/pcre-config.cmake.in	2015-03-17 21:20:20.000000000 +0700
 @@ -0,0 +1,65 @@
 +# - Find PCRE Libraries package
 +
