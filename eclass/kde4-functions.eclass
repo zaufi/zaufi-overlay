@@ -1,6 +1,6 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/eclass/kde4-functions.eclass,v 1.76 2015/03/29 10:29:42 johu Exp $
 
 # @ECLASS: kde4-functions.eclass
 # @MAINTAINER:
@@ -17,9 +17,9 @@ inherit versionator
 
 # @ECLASS-VARIABLE: EAPI
 # @DESCRIPTION:
-# Currently kde4 eclasses support EAPI 4 and 5.
+# Currently kde4 eclasses support EAPI 5.
 case ${EAPI} in
-	4|5) : ;;
+	5) : ;;
 	*) die "EAPI=${EAPI:-0} is not supported" ;;
 esac
 
@@ -36,7 +36,8 @@ esac
 # @DESCRIPTION:
 # This gets set to a non-zero value when a package is considered a kde or
 # kdevelop ebuild.
-if [[ ${CATEGORY} = kde-base ]]; then
+if [[ ${CATEGORY} = kde-base || ${CATEGORY} = kde-apps ]]; then
+	debug-print "${ECLASS}: KDEBASE ebuild recognized"
 	KDEBASE=kde-base
 elif [[ ${KMNAME-${PN}} = kdevelop ]]; then
 	KDEBASE=kdevelop
@@ -271,6 +272,41 @@ load_library_dependencies() {
 	eend $?
 }
 
+# @FUNCTION: add_kdeapps_dep
+# @DESCRIPTION:
+# Create proper dependency for kde-apps/ dependencies.
+# This takes 1 to 3 arguments. The first being the package name, the optional
+# second is additional USE flags to append, and the optional third is the
+# version to use instead of the automatic version (use sparingly).
+# The output of this should be added directly to DEPEND/RDEPEND, and may be
+# wrapped in a USE conditional (but not an || conditional without an extra set
+# of parentheses).
+add_kdeapps_dep() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	local ver
+
+	if [[ -n ${3} ]]; then
+		ver=${3}
+	elif [[ -n ${KDE_OVERRIDE_MINIMAL} ]]; then
+		ver=${KDE_OVERRIDE_MINIMAL}
+	elif [[ ${KDEBASE} != kde-base ]]; then
+		ver=${KDE_MINIMAL}
+	# if building stable-live version depend just on the raw KDE version
+	# to allow merging packages against more stable basic stuff
+	elif [[ ${PV} == *.9999 ]]; then
+		ver=$(get_kde_version)
+	else
+		ver=${PV}
+	fi
+
+	[[ -z ${1} ]] && die "Missing parameter"
+
+	#FIXME
+	# Drop aqua= from kf5 packages
+	echo " >=kde-apps/${1}-${ver}:4[aqua=${2:+,${2}}]"
+}
+
 # @FUNCTION: add_kdebase_dep
 # @DESCRIPTION:
 # Create proper dependency for kde-base/ dependencies.
@@ -289,12 +325,16 @@ add_kdebase_dep() {
 		ver=${3}
 	elif [[ -n ${KDE_OVERRIDE_MINIMAL} ]]; then
 		ver=${KDE_OVERRIDE_MINIMAL}
-	elif [[ ${KDEBASE} != kde-base ]]; then
+	elif [[ -n ${KDE_MINIMAL} ]]; then
 		ver=${KDE_MINIMAL}
-	# if building stable-live version depend just on the raw KDE version
-	# to allow merging packages against more stable basic stuff
-	elif [[ ${PV} == *.9999 ]]; then
-		ver=$(get_kde_version)
+	# if building live version depend on the final release since there will
+	# not be any more major development. this solves dep errors as not all
+	# packages have kde-base live versions now
+
+	# depend on the last sane released version where the normal >=${PV} dep
+	# is not possible
+	elif [[ ${CATEGORY} == kde-apps || ${PV} == *9999 ]]; then
+		ver=4.14.3
 	else
 		ver=${PV}
 	fi
