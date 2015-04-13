@@ -53,6 +53,8 @@ PDEPEND="app-eselect/eselect-package-manager"
 
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
+PATCHES=( "${FILESDIR}/${P}-rollback-to-old-compress.patch" )
+
 DOCS=( AUTHORS README NEWS )
 
 pkg_pretend() {
