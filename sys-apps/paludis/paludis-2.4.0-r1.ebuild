@@ -53,8 +53,6 @@ PDEPEND="app-eselect/eselect-package-manager"
 
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
-PATCHES=( "${FILESDIR}/${P}-rollback-to-old-compress.patch" )
-
 DOCS=( AUTHORS README NEWS )
 
 pkg_pretend() {
@@ -92,6 +90,7 @@ src_prepare() {
 	# https://bugs.gentoo.org/show_bug.cgi?id=439372#c2
 	sed -i -e "1s/ruby/&${RUBY_VER/./}/" ruby/demos/*.rb || die
 
+	epatch "${FILESDIR}/${P}-rollback-to-old-compress.patch"
 	epatch_user
 }
 
