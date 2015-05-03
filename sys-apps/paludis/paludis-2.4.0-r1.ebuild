@@ -91,6 +91,7 @@ src_prepare() {
 	sed -i -e "1s/ruby/&${RUBY_VER/./}/" ruby/demos/*.rb || die
 
 	epatch "${FILESDIR}/${P}-rollback-to-old-compress.patch"
+	epatch "${FILESDIR}/${P}-gcc-5.1-fix.patch"
 	epatch_user
 }
 
