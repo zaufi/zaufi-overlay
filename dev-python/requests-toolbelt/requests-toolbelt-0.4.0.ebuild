@@ -16,7 +16,7 @@ LICENSE="BSD public-domain"
 SLOT="0"
 KEYWORDS="amd64 x86"
 IUSE=""
-RESTRICT="fetch test"
+RESTRICT="mirror test"
 
 DEPEND="
 	>=dev-python/requests-2.0.1[${PYTHON_USEDEP}]

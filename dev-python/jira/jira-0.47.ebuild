@@ -16,7 +16,7 @@ LICENSE="BSD public-domain"
 SLOT="0"
 KEYWORDS="amd64 x86"
 IUSE=""
-RESTRICT="fetch test"
+RESTRICT="mirror test"
 
 # >=dev-libs/cryptlib-3.3.3[python,${PYTHON_USEDEP}]
 DEPEND="

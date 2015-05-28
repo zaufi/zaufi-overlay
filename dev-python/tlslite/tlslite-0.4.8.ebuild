@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="amd64 x86"
 #Refrain for now setting IUSE test and deps of test given test restricted.
 IUSE="doc gmp"
-RESTRICT="fetch test"
+RESTRICT="mirror test"
 
 # >=dev-libs/cryptlib-3.3.3[python,${PYTHON_USEDEP}]
 DEPEND="|| (
