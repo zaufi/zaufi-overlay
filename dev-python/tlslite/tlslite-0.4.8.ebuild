@@ -19,10 +19,10 @@ KEYWORDS="amd64 x86"
 IUSE="doc gmp"
 RESTRICT="test"
 
-DEPEND=">=dev-libs/cryptlib-3.3.3[python,${PYTHON_USEDEP}]
-	|| (
-		dev-python/m2crypto[${PYTHON_USEDEP}]
+# >=dev-libs/cryptlib-3.3.3[python,${PYTHON_USEDEP}]
+DEPEND="|| (
 		dev-python/pycrypto[${PYTHON_USEDEP}]
+		dev-python/m2crypto[${PYTHON_USEDEP}]
 	)
 	gmp? ( dev-python/gmpy[${PYTHON_USEDEP}] )"
 RDEPEND="${DEPEND}"
