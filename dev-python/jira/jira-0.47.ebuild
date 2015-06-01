@@ -10,12 +10,12 @@ inherit distutils-r1
 
 DESCRIPTION="Python library designed to ease the use of the JIRA REST API"
 HOMEPAGE="http://jira.readthedocs.org/en/latest/"
-SRC_URI="https://pypi.python.org/packages/source/j/${PN}/${P}.tar.gz"
+SRC_URI="https://pypi.python.org/packages/source/j/${PN}/${P}.tar.gz http://readthedocs.org/projects/jira/downloads/htmlzip/latest/ -> ${PN}-doc-${PV}.zip"
 
 LICENSE="BSD public-domain"
 SLOT="0"
 KEYWORDS="amd64 x86"
-IUSE=""
+IUSE="doc"
 RESTRICT="mirror test"
 
 # >=dev-libs/cryptlib-3.3.3[python,${PYTHON_USEDEP}]
@@ -27,3 +27,8 @@ DEPEND="
 	>=dev-python/six-1.9.0[${PYTHON_USEDEP}]
 	"
 RDEPEND="${DEPEND}"
+
+python_install_all() {
+	distutils-r1_python_install_all
+	use doc && dohtml -r "${WORKDIR}"/jira-latest/*
+}
