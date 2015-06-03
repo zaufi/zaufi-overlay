@@ -4,9 +4,9 @@
 
 EAPI=5
 
-DESCRIPTION="Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification"
-HOMEPAGE="http://www.w3.org/TR/CSS2/"
-SRC_URI="http://www.w3.org/TR/CSS2/css2.tgz"
+DESCRIPTION="HTML 4.01 Specification"
+HOMEPAGE="http://www.w3.org/TR/html401/"
+SRC_URI="http://www.w3.org/TR/html401/html40.tgz"
 RESTRICT="mirror"
 
 LICENSE=""
