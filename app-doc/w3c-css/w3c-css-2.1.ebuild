@@ -18,5 +18,5 @@ DEPEND=""
 RDEPEND=""
 
 src_install() {
-    dohtml ${S}
+    dohtml "${WORKDIR}"
 }
