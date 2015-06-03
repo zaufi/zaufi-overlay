@@ -21,7 +21,6 @@ src_unpack() {
 	mkdir -p "${S}"
 	cd "${S}"
 	default_src_unpack
-	ln -s cover.html index.html
 }
 
 src_install() {
