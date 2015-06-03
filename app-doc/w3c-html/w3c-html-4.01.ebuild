@@ -10,7 +10,7 @@ SRC_URI="http://www.w3.org/TR/html401/html40.tgz"
 RESTRICT="mirror"
 
 LICENSE=""
-SLOT="2.1"
+SLOT="4"
 KEYWORDS="amd64 x86"
 IUSE=""
 
