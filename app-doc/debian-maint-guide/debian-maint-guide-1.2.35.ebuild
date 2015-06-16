@@ -24,5 +24,5 @@ src_unpack() {
 
 src_install() {
 	dohtml -r ${WORKDIR}/usr/share/doc/${DEB_NAME}/html/
-	dodoc ${WORKDIR}/usr/share/doc/${DEB_NAME}/{changelog.gz,copyright,${DEB_NAME}.{en.txt.gz,.en.pdf}}
+	dodoc ${WORKDIR}/usr/share/doc/${DEB_NAME}/{changelog.gz,copyright,${DEB_NAME}.{en.txt.gz,en.pdf}}
 }
