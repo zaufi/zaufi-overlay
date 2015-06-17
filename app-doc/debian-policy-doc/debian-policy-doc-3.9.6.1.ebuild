@@ -15,7 +15,7 @@ LICENSE="GPL-2+"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
-[<32;1;19M
+
 S="${WORKDIR}"
 
 src_unpack() {
