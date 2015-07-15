@@ -45,9 +45,7 @@ DEPEND="dev-util/cmake
 	doc? ( ${PYTHON_DEPS} )
 	${RDEPEND}"
 
-# src_test() defaults to make -C testing but there is no such directory (bug #504448)
 RESTRICT="mirror test"
-EPATCH_SUFFIX="patch"
 
 get_langs() {
 	# using only user set linguas also fixes #263641
@@ -85,8 +83,6 @@ src_prepare() {
 	# Call dot with -Teps instead of -Tps for EPS generation - bug #282150
 	sed -i -e '/addJob("ps"/ s/"ps"/"eps"/g' src/dot.cpp || die
 
-	epatch "${FILESDIR}"/${P}-empty-line-sigsegv.patch #454348
-
 	# fix pdf doc
 	sed -i.orig -e "s:g_kowal:g kowal:" \
 		doc/maintainers.txt || die
@@ -103,8 +99,15 @@ src_prepare() {
 }
 
 src_configure() {
+	local linguas="`$(get_langs)`"
+	local nls_opt
+	if [ -z "${linguas}" ]; then
+		nls_opt='-Denglish_only=ON'
+	else
+		nls_opt="-DLANG_CODES='${linguas}'"
+	fi
 	local mycmakeargs=(
-		-DLANG_CODES="`$(get_langs)`"
+		${nls_opt}
 		$(cmake-utils_use doc build_doc)
 		$(cmake-utils_use clang use_libclang)
 		$(cmake-utils_use doxysearch build_search)
@@ -115,13 +118,13 @@ src_configure() {
 }
 
 src_compile() {
-
-	emake
+	cmake-utils_src_compile
 	# generate html and pdf (if tetex in use) documents.
 	# errors here are not considered fatal, hence the ewarn message
 	# TeX's font caching in /var/cache/fonts causes sandbox warnings,
 	# so we allow it.
 	if use doc; then
+		cd "${BUILD_DIR}" && emake docs
 		if ! use dot; then
 			sed -i -e "s/HAVE_DOT               = YES/HAVE_DOT    = NO/" \
 				{Doxyfile,doc/Doxyfile} \
@@ -147,7 +150,7 @@ src_compile() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" MAN1DIR=share/man/man1 install
+	cmake-utils_src_install
 
 	if use qt4; then
 		doicon "${DISTDIR}/doxywizard.png"
@@ -160,6 +163,7 @@ src_install() {
 
 	# pdf and html manuals
 	if use doc; then
+		cd "${BUILD_DIR}"
 		dohtml -r html/*
 		use latex && dodoc latex/doxygen_manual.pdf
 	fi
