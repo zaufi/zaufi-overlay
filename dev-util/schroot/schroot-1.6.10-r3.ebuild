@@ -1,10 +1,10 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-util/schroot/schroot-1.6.5.ebuild,v 1.2 2013/03/06 20:22:29 steev Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-util/schroot/schroot-1.6.10-r2.ebuild,v 1.1 2015/07/31 22:46:23 jcallen Exp $
 
-EAPI="4"
+EAPI="5"
 
-inherit autotools base bash-completion-r1 eutils pam versionator
+inherit cmake-utils eutils pam versionator bash-completion-r1
 
 MY_P=${PN}_${PV}
 DEB_REL=1
@@ -12,7 +12,7 @@ DEB_REL=1
 DESCRIPTION="Utility to execute commands in a chroot environment"
 HOMEPAGE="http://packages.debian.org/source/sid/schroot"
 SRC_URI="mirror://debian/pool/main/${PN::1}/${PN}/${MY_P}.orig.tar.xz
-	mirror://debian/pool/main/${PN::1}/${PN}/${MY_P}-${DEB_REL}.debian.tar.gz"
+	mirror://debian/pool/main/${PN::1}/${PN}/${MY_P}-${DEB_REL}.debian.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -21,7 +21,6 @@ IUSE="btrfs +dchroot debug doc lvm nls pam test"
 
 COMMON_DEPEND="
 	>=dev-libs/boost-1.42.0
-	dev-libs/lockdev
 	>=sys-apps/util-linux-2.16
 	btrfs? ( >=sys-fs/btrfs-progs-0.19-r2 )
 	lvm? ( sys-fs/lvm2 )
@@ -48,65 +47,59 @@ RDEPEND="${COMMON_DEPEND}
 "
 
 PATCHES=(
-	"${FILESDIR}/${PN}-1.6.3-tests.patch"
-	"${FILESDIR}/${PN}-1.6.5-fix-btrfs-detection.patch"
+	"${FILESDIR}/${PN}-1.6.10-cmake-add-additional-regex-tests.patch"
 )
 
 src_unpack() {
 	unpack ${MY_P}.orig.tar.xz
 	cd "${S}"
-	unpack ${MY_P}-${DEB_REL}.debian.tar.gz
+	unpack ${MY_P}-${DEB_REL}.debian.tar.xz
 }
 
 src_prepare() {
-	base_src_prepare
+	sed -i -e 's/warn(/message(WARNING /' man/CMakeLists.txt || die
+	sed -i -e '/^have schroot/d' etc/bash_completion/schroot || die
 
-	# Don't depend on cppunit unless we are testing
-	use test || sed -i '/AM_PATH_CPPUNIT/d' configure.ac
-
-	eautoreconf
+	cmake-utils_src_prepare
 }
 
 src_configure() {
-	root_tests=no
-	use test && (( EUID == 0 )) && root_tests=yes
-	use nls || export ac_cv_path_PO4A=
-	econf \
-		$(use_enable btrfs btrfs-snapshot) \
-		$(use_enable doc doxygen) \
-		$(use_enable dchroot) \
-		$(use_enable dchroot dchroot-dsa) \
-		$(use_enable debug) \
-		$(use_enable lvm lvm-snapshot) \
-		$(use_enable nls) \
-		$(use_enable pam) \
-		--enable-block-device \
-		--enable-loopback \
-		--enable-uuid \
-		--enable-root-tests=$root_tests \
-		--enable-shared \
-		--disable-static \
-		--localstatedir="${EPREFIX}"/var \
-		--with-bash-completion-dir="$(get_bashcompdir)"
+	local mycmakeargs=(
+		$(cmake-utils_use btrfs btrfs-snapshot)
+		$(cmake-utils_use dchroot dchroot)
+		$(cmake-utils_use dchroot dchroot-dsa)
+		$(cmake-utils_use debug debug)
+		$(cmake-utils_use doc doxygen)
+		$(cmake-utils_use lvm lvm-snapshot)
+		$(cmake-utils_use nls nls)
+		$(cmake-utils_use pam pam)
+		$(cmake-utils_use test test)
+		-Dbash_completion_dir="$(get_bashcompdir)"
+		-DCMAKE_INSTALL_SYSCONFDIR="${EPREFIX}/etc"
+		-DCMAKE_INSTALL_LOCALSTATEDIR="${EPREFIX}/var"
+	)
+	if ! use nls; then
+		mycmakeargs+=(-DPO4A_EXECUTABLE=NOTFOUND)
+	fi
+
+	cmake-utils_src_configure
 }
 
 src_compile() {
-	emake all $(usev doc)
+	cmake-utils_src_compile all $(usev doc)
 }
 
 src_test() {
-	if [[ $root_tests == yes && $EUID -ne 0 ]]; then
-		ewarn "Disabling tests because you are no longer root"
+	if [[ $EUID -ne 0 ]]; then
+		ewarn "Disabling tests because you are not root"
 		return 0
 	fi
 
-	# Fix a bug in the tarball -- an empty directory was omitted
-	mkdir test/run-parts.ex2
-	default
+	cmake-utils_src_test
 }
 
 src_install() {
-	default
+	cmake-utils_src_install
 
 	insinto /usr/share/doc/${PF}/contrib/setup.d
 	doins contrib/setup.d/05customdir contrib/setup.d/09fsck contrib/setup.d/10mount-ssh
@@ -118,18 +111,15 @@ src_install() {
 
 	if use doc; then
 		docinto html/sbuild
-		dohtml doc/sbuild/html/*
+		dohtml "${BUILD_DIR}"/doc/sbuild/html/*
 		docinto html/schroot
-		dohtml doc/schroot/html/*
+		dohtml "${BUILD_DIR}"/doc/schroot/html/*
 	fi
 
 	if use pam; then
 		rm -f "${ED}"etc/pam.d/schroot
 		pamd_mimic_system schroot auth account session
 	fi
-
-	# Remove *.la files
-	find "${D}" -name "*.la" -exec rm {} + || die "removal of *.la files failed"
 }
 
 pkg_postinst() {
