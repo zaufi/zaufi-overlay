@@ -18,6 +18,8 @@ KEYWORDS="amd64 x86"
 IUSE="doc"
 RESTRICT="mirror test"
 
+PATCHES=( "${FILESDIR}/python31-dont-need-ordereddict.patch" )
+
 # >=dev-libs/cryptlib-3.3.3[python,${PYTHON_USEDEP}]
 DEPEND="
 	>=dev-python/requests-2.6.0[${PYTHON_USEDEP}]
@@ -25,6 +27,7 @@ DEPEND="
 	dev-python/requests-toolbelt[${PYTHON_USEDEP}]
 	dev-python/tlslite[${PYTHON_USEDEP}]
 	>=dev-python/six-1.9.0[${PYTHON_USEDEP}]
+	$(python_gen_cond_dep 'dev-python/ordereddict[${PYTHON_USEDEP}]' python{2_7})
 	"
 RDEPEND="${DEPEND}"
 
