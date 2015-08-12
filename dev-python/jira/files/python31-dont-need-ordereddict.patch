@@ -7,7 +7,7 @@
 +def _is_ordereddict_needed():
 +    ''' Check if `ordereddict` package really needed '''
 +    try:
-+        import OrderedDict
++        from collections import OrderedDict
 +        return False
 +    except ImportError:
 +        pass
