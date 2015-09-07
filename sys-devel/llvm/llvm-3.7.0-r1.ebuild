@@ -21,7 +21,7 @@ SRC_URI="http://llvm.org/releases/${PV}/${P}.src.tar.xz
 LICENSE="UoI-NCSA"
 SLOT="0/${PV}"
 KEYWORDS="~amd64 ~arm ~arm64 ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x64-freebsd ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos"
-IUSE="clang +cxx1y +cxxmodules debug doc gold libedit +libffi lldb multitarget ncurses ocaml
+IUSE="clang +cxx1y debug doc gold libedit +libffi lldb multitarget ncurses ocaml
 	python +static-analyzer test xml video_cards_radeon kernel_Darwin"
 
 COMMON_DEPEND="
@@ -332,12 +332,6 @@ multilib_src_configure() {
 	if use cxx1y; then
 		mycmakeargs+=(
 			-DLLVM_ENABLE_CXX1Y=$(usex cxx1y)
-		)
-	fi
-
-	if use cxxmodules; then
-		mycmakeargs+=(
-			-DLLVM_ENABLE_MODULES=$(usex cxxmodules)
 		)
 	fi
 
