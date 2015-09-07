@@ -332,11 +332,13 @@ multilib_src_configure() {
 	if use cxx1y; then
 		mycmakeargs+=(
 			-DLLVM_ENABLE_CXX1Y=$(usex cxx1y)
+		)
 	fi
 
 	if use cxxmodules; then
 		mycmakeargs+=(
 			-DLLVM_ENABLE_MODULES=$(usex cxxmodules)
+		)
 	fi
 
 	cmake-utils_src_configure
