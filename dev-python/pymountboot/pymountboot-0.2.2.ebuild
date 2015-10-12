@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/dev-python/pymountboot/pymountboot-0.2.2.ebuild,v 1.8 2014/07/06 13:18:35 mgorny Exp $
 
 EAPI=5
-PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3,3_4} pypy pypy2_0 )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3,3_4,3_5} pypy pypy2_0 )
 
 inherit distutils-r1
 

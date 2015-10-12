@@ -5,7 +5,6 @@
 
 inherit distutils
 
-
 DESCRIPTION="An autocompletion library for Python"
 HOMEPAGE="http://code.google.com/p/pysmell"
 SRC_URI="http://pypi.python.org/packages/source/p/pysmell/${P}.zip"
@@ -14,4 +13,3 @@ KEYWORDS="~amd64"
 SLOT="0"
 IUSE=""
 DEPEND="app-arch/unzip"
-
