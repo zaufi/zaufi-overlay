@@ -4,7 +4,7 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3,3_4} )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3,3_4,3_5} )
 # matching profile defaults for now
 RUBY_VER=2.0
 

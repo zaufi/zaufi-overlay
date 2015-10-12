@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/dev-python/termcolor/termcolor-1.1.0-r1.ebuild,v 1.5 2014/08/10 21:23:03 slyfox Exp $
 
 EAPI=5
-PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3,3_4} pypy pypy2_0 )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3,3_4,3_5} pypy pypy2_0 )
 
 inherit distutils-r1
 
