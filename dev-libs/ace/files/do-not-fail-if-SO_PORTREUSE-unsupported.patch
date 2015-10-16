@@ -1,0 +1,11 @@
+--- a/ace/SOCK_Dgram_Mcast.cpp
++++ b/ace/SOCK_Dgram_Mcast.cpp
+@@ -186,7 +186,7 @@ ACE_SOCK_Dgram_Mcast::open_i (const ACE_
+       if (this->ACE_SOCK::set_option (SOL_SOCKET,
+                                       SO_REUSEPORT,
+                                       &one,
+-                                      sizeof one) == -1)
++                                      sizeof one) == -1 && errno != ENOPROTOOPT)
+         return -1;
+ #endif /* SO_REUSEPORT */
+     }
