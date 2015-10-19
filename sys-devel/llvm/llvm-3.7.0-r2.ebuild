@@ -275,7 +275,7 @@ multilib_src_configure() {
 		mycmakeargs+=(
 			-DLLVM_BUILD_DOCS=$(usex doc)
 			-DLLVM_ENABLE_SPHINX=$(usex doc)
-			-DLLVM_ENABLE_DOXYGEN=OFF
+			-DLLVM_ENABLE_DOXYGEN=ON
 			-DLLVM_INSTALL_HTML="${EPREFIX}/usr/share/doc/${PF}/html"
 			-DSPHINX_WARNINGS_AS_ERRORS=OFF
 			-DLLVM_INSTALL_UTILS=ON
