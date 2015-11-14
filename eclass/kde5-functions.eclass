@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/eclass/kde5-functions.eclass,v 1.7 2015/05/09 10:24:46 mrueg Exp $
+# $Id$
 
 # @ECLASS: kde5-functions.eclass
 # @MAINTAINER:
@@ -26,17 +26,22 @@ esac
 # @ECLASS-VARIABLE: FRAMEWORKS_MINIMAL
 # @DESCRIPTION:
 # Minimal Frameworks version to require for the package.
-: ${FRAMEWORKS_MINIMAL:=5.8.0}
+: ${FRAMEWORKS_MINIMAL:=5.14.0}
 
 # @ECLASS-VARIABLE: PLASMA_MINIMAL
 # @DESCRIPTION:
 # Minimal Plasma version to require for the package.
-: ${PLASMA_MINIMAL:=5.2.0}
+: ${PLASMA_MINIMAL:=5.4.1}
 
 # @ECLASS-VARIABLE: KDE_APPS_MINIMAL
 # @DESCRIPTION:
 # Minimal KDE Applicaions version to require for the package.
 : ${KDE_APPS_MINIMAL:=14.12.0}
+
+# @ECLASS-VARIABLE: KDE_GCC_MINIMAL
+# @DESCRIPTION:
+# Minimal GCC version to require for the package.
+: ${KDE_GCC_MINIMAL:=4.8}
 
 # @ECLASS-VARIABLE: KDEBASE
 # @DESCRIPTION:
@@ -79,10 +84,12 @@ _check_gcc_version() {
 		local version=$(gcc-version)
 		local major=${version%.*}
 		local minor=${version#*.}
+		local min_major=${KDE_GCC_MINIMAL%.*}
+		local min_minor=${KDE_GCC_MINIMAL#*.}
 
-		[[ ${major} -lt 4 ]] || \
-				( [[ ${major} -eq 4 && ${minor} -lt 8 ]] ) \
-			&& die "Sorry, but gcc-4.8 or later is required for KDE 5."
+		[[ ${major} -lt ${min_major} ]] || \
+				( [[ ${major} -eq ${min_major} && ${minor} -lt ${min_minor} ]] ) \
+			&& die "Sorry, but gcc-${KDE_GCC_MINIMAL} or later is required for this package."
 	fi
 }
 
@@ -188,7 +195,11 @@ add_kdeapps_dep() {
 		version=${PV}
 	elif [[ -z "${version}" ]] ; then
 		# In KDE applications world, 5.9999 > yy.mm.x
-		[[ ${PV} = 5.9999 ]] && version=5.9999 || version=${KDE_APPS_MINIMAL}
+		if [[ ${PV} = 5.9999 || ${PV} = 9999 ]]; then
+			version=5.9999
+		else
+			version=${KDE_APPS_MINIMAL}
+		fi
 	fi
 
 	_add_kdecategory_dep kde-apps "${1}" "${2}" "${version}"
@@ -218,7 +229,7 @@ punt_bogus_dep() {
 	local prefix=${1}
 	local dep=${2}
 
-	pcregrep -Mn "(?s)find_package\(\s*${prefix}.[^)]*?${dep}.*?\)" CMakeLists.txt > "${T}/bogus${dep}"
+	pcregrep -Mn "(?s)find_package\s*\(\s*${prefix}.[^)]*?${dep}.*?\)" CMakeLists.txt > "${T}/bogus${dep}"
 
 	# pcregrep returns non-zero on no matches/error
 	if [[ $? != 0 ]] ; then
@@ -232,7 +243,7 @@ punt_bogus_dep() {
 	sed -e "${first},${last}s/${dep}//" -i CMakeLists.txt || die
 
 	if [[ ${length} = 1 ]] ; then
-		sed -e "/find_package(\s*${prefix}\s*REQUIRED\s*COMPONENTS\s*)/d" -i CMakeLists.txt || die
+		sed -e "/find_package\s*(\s*${prefix}\s*REQUIRED\s*COMPONENTS\s*)/d" -i CMakeLists.txt || die
 	fi
 }
 

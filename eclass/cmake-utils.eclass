@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/eclass/cmake-utils.eclass,v 1.114 2015/02/18 06:19:32 bircoph Exp $
+# $Id$
 
 # @ECLASS: cmake-utils.eclass
 # @MAINTAINER:
@@ -121,15 +121,14 @@ case ${WANT_CMAKE} in
 		CMAKEDEPEND+="${WANT_CMAKE}? ( "
 		;;
 esac
-inherit toolchain-funcs multilib flag-o-matic eutils
+inherit toolchain-funcs multilib flag-o-matic eutils versionator
 
 case ${EAPI} in
 	2|3|4|5) : ;;
 	*) die "EAPI=${EAPI:-0} is not supported" ;;
 esac
 
-CMAKE_EXPF="src_prepare src_configure src_compile src_test src_install"
-EXPORT_FUNCTIONS ${CMAKE_EXPF}
+EXPORT_FUNCTIONS src_prepare src_configure src_compile src_test src_install
 
 case ${CMAKE_MAKEFILE_GENERATOR} in
 	emake)
@@ -229,6 +228,11 @@ _generator_to_use() {
 
 	case ${CMAKE_MAKEFILE_GENERATOR} in
 		ninja)
+			# if ninja is enabled but not installed, the build could fail
+			# this could happen if ninja is manually enabled (eg. make.conf) but not installed
+			if ! has_version dev-util/ninja; then
+				die "CMAKE_MAKEFILE_GENERATOR is set to ninja, but ninja is not installed. Please install dev-util/ninja or unset CMAKE_MAKEFILE_GENERATOR."
+			fi
 			generator_name="Ninja"
 			;;
 		emake)
@@ -376,7 +380,7 @@ _modify-cmakelists() {
 		|| die "${LINENO}: failed to disable hardcoded settings"
 
 	# NOTE Append some useful summary here
-	cat >> "${CMAKE_USE_DIR}"/CMakeLists.txt <<- _EOF_
+	cat >> "${CMAKE_USE_DIR}"/CMakeLists.txt <<- _EOF_ || die
 
 		MESSAGE(STATUS "<<< Gentoo configuration >>>
 		Build type      \${CMAKE_BUILD_TYPE}
@@ -394,15 +398,15 @@ _modify-cmakelists() {
 enable_cmake-utils_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	pushd "${S}" > /dev/null
+	pushd "${S}" > /dev/null || die
 
 	debug-print "$FUNCNAME: PATCHES=$PATCHES"
 	[[ ${PATCHES[@]} ]] && epatch "${PATCHES[@]}"
-		
+
 	debug-print "$FUNCNAME: applying user patches"
 	epatch_user
 
-	popd > /dev/null
+	popd > /dev/null || die
 }
 
 # @VARIABLE: mycmakeargs
@@ -457,18 +461,28 @@ enable_cmake-utils_src_configure() {
 
 	# Prepare Gentoo override rules (set valid compiler, append CPPFLAGS etc.)
 	local build_rules=${BUILD_DIR}/gentoo_rules.cmake
-	cat > "${build_rules}" <<- _EOF_
+	# Since cmake-3.4.0_rc1 "<FLAGS>" no longer contains includes and thus
+	# we need to add "<INCLUDES>"
+	local includes=
+	if [[ ${PN} == cmake ]] ; then
+		if $(version_is_at_least 3.4.0 $(get_version_component_range 1-3 ${PV})) ; then
+			includes="<INCLUDES>"
+		fi
+	elif has_version \>=dev-util/cmake-3.4.0_rc1 ; then
+		includes="<INCLUDES>"
+	fi
+	cat > "${build_rules}" <<- _EOF_ || die
 		SET (CMAKE_AR $(type -P $(tc-getAR)) CACHE FILEPATH "Archive manager" FORCE)
-		SET (CMAKE_ASM_COMPILE_OBJECT "<CMAKE_C_COMPILER> <DEFINES> ${CFLAGS} <FLAGS> -o <OBJECT> -c <SOURCE>" CACHE STRING "ASM compile command" FORCE)
-		SET (CMAKE_C_COMPILE_OBJECT "<CMAKE_C_COMPILER> <DEFINES> ${CPPFLAGS} <FLAGS> -o <OBJECT> -c <SOURCE>" CACHE STRING "C compile command" FORCE)
-		SET (CMAKE_CXX_COMPILE_OBJECT "<CMAKE_CXX_COMPILER> <DEFINES> ${CPPFLAGS} <FLAGS> -o <OBJECT> -c <SOURCE>" CACHE STRING "C++ compile command" FORCE)
-		SET (CMAKE_Fortran_COMPILE_OBJECT "<CMAKE_Fortran_COMPILER> <DEFINES> ${FCFLAGS} <FLAGS> -o <OBJECT> -c <SOURCE>" CACHE STRING "Fortran compile command" FORCE)
+		SET (CMAKE_ASM_COMPILE_OBJECT "<CMAKE_C_COMPILER> <DEFINES> ${includes} ${CFLAGS} <FLAGS> -o <OBJECT> -c <SOURCE>" CACHE STRING "ASM compile command" FORCE)
+		SET (CMAKE_C_COMPILE_OBJECT "<CMAKE_C_COMPILER> <DEFINES> ${includes} ${CPPFLAGS} <FLAGS> -o <OBJECT> -c <SOURCE>" CACHE STRING "C compile command" FORCE)
+		SET (CMAKE_CXX_COMPILE_OBJECT "<CMAKE_CXX_COMPILER> <DEFINES> ${includes} ${CPPFLAGS} <FLAGS> -o <OBJECT> -c <SOURCE>" CACHE STRING "C++ compile command" FORCE)
+		SET (CMAKE_Fortran_COMPILE_OBJECT "<CMAKE_Fortran_COMPILER> <DEFINES> ${includes} ${FCFLAGS} <FLAGS> -o <OBJECT> -c <SOURCE>" CACHE STRING "Fortran compile command" FORCE)
 		SET (CMAKE_RANLIB $(type -P $(tc-getRANLIB)) CACHE FILEPATH "Archive index generator" FORCE)
 		SET (PKG_CONFIG_EXECUTABLE $(type -P $(tc-getPKG_CONFIG)) CACHE FILEPATH "pkg-config executable" FORCE)
 	_EOF_
 
 	local toolchain_file=${BUILD_DIR}/gentoo_toolchain.cmake
-	cat > ${toolchain_file} <<- _EOF_
+	cat > ${toolchain_file} <<- _EOF_ || die
 		SET (CMAKE_C_COMPILER $(tc-getCC))
 		SET (CMAKE_CXX_COMPILER $(tc-getCXX))
 		SET (CMAKE_Fortran_COMPILER $(tc-getFC))
@@ -480,18 +494,23 @@ enable_cmake-utils_src_configure() {
 			Cygwin) sysname="CYGWIN_NT-5.1" ;;
 			HPUX) sysname="HP-UX" ;;
 			linux) sysname="Linux" ;;
-			Winnt) sysname="Windows" ;;
+			Winnt)
+				sysname="Windows"
+				cat >> "${toolchain_file}" <<- _EOF_ || die
+					SET (CMAKE_RC_COMPILER $(tc-getRC))
+				_EOF_
+				;;
 			*) sysname="${KERNEL}" ;;
 		esac
 
-		cat >> "${toolchain_file}" <<- _EOF_
+		cat >> "${toolchain_file}" <<- _EOF_ || die
 			SET (CMAKE_SYSTEM_NAME "${sysname}")
 		_EOF_
 
 		if [ "${SYSROOT:-/}" != "/" ] ; then
 			# When cross-compiling with a sysroot (e.g. with crossdev's emerge wrappers)
 			# we need to tell cmake to use libs/headers from the sysroot but programs from / only.
-			cat >> "${toolchain_file}" <<- _EOF_
+			cat >> "${toolchain_file}" <<- _EOF_ || die
 				set(CMAKE_FIND_ROOT_PATH "${SYSROOT}")
 				set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 				set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
@@ -503,7 +522,7 @@ enable_cmake-utils_src_configure() {
 	has "${EAPI:-0}" 0 1 2 && ! use prefix && EPREFIX=
 
 	if [[ ${EPREFIX} ]]; then
-		cat >> "${build_rules}" <<- _EOF_
+		cat >> "${build_rules}" <<- _EOF_ || die
 			# in Prefix we need rpath and must ensure cmake gets our default linker path
 			# right ... except for Darwin hosts
 			IF (NOT APPLE)
@@ -528,7 +547,7 @@ enable_cmake-utils_src_configure() {
 	# Common configure parameters (invariants)
 	local common_config=${BUILD_DIR}/gentoo_common_config.cmake
 	local libdir=$(get_libdir)
-	cat > "${common_config}" <<- _EOF_
+	cat > "${common_config}" <<- _EOF_ || die
 		SET (LIB_SUFFIX ${libdir/lib} CACHE STRING "library path suffix" FORCE)
 		SET (CMAKE_INSTALL_LIBDIR ${libdir} CACHE PATH "Output directory for libraries")
 	_EOF_
@@ -538,6 +557,7 @@ enable_cmake-utils_src_configure() {
 	# Make the array a local variable since <=portage-2.1.6.x does not
 	# support global arrays (see bug #297255).
 	if [[ $(declare -p mycmakeargs 2>&-) != "declare -a mycmakeargs="* ]]; then
+		eqawarn "Declaring mycmakeargs as a variable is deprecated. Please use an array instead."
 		local mycmakeargs_local=(${mycmakeargs})
 	else
 		local mycmakeargs_local=("${mycmakeargs[@]}")
@@ -569,11 +589,11 @@ enable_cmake-utils_src_configure() {
 		cmakeargs+=( -C "${CMAKE_EXTRA_CACHE_FILE}" )
 	fi
 
-	pushd "${BUILD_DIR}" > /dev/null
+	pushd "${BUILD_DIR}" > /dev/null || die
 	debug-print "${LINENO} ${ECLASS} ${FUNCNAME}: mycmakeargs is ${mycmakeargs_local[*]}"
 	echo "${CMAKE_BINARY}" "${cmakeargs[@]}" "${CMAKE_USE_DIR}"
 	"${CMAKE_BINARY}" "${cmakeargs[@]}" "${CMAKE_USE_DIR}" || die "cmake failed"
-	popd > /dev/null
+	popd > /dev/null || die
 }
 
 enable_cmake-utils_src_compile() {
@@ -650,25 +670,25 @@ cmake-utils_src_make() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	_check_build_dir
-	pushd "${BUILD_DIR}" > /dev/null
+	pushd "${BUILD_DIR}" > /dev/null || die
 
 	${CMAKE_MAKEFILE_GENERATOR}_src_make "$@"
 
-	popd > /dev/null
+	popd > /dev/null || die
 }
 
 enable_cmake-utils_src_test() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	_check_build_dir
-	pushd "${BUILD_DIR}" > /dev/null
+	pushd "${BUILD_DIR}" > /dev/null || die
 	[[ -e CTestTestfile.cmake ]] || { echo "No tests found. Skipping."; return 0 ; }
 
 	[[ -n ${TEST_VERBOSE} ]] && myctestargs+=( --extra-verbose --output-on-failure )
 
 	if ctest "${myctestargs[@]}" "$@" ; then
 		einfo "Tests succeeded."
-		popd > /dev/null
+		popd > /dev/null || die
 		return 0
 	else
 		if [[ -n "${CMAKE_YES_I_WANT_TO_SEE_THE_TEST_LOG}" ]] ; then
@@ -683,7 +703,7 @@ enable_cmake-utils_src_test() {
 		fi
 
 		# die might not die due to nonfatal
-		popd > /dev/null
+		popd > /dev/null || die
 		return 1
 	fi
 }
@@ -692,13 +712,13 @@ enable_cmake-utils_src_install() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	_check_build_dir
-	pushd "${BUILD_DIR}" > /dev/null
+	pushd "${BUILD_DIR}" > /dev/null || die
 	DESTDIR="${D}" ${CMAKE_MAKEFILE_GENERATOR} install "$@" || die "died running ${CMAKE_MAKEFILE_GENERATOR} install"
-	popd > /dev/null
+	popd > /dev/null || die
 
-	pushd "${S}" > /dev/null
+	pushd "${S}" > /dev/null || die
 	einstalldocs
-	popd > /dev/null
+	popd > /dev/null || die
 }
 
 # @FUNCTION: cmake-utils_src_prepare
