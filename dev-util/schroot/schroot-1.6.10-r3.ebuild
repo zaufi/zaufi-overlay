@@ -48,6 +48,7 @@ RDEPEND="${COMMON_DEPEND}
 
 PATCHES=(
 	"${FILESDIR}/${PN}-1.6.10-cmake-add-additional-regex-tests.patch"
+	"${FILESDIR}/${PN}-1.6.10-unionfs-fuse-support.patch"
 )
 
 src_unpack() {

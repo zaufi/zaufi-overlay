@@ -1,0 +1,29 @@
+--- a/etc/setup.d/10mount
++++ b/etc/setup.d/10mount
+@@ -114,7 +114,7 @@ do_mount_fs_union()
+     if [ -z "$CHROOT_UNION_MOUNT_OPTIONS" ]; then
+         case $CHROOT_UNION_TYPE in
+             unionfs)
+-                CHROOT_UNION_MOUNT_OPTIONS="dirs=${CHROOT_UNION_OVERLAY_DIRECTORY}=rw,${CHROOT_UNION_UNDERLAY_DIRECTORY}=ro"
++                CHROOT_UNION_MOUNT_OPTIONS="${CHROOT_UNION_OVERLAY_DIRECTORY}=RW:${CHROOT_UNION_UNDERLAY_DIRECTORY}=RO"
+                 ;;
+             aufs)
+                 CHROOT_UNION_MOUNT_OPTIONS="br:${CHROOT_UNION_OVERLAY_DIRECTORY}:${CHROOT_UNION_UNDERLAY_DIRECTORY}=ro"
+@@ -128,7 +128,16 @@ do_mount_fs_union()
+     info "Using '$CHROOT_UNION_TYPE' for filesystem union"
+ 
+     # Try mounting fs
+-    mount -t "$CHROOT_UNION_TYPE" -o "$CHROOT_UNION_MOUNT_OPTIONS" "$CHROOT_NAME" "$1"
++    case $CHROOT_UNION_TYPE in
++        aufs|overlayfs)
++            mount -t "$CHROOT_UNION_TYPE" -o "$CHROOT_UNION_MOUNT_OPTIONS" "$CHROOT_NAME" "$1"
++            ;;
++        unionfs)
++            info "UnionFS: ${CHROOT_UNION_OVERLAY_DIRECTORY} + ${CHROOT_UNION_UNDERLAY_DIRECTORY} => ${1}"
++            info "UnionFS OPTIONS: ${CHROOT_UNION_MOUNT_OPTIONS}"
++            unionfs-fuse -o cow,allow_other,suid,dev "${CHROOT_UNION_MOUNT_OPTIONS}" "$1"
++            ;;
++    esac
+ }
+ 
+ if [ "$VERBOSE" = "verbose" ]; then
