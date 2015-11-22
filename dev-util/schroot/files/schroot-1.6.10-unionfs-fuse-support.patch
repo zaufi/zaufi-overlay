@@ -21,7 +21,7 @@
 +        unionfs)
 +            info "UnionFS: ${CHROOT_UNION_OVERLAY_DIRECTORY} + ${CHROOT_UNION_UNDERLAY_DIRECTORY} => ${1}"
 +            info "UnionFS OPTIONS: ${CHROOT_UNION_MOUNT_OPTIONS}"
-+            unionfs-fuse -o cow,allow_other,suid,dev "${CHROOT_UNION_MOUNT_OPTIONS}" "$1"
++            unionfs -o cow,allow_other,suid,dev "${CHROOT_UNION_MOUNT_OPTIONS}" "$1"
 +            ;;
 +    esac
  }
