@@ -124,19 +124,6 @@ src_compile() {
 }
 
 src_install() {
-	local LIBDIR="${ED}/usr/$(get_libdir)"
-	emake install DESTDIR="${ED}" PREFIX=/usr
-	if use npm; then
-		dodoc -r "${LIBDIR}"/node_modules/npm/html
-		rm -rf "${LIBDIR}"/node_modules/npm/{doc,html} || die
-		find "${LIBDIR}"/node_modules -type f -name "LICENSE*" -or -name "LICENCE*" -delete || die
-		
-		# Install bash completion for `npm`
-		local tmp_npm_completion_file="$(emktemp)"
-		"${ED}/usr/bin/npm" completion > "${tmp_npm_completion_file}"
-		newbashcomp "${tmp_npm_completion_file}" npm
-	fi
-
 	# set up a symlink structure that npm expects..
 	dodir /usr/include/node/deps/{v8,uv}
 	dosym . /usr/include/node/src
@@ -144,7 +131,45 @@ src_install() {
 		dosym ../.. /usr/include/node/${var}
 	done
 
-	pax-mark -m "${ED}"/usr/bin/node
+	local LIBDIR="${ED}/usr/$(get_libdir)"
+	emake install DESTDIR="${ED}" PREFIX=/usr
+	pax-mark m "${ED}"/usr/bin/node
+
+	# Fix location of `gdbinit`
+	mv "${ED}"/usr/share/doc/node "${ED}"/usr/share/${PF}
+
+	if use npm; then
+		# Install bash completion for `npm`
+		local tmp_npm_completion_file="$(emktemp)"
+		"${ED}/usr/bin/npm" completion > "${tmp_npm_completion_file}"
+		newbashcomp "${tmp_npm_completion_file}" npm
+		rm "${LIBDIR}"/node_modules/npm/lib/utils/completion.sh
+		
+		# Move man pages
+		doman "${LIBDIR}"/node_modules/npm/man/man{1,5,7}/*
+		rm -rf "${LIBDIR}"/node_modules/npm/man
+		
+		# Cleanup a little
+		rm "${LIBDIR}"/node_modules/npm/{.mailmap,.travis.yml,.npmignore,Makefile,make.bat,wercker.yml} || die
+		rm -rf "${LIBDIR}"/node_modules/npm/{doc,html,AUTHORS,CHANGELOG.md,CONTRIBUTING.md,LICENSE} || die
+	fi
+
+	# Remove various development and/or inappropriate files and useless docs of dependend packages
+	ebegin "Cleanup useless files"
+	find "${LIBDIR}"/node_modules -type f \
+	    -name 'LICENSE*' -or \
+	    -name 'LICENCE*' -or \
+	    -name 'License*' -or \
+	    -name 'README*' -or \
+	    -name 'CHANGELOG*' -or \
+	    -name '.travis.yml' -or \
+	    -name '.npmignore' -or \
+	    -name '*.md' -or \
+	    -name '*.markdown' -or \
+	    -name '*.bat' -or \
+	    -name '*.cmd' \
+	  | xargs rm -rf
+	eend $?
 }
 
 src_test() {
