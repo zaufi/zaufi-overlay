@@ -6,7 +6,7 @@ EAPI=5
 
 PYTHON_COMPAT=( python2_7 )
 
-inherit bash-completion-r1 flag-o-matic pax-utils python-single-r1 toolchain-funcs
+inherit bash-completion-r1 eutils flag-o-matic pax-utils python-single-r1 toolchain-funcs
 
 DESCRIPTION="Evented IO for V8 Javascript"
 HOMEPAGE="http://nodejs.org/"
@@ -134,7 +134,7 @@ src_install() {
 		# Install bash completion for `npm`
 		local tmp_npm_completion_file="$(emktemp)"
 		"${ED}/usr/bin/npm" completion > "${tmp_npm_completion_file}"
-		newbashcomp "${tmp_npm_completion_file}" ${PN}
+		newbashcomp "${tmp_npm_completion_file}" npm
 	fi
 
 	# set up a symlink structure that npm expects..
