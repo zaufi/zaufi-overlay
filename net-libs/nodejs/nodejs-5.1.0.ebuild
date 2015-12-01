@@ -15,7 +15,7 @@ SRC_URI="http://nodejs.org/dist/v${PV}/node-v${PV}.tar.xz"
 LICENSE="Apache-1.1 Apache-2.0 BSD BSD-2 MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~x86 ~x64-macos"
-IUSE="debug icu +npm snapshot +ssl"
+IUSE="debug doc icu +npm snapshot +ssl"
 
 RDEPEND="icu? ( >=dev-libs/icu-55:= )
 	${PYTHON_DEPS}
@@ -86,6 +86,8 @@ src_prepare() {
 		BUILDTYPE=Debug
 	fi
 
+	epatch "${FILESDIR}"/${PF}-no-deps-tracking.patch
+
 	epatch_user
 }
 
@@ -121,6 +123,10 @@ src_compile() {
 	emake -C out mksnapshot
 	pax-mark m "out/${BUILDTYPE}/mksnapshot"
 	emake -C out
+
+	if use doc; then
+		emake doc
+	fi
 }
 
 src_install() {
@@ -137,6 +143,10 @@ src_install() {
 
 	# Fix location of `gdbinit`
 	mv "${ED}"/usr/share/doc/node "${ED}"/usr/share/${PF}
+	
+	if use doc; then
+		dohtml -r "${S}"/out/doc/api/*
+	fi
 
 	if use npm; then
 		# Install bash completion for `npm`
@@ -156,18 +166,25 @@ src_install() {
 
 	# Remove various development and/or inappropriate files and useless docs of dependend packages
 	ebegin "Cleanup useless files"
-	find "${LIBDIR}"/node_modules -type f \
-	    -name 'LICENSE*' -or \
-	    -name 'LICENCE*' -or \
-	    -name 'License*' -or \
-	    -name 'README*' -or \
-	    -name 'CHANGELOG*' -or \
-	    -name '.travis.yml' -or \
-	    -name '.npmignore' -or \
-	    -name '*.md' -or \
-	    -name '*.markdown' -or \
-	    -name '*.bat' -or \
-	    -name '*.cmd' \
+	find "${LIBDIR}"/node_modules \
+	    \( -type d -name examples \) -or \
+		\( \
+		    -type f \( \
+		    -name 'LICENSE*' -or \
+		    -name 'LICENCE*' -or \
+		    -name 'License*' -or \
+		    -name 'AUTHORS*' -or \
+		    -name 'CONTRIBUTORS*' -or \
+		    -name 'README*' -or \
+		    -name 'CHANGELOG*' -or \
+		    -name '.travis.yml' -or \
+		    -name '.npmignore' -or \
+		    -name '*.md' -or \
+		    -name '*.markdown' -or \
+		    -name '*.bat' -or \
+		    -name '*.cmd' \
+		    \) \
+		\) \
 	  | xargs rm -rf
 	eend $?
 }
