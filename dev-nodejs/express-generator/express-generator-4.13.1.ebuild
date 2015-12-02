@@ -20,7 +20,7 @@ RDEPEND=">=net-libs/nodejs-0.8.10
 	=dev-nodejs/sorted-object-1.0.0
 	${DEPEND}"
 
-NPM_EXTRA_FILES="bin templates"
+NPM_EXTRA_FILES="templates"
 
 src_install() {
 	npm_src_install
