@@ -56,8 +56,8 @@ SRC_URI="http://registry.npmjs.org/${PN}/-/${P}.tgz"
 # Get the directory to place module files.
 
 get_nodemoduledir() {
-    local node_modules="${ED}/usr/$(get_libdir)/node_modules/${NPM_MODULE}"
-    echo ${node_modules}
+    local node_modules="${EPREFIX}/usr/$(get_libdir)/node_modules/${NPM_MODULE}"
+    echo "${node_modules}"
 }
 
 # @FUNCTION: npm-src_unpack
@@ -84,7 +84,7 @@ npm_src_compile() {
 
 npm_src_install() {
     local npm_files="${NPM_FILES} ${NPM_EXTRA_FILES}"
-    local node_modules="$(get_nodemoduledir)"
+    local node_modules="${ED}$(get_nodemoduledir)"
 
     mkdir -p ${node_modules} || die "Could not create DEST folder"
 
