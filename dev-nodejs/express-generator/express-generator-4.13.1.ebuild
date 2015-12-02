@@ -25,7 +25,7 @@ NPM_EXTRA_FILES="templates"
 src_install() {
 	npm_src_install
 
-	exeinto "${ED}/$(get_nodemoduledir)"/bin
+	exeinto "$(get_nodemoduledir)"/bin
 	doexe bin/express
 	dosym "$(get_nodemoduledir)"/bin/express /usr/bin/express
 }
