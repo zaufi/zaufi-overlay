@@ -20,10 +20,10 @@ RDEPEND=">=net-libs/nodejs-0.8.10
 	=dev-nodejs/sorted-object-1.0.0
 	${DEPEND}"
 
-NPM_EXTRA_FILES="templates"
+NPM_EXTRA_FILES="bin templates"
 
 src_install() {
 	npm_src_install
 
-	dobin bin/express
+	dosym "$(get_nodemoduledir)"/bin/express "${ED}"/usr/bin/express
 }

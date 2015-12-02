@@ -51,6 +51,15 @@ NPM_FILES="index.js lib package.json ${NPM_MODULE}.js"
 HOMEPAGE="https://www.npmjs.org/package/${PN}"
 SRC_URI="http://registry.npmjs.org/${PN}/-/${P}.tgz"
 
+# @FUNCTION: get_nodemoduledir
+# @DESCRIPTION:
+# Get the directory to place module files.
+
+get_nodemoduledir() {
+    local node_modules="${ED}/usr/$(get_libdir)/node_modules/${NPM_MODULE}"
+    echo ${node_modules}
+}
+
 # @FUNCTION: npm-src_unpack
 # @DESCRIPTION:
 # Default src_unpack function for NodeJS/npm packages. This funtions unpacks
@@ -75,31 +84,28 @@ npm_src_compile() {
 
 npm_src_install() {
     local npm_files="${NPM_FILES} ${NPM_EXTRA_FILES}"
-    local node_modules="${D}/usr/$(get_libdir)/node_modules/${NPM_MODULE}"
+    local node_modules="$(get_nodemoduledir)"
 
     mkdir -p ${node_modules} || die "Could not create DEST folder"
 
-    for f in ${npm_files}
-    do
+    for f in ${npm_files}; do
         if [[ -e "${S}/$f" ]]; then
             cp -r "${S}/$f" ${node_modules}
         fi
     done
 
-	# Install docs usually found in NodeJS/NPM packages.
-	local f
-	for f in README* HISTORY* ChangeLog AUTHORS NEWS TODO CHANGES \
-			THANKS BUGS FAQ CREDITS CHANGELOG*; do
-		if [[ -s ${f} ]]; then
-			dodoc "${f}"
-		fi
-	done
-    
+    # Install docs usually found in NodeJS/NPM packages.
+    local f
+    for f in README* HISTORY* ChangeLog AUTHORS NEWS TODO CHANGES* THANKS BUGS FAQ CREDITS CHANGELOG*; do
+        if [[ -s ${f} ]]; then
+            dodoc "${f}"
+        fi
+    done
+
     if has doc ${USE}; then
         local npm_docs="${NPM_DOCS}"
 
-        for f in $npm_docs
-        do
+        for f in $npm_docs; do
             if [[ -e "${S}/$f" ]]; then
                 dodoc -r "${S}/$f"
             fi
