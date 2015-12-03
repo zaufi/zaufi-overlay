@@ -39,9 +39,10 @@ COMMON_DEPEND="
 	libffi? ( >=virtual/libffi-3.0.13-r1:0=[${MULTILIB_USEDEP}] )
 	ncurses? ( >=sys-libs/ncurses-5.9-r3:0=[${MULTILIB_USEDEP}] )
 	ocaml? (
-		dev-lang/ocaml:0=
+		>=dev-lang/ocaml-4.00.0:0=
 		dev-ml/findlib
-		dev-ml/ocaml-ctypes )"
+		dev-ml/ocaml-ctypes
+		!!<=sys-devel/llvm-3.7.0-r1[ocaml] )"
 # configparser-3.2 breaks the build (3.3 or none at all are fine)
 DEPEND="${COMMON_DEPEND}
 	dev-lang/perl
@@ -70,7 +71,7 @@ PDEPEND="clang? ( =sys-devel/clang-${PV}-r100 )"
 # pypy gives me around 1700 unresolved tests due to open file limit
 # being exceeded. probably GC does not close them fast enough.
 REQUIRED_USE="${PYTHON_REQUIRED_USE}
-	lldb? ( clang )
+	lldb? ( clang xml )
 	test? ( || ( $(python_gen_useflags 'python*') ) )"
 
 S=${WORKDIR}/${P/_}.src
@@ -150,6 +151,8 @@ src_prepare() {
 	sed -e "/RUN/s/-warn-error A//" -i test/Bindings/OCaml/*ml  || die
 	# Fix libdir for ocaml bindings install, bug #559134
 	epatch "${FILESDIR}"/cmake/${P}-ocaml-multilib.patch
+	# Do not build/install ocaml docs with USE=-doc, bug #562008
+	epatch "${FILESDIR}"/cmake/${P}-ocaml-build_doc.patch
 
 	# Make it possible to override Sphinx HTML install dirs
 	# https://llvm.org/bugs/show_bug.cgi?id=23780
@@ -177,6 +180,10 @@ src_prepare() {
 		epatch "${FILESDIR}"/cmake/clang-0001-Install-clang-runtime-into-usr-lib-without-suffix.patch
 		epatch "${FILESDIR}"/cmake/compiler-rt-0001-cmake-Install-compiler-rt-into-usr-lib-without-suffi.patch
 
+		# Do not force -march flags on arm platforms
+		# https://bugs.gentoo.org/show_bug.cgi?id=562706
+		epatch "${FILESDIR}"/cmake/${P}-compiler_rt_arm_march_flags.patch
+
 		# Make it possible to override CLANG_LIBDIR_SUFFIX
 		# (that is used only to find LLVMgold.so)
 		# https://llvm.org/bugs/show_bug.cgi?id=23793
@@ -198,6 +205,10 @@ src_prepare() {
 		epatch "${FILESDIR}"/${PN}-3.7-lldb_python.patch
 		sed -e "s/GENTOO_LIBDIR/$(get_libdir)/" \
 			-i tools/lldb/scripts/Python/finishSwigPythonLLDB.py || die
+
+		# Fix build with ncurses[tinfo], #560474
+		# http://llvm.org/viewvc/llvm-project?view=revision&revision=247842
+		epatch "${FILESDIR}"/cmake/${P}-lldb_tinfo.patch
 	fi
 
 	# User patches
@@ -249,6 +260,12 @@ multilib_src_configure() {
 
 		-DHAVE_HISTEDIT_H=$(usex libedit)
 	)
+
+	if use clang; then
+		mycmakeargs+=(
+			-DCMAKE_DISABLE_FIND_PACKAGE_LibXml2=$(usex !xml)
+		)
+	fi
 
 	if use lldb; then
 		mycmakeargs+=(
