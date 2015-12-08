@@ -146,7 +146,7 @@ src_install() {
 	
 	if use doc; then
 		# Patch docs to make them offline readable
-		for i in `grep -rl 'fonts.googleapis.com' "${ED}"/usr/share/${PF}/*`; do
+		for i in `grep -rl 'fonts.googleapis.com' "${S}"/out/doc/api/*`; do
 		    sed -i '/fonts.googleapis.com/ d' $i;
 		done
 		# Install docs!
