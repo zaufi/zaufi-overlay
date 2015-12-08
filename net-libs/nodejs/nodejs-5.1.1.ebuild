@@ -86,7 +86,7 @@ src_prepare() {
 		BUILDTYPE=Debug
 	fi
 
-	epatch "${FILESDIR}"/${PF}-no-deps-tracking.patch
+	epatch "${FILESDIR}"/${PN}-5.1.0-no-deps-tracking.patch
 
 	epatch_user
 }
