@@ -92,6 +92,7 @@ src_prepare() {
 
 	epatch "${FILESDIR}/${P}-rollback-to-old-compress.patch"
 	epatch "${FILESDIR}/${P}-gcc-5.1-fix.patch"
+	epatch "${FILESDIR}/${P}-fix-python-detection.patch"
 	epatch_user
 }
 
