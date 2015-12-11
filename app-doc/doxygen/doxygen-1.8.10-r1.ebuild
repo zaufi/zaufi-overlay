@@ -96,6 +96,8 @@ src_prepare() {
 		echo
 		replace-flags "-O3" "-O2"
 	fi
+
+	epatch "${FILESDIR}"/${PF}-fix-flex-detection.patch
 }
 
 src_configure() {
