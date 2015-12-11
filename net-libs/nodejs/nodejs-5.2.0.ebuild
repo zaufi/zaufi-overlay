@@ -15,13 +15,13 @@ SRC_URI="http://nodejs.org/dist/v${PV}/node-v${PV}.tar.xz"
 LICENSE="Apache-1.1 Apache-2.0 BSD BSD-2 MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~x86 ~x64-macos"
-IUSE="debug doc icu +npm snapshot +ssl"
+IUSE="debug doc icu +npm +snapshot +ssl"
 
-RDEPEND="icu? ( >=dev-libs/icu-55:= )
+RDEPEND="icu? ( >=dev-libs/icu-56:= )
 	${PYTHON_DEPS}
 	>=net-libs/http-parser-2.5:=
-	>=dev-libs/libuv-1.6.1:=
-	>=dev-libs/openssl-1.0.2d:0=[-bindist]
+	>=dev-libs/libuv-1.7.5:=
+	>=dev-libs/openssl-1.0.2e:0=[-bindist]
 	sys-libs/zlib
 "
 DEPEND="${RDEPEND}
