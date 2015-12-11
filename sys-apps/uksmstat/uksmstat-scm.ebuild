@@ -1,6 +1,5 @@
 # Copyright 2011 Alex Turbov <i.zaufi@gmail.com>
 # Distributed under the terms of the GNU General Public License v3
-# $Header: $
 # kate: hl bash;
 
 EAPI="5"

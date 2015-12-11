@@ -1,6 +1,5 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-libs/raptor/raptor-2.0.7.ebuild,v 1.7 2012/04/06 19:33:04 ssuominen Exp $
 
 # FIXME: It should be possible to use net-nntp/inn for libinn.h and -linn!
 

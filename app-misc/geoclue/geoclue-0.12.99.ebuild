@@ -1,6 +1,5 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-misc/geoclue/geoclue-0.12.99.ebuild,v 1.12 2013/04/25 10:35:50 patrick Exp $
 
 EAPI=4
 inherit autotools eutils

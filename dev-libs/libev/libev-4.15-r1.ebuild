@@ -1,6 +1,5 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-libs/libev/libev-4.15.ebuild,v 1.9 2013/09/26 17:29:37 ago Exp $
 
 EAPI=5
 
