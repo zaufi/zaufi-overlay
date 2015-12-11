@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~arm ~x86 ~x64-macos"
 IUSE="debug doc icu +npm +snapshot +ssl"
 
-RDEPEND="icu? ( >=dev-libs/icu-56:= )
+RDEPEND="icu? ( >=dev-libs/icu-55:= )
 	${PYTHON_DEPS}
 	>=net-libs/http-parser-2.5:=
 	>=dev-libs/libuv-1.7.5:=
