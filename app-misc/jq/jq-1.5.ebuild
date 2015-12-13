@@ -21,12 +21,6 @@ DEPEND="sys-devel/bison
 
 DOCS=( AUTHORS README )
 
-src_prepare() {
-	sed -i '/^dist_doc_DATA/d' Makefile.am || die
-	epatch "${FILESDIR}"/${PN}-1.4-dynamic-link.patch
-	eautoreconf
-}
-
 src_configure() {
 	# don't try to rebuild docs
 	econf \
@@ -36,5 +30,5 @@ src_configure() {
 
 src_install() {
 	default
-	use static-libs || find "${ED}" -name libjq.la -delete
+	find "${ED}" -name libjq.la -delete
 }
