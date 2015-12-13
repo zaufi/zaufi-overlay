@@ -31,4 +31,6 @@ src_configure() {
 src_install() {
 	default
 	find "${ED}" -name libjq.la -delete
+	mv "${ED}"/usr/share/doc/${PN}/* "${ED}"/usr/share/doc/${PF}
+	rm -rf "${ED}"/usr/share/doc/${PN}
 }
