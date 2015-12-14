@@ -19,6 +19,6 @@ DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
     >=dev-nodejs/generate-function-2.0.0
     >=dev-nodejs/generate-object-property-1.1.0
-    =dev-nodejs/jsonpointer-2.0.0
+    ~dev-nodejs/jsonpointer-2.0.0
     >=dev-nodejs/xtend-4.0.0
 "

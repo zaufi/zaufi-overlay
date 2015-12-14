@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/extsprintf-1.0.2
-    =dev-nodejs/json-schema-0.2.2
-    =dev-nodejs/verror-1.3.6
+    ~dev-nodejs/extsprintf-1.0.2
+    ~dev-nodejs/json-schema-0.2.2
+    ~dev-nodejs/verror-1.3.6
 "

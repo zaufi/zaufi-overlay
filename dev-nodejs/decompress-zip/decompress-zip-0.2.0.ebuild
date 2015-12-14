@@ -23,7 +23,7 @@ RDEPEND="${DEPEND}
     >=dev-nodejs/nopt-3.0.1
     >=dev-nodejs/q-1.1.2
     >=dev-nodejs/readable-stream-1.1.8
-    =dev-nodejs/touch-0.0.3
+    ~dev-nodejs/touch-0.0.3
 "
 
 src_install() {

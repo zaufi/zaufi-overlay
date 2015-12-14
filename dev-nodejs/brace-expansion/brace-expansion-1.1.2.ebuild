@@ -18,5 +18,5 @@ IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
     >=dev-nodejs/balanced-match-0.3.0
-    =dev-nodejs/concat-map-0.0.1
+    ~dev-nodejs/concat-map-0.0.1
 "

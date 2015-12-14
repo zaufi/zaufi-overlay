@@ -18,13 +18,13 @@ IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
     >=dev-nodejs/abbrev-1.0.5
-    =dev-nodejs/archy-1.0.0
+    ~dev-nodejs/archy-1.0.0
     >=dev-nodejs/bower-config-1.3.0
     >=dev-nodejs/bower-endpoint-parser-0.2.2
     >=dev-nodejs/bower-json-0.4.0
     >=dev-nodejs/bower-logger-0.2.2
     >=dev-nodejs/bower-registry-client-1.0.0
-    =dev-nodejs/cardinal-0.4.4
+    ~dev-nodejs/cardinal-0.4.4
     >=dev-nodejs/chalk-1.0.0
     >=dev-nodejs/chmodr-1.0.2
     >=dev-nodejs/configstore-0.3.2
@@ -37,30 +37,30 @@ RDEPEND="${DEPEND}
     >=dev-nodejs/glob-4.3.2
     >=dev-nodejs/graceful-fs-3.0.5
     >=dev-nodejs/handlebars-2.0.0
-    =dev-nodejs/inquirer-0.10.0
+    ~dev-nodejs/inquirer-0.10.0
     >=dev-nodejs/insight-0.7.0
     >=dev-nodejs/is-root-1.0.0
     >=dev-nodejs/junk-1.0.0
     >=dev-nodejs/lockfile-1.0.0
     >=dev-nodejs/lru-cache-2.5.0
     >=dev-nodejs/md5-hex-1.0.2
-    =dev-nodejs/mkdirp-0.5.0
+    ~dev-nodejs/mkdirp-0.5.0
     >=dev-nodejs/mout-0.11.0
     >=dev-nodejs/nopt-3.0.1
     >=dev-nodejs/opn-1.0.1
-    =dev-nodejs/p-throttler-0.1.1
-    =dev-nodejs/promptly-0.2.0
+    ~dev-nodejs/p-throttler-0.1.1
+    ~dev-nodejs/promptly-0.2.0
     >=dev-nodejs/q-1.1.2
-    =dev-nodejs/request-2.53.0
-    =dev-nodejs/request-progress-0.3.1
-    =dev-nodejs/retry-0.6.1
+    ~dev-nodejs/request-2.53.0
+    ~dev-nodejs/request-progress-0.3.1
+    ~dev-nodejs/retry-0.6.1
     >=dev-nodejs/rimraf-2.2.8
     >=dev-nodejs/semver-2.3.0
     >=dev-nodejs/semver-utils-1.1.1
     >=dev-nodejs/shell-quote-1.4.2
     >=dev-nodejs/stringify-object-1.0.0
     >=dev-nodejs/tar-fs-1.4.1
-    =dev-nodejs/tmp-0.0.24
+    ~dev-nodejs/tmp-0.0.24
     >=dev-nodejs/update-notifier-0.6.0
     >=dev-nodejs/user-home-1.1.0
     >=dev-nodejs/which-1.0.8

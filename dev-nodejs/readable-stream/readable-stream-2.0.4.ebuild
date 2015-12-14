@@ -19,8 +19,8 @@ DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
     >=dev-nodejs/core-util-is-1.0.0
     >=dev-nodejs/inherits-2.0.1
-    =dev-nodejs/isarray-0.0.1
+    ~dev-nodejs/isarray-0.0.1
     >=dev-nodejs/process-nextick-args-1.0.0
-    >=dev-nodejs/string_decoder-0.10.*
+    =dev-nodejs/string_decoder-0.10.*
     >=dev-nodejs/util-deprecate-1.0.1
 "

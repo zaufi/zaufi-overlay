@@ -21,5 +21,5 @@ RDEPEND="${DEPEND}
     >=dev-nodejs/mout-0.9.0
     >=dev-nodejs/optimist-0.6.1
     >=dev-nodejs/osenv-0.1.3
-    =dev-nodejs/untildify-2.1.0
+    ~dev-nodejs/untildify-2.1.0
 "
