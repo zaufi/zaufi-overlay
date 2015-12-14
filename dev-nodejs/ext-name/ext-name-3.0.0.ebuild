@@ -17,10 +17,10 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/ends-with-0.2.0
-    =dev-nodejs/ext-list-2.0.0
-    =dev-nodejs/meow-3.1.0
-    =dev-nodejs/sort-keys-length-1.0.0
+    >=dev-nodejs/ends-with-0.2.0
+    >=dev-nodejs/ext-list-2.0.0
+    >=dev-nodejs/meow-3.1.0
+    >=dev-nodejs/sort-keys-length-1.0.0
 "
 
 src_install() {

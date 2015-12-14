@@ -17,12 +17,12 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/binary-0.3.0
-    =dev-nodejs/graceful-fs-3.0.0
-    =dev-nodejs/mkpath-0.1.0
-    =dev-nodejs/nopt-3.0.1
-    =dev-nodejs/q-1.1.2
-    =dev-nodejs/readable-stream-1.1.8
+    >=dev-nodejs/binary-0.3.0
+    >=dev-nodejs/graceful-fs-3.0.0
+    >=dev-nodejs/mkpath-0.1.0
+    >=dev-nodejs/nopt-3.0.1
+    >=dev-nodejs/q-1.1.2
+    >=dev-nodejs/readable-stream-1.1.8
     =dev-nodejs/touch-0.0.3
 "
 

@@ -17,6 +17,6 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/path-exists-2.0.0
-    =dev-nodejs/pinkie-promise-2.0.0
+    >=dev-nodejs/path-exists-2.0.0
+    >=dev-nodejs/pinkie-promise-2.0.0
 "

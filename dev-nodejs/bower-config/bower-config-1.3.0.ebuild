@@ -17,9 +17,9 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.8.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/graceful-fs-4.0.0
+    >=dev-nodejs/graceful-fs-4.0.0
     >=dev-nodejs/mout-0.9.0
-    =dev-nodejs/optimist-0.6.1
-    =dev-nodejs/osenv-0.1.3
+    >=dev-nodejs/optimist-0.6.1
+    >=dev-nodejs/osenv-0.1.3
     =dev-nodejs/untildify-2.1.0
 "

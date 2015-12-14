@@ -17,8 +17,8 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/got-5.0.0
-    =dev-nodejs/rc-1.1.2
-    =dev-nodejs/registry-url-3.0.3
-    =dev-nodejs/semver-5.1.0
+    >=dev-nodejs/got-5.0.0
+    >=dev-nodejs/rc-1.1.2
+    >=dev-nodejs/registry-url-3.0.3
+    >=dev-nodejs/semver-5.1.0
 "

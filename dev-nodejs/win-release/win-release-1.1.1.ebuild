@@ -17,5 +17,5 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/semver-5.0.1
+    >=dev-nodejs/semver-5.0.1
 "

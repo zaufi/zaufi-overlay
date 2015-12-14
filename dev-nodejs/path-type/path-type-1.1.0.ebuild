@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/graceful-fs-4.1.2
-    =dev-nodejs/pify-2.0.0
-    =dev-nodejs/pinkie-promise-2.0.0
+    >=dev-nodejs/graceful-fs-4.1.2
+    >=dev-nodejs/pify-2.0.0
+    >=dev-nodejs/pinkie-promise-2.0.0
 "

@@ -17,6 +17,6 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/node-eta-0.1.1
-    =dev-nodejs/throttleit-0.0.2
+    >=dev-nodejs/node-eta-0.1.1
+    >=dev-nodejs/throttleit-0.0.2
 "

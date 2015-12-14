@@ -17,10 +17,10 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/chalk-1.1.1
-    =dev-nodejs/commander-2.9.0
-    =dev-nodejs/is-my-json-valid-2.12.3
-    =dev-nodejs/pinkie-promise-2.0.0
+    >=dev-nodejs/chalk-1.1.1
+    >=dev-nodejs/commander-2.9.0
+    >=dev-nodejs/is-my-json-valid-2.12.3
+    >=dev-nodejs/pinkie-promise-2.0.0
 "
 
 src_install() {

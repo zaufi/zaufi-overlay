@@ -17,11 +17,11 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/chalk-1.0.0
-    =dev-nodejs/configstore-1.0.0
-    =dev-nodejs/is-npm-1.0.0
-    =dev-nodejs/latest-version-2.0.0
-    =dev-nodejs/repeating-2.0.0
-    =dev-nodejs/semver-diff-2.0.0
-    =dev-nodejs/string-length-1.0.0
+    >=dev-nodejs/chalk-1.0.0
+    >=dev-nodejs/configstore-1.0.0
+    >=dev-nodejs/is-npm-1.0.0
+    >=dev-nodejs/latest-version-2.0.0
+    >=dev-nodejs/repeating-2.0.0
+    >=dev-nodejs/semver-diff-2.0.0
+    >=dev-nodejs/string-length-1.0.0
 "

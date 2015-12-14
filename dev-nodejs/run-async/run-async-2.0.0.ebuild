@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/is-promise-2.1.0
-    =dev-nodejs/once-1.3.0
-    =dev-nodejs/promise-resolver-1.0.0
+    >=dev-nodejs/is-promise-2.1.0
+    >=dev-nodejs/once-1.3.0
+    >=dev-nodejs/promise-resolver-1.0.0
 "

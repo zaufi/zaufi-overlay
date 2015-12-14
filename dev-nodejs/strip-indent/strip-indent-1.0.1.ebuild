@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/get-stdin-4.0.1
+    >=dev-nodejs/get-stdin-4.0.1
 "
 
 src_install() {

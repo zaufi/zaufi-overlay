@@ -17,5 +17,5 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.8.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/has-flag-1.0.0
+    >=dev-nodejs/has-flag-1.0.0
 "

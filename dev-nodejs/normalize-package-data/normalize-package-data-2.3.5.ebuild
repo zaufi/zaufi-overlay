@@ -17,8 +17,8 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/hosted-git-info-2.1.4
-    =dev-nodejs/is-builtin-module-1.0.0
+    >=dev-nodejs/hosted-git-info-2.1.4
+    >=dev-nodejs/is-builtin-module-1.0.0
     dev-nodejs/semver
-    =dev-nodejs/validate-npm-package-license-3.0.1
+    >=dev-nodejs/validate-npm-package-license-3.0.1
 "

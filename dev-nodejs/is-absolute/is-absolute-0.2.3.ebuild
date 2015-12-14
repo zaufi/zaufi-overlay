@@ -17,6 +17,6 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/is-relative-0.2.1
-    =dev-nodejs/is-windows-0.1.0
+    >=dev-nodejs/is-relative-0.2.1
+    >=dev-nodejs/is-windows-0.1.0
 "

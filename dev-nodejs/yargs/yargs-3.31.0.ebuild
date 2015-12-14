@@ -17,11 +17,11 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/camelcase-2.0.1
-    =dev-nodejs/cliui-3.0.3
-    =dev-nodejs/decamelize-1.1.1
-    =dev-nodejs/os-locale-1.4.0
-    =dev-nodejs/string-width-1.0.1
-    =dev-nodejs/window-size-0.1.4
-    =dev-nodejs/y18n-3.2.0
+    >=dev-nodejs/camelcase-2.0.1
+    >=dev-nodejs/cliui-3.0.3
+    >=dev-nodejs/decamelize-1.1.1
+    >=dev-nodejs/os-locale-1.4.0
+    >=dev-nodejs/string-width-1.0.1
+    >=dev-nodejs/window-size-0.1.4
+    >=dev-nodejs/y18n-3.2.0
 "

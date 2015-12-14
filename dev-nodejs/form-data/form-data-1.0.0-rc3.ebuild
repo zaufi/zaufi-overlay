@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/async-1.4.0
-    =dev-nodejs/combined-stream-1.0.5
-    =dev-nodejs/mime-types-2.1.3
+    >=dev-nodejs/async-1.4.0
+    >=dev-nodejs/combined-stream-1.0.5
+    >=dev-nodejs/mime-types-2.1.3
 "

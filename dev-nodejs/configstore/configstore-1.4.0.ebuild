@@ -17,12 +17,12 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/graceful-fs-4.1.2
-    =dev-nodejs/mkdirp-0.5.0
-    =dev-nodejs/object-assign-4.0.1
-    =dev-nodejs/os-tmpdir-1.0.0
-    =dev-nodejs/osenv-0.1.0
-    =dev-nodejs/uuid-2.0.1
-    =dev-nodejs/write-file-atomic-1.1.2
-    =dev-nodejs/xdg-basedir-2.0.0
+    >=dev-nodejs/graceful-fs-4.1.2
+    >=dev-nodejs/mkdirp-0.5.0
+    >=dev-nodejs/object-assign-4.0.1
+    >=dev-nodejs/os-tmpdir-1.0.0
+    >=dev-nodejs/osenv-0.1.0
+    >=dev-nodejs/uuid-2.0.1
+    >=dev-nodejs/write-file-atomic-1.1.2
+    >=dev-nodejs/xdg-basedir-2.0.0
 "

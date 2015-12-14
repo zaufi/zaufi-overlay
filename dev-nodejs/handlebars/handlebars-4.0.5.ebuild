@@ -17,10 +17,10 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.4.7"
 RDEPEND="${DEPEND}
-    =dev-nodejs/async-1.4.0
-    =dev-nodejs/optimist-0.6.1
-    =dev-nodejs/source-map-0.4.4
-    dev-nodejs/uglify-js
+    >=dev-nodejs/async-1.4.0
+    >=dev-nodejs/optimist-0.6.1
+    >=dev-nodejs/source-map-0.4.4
+    >=dev-nodejs/uglify-js
 "
 
 src_install() {

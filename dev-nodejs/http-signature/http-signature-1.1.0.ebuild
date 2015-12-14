@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/assert-plus-0.1.5
-    =dev-nodejs/jsprim-1.2.2
-    =dev-nodejs/sshpk-1.7.0
+    >=dev-nodejs/assert-plus-0.1.5
+    >=dev-nodejs/jsprim-1.2.2
+    >=dev-nodejs/sshpk-1.7.0
 "

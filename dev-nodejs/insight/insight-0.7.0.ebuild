@@ -17,13 +17,13 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/async-1.4.2
-    =dev-nodejs/chalk-1.0.0
-    =dev-nodejs/configstore-1.0.0
-    =dev-nodejs/inquirer-0.10.0
-    =dev-nodejs/lodash-debounce-3.0.1
-    =dev-nodejs/object-assign-4.0.1
-    =dev-nodejs/os-name-1.0.0
-    =dev-nodejs/request-2.40.0
-    =dev-nodejs/tough-cookie-2.0.0
+    >=dev-nodejs/async-1.4.2
+    >=dev-nodejs/chalk-1.0.0
+    >=dev-nodejs/configstore-1.0.0
+    >=dev-nodejs/inquirer-0.10.0
+    >=dev-nodejs/lodash-debounce-3.0.1
+    >=dev-nodejs/object-assign-4.0.1
+    >=dev-nodejs/os-name-1.0.0
+    >=dev-nodejs/request-2.40.0
+    >=dev-nodejs/tough-cookie-2.0.0
 "

@@ -17,12 +17,12 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/camelcase-keys-2.0.0
-    =dev-nodejs/loud-rejection-1.0.0
-    =dev-nodejs/minimist-1.1.3
-    =dev-nodejs/normalize-package-data-2.3.4
-    =dev-nodejs/object-assign-4.0.1
-    =dev-nodejs/read-pkg-up-1.0.1
-    =dev-nodejs/redent-1.0.0
-    =dev-nodejs/trim-newlines-1.0.0
+    >=dev-nodejs/camelcase-keys-2.0.0
+    >=dev-nodejs/loud-rejection-1.0.0
+    >=dev-nodejs/minimist-1.1.3
+    >=dev-nodejs/normalize-package-data-2.3.4
+    >=dev-nodejs/object-assign-4.0.1
+    >=dev-nodejs/read-pkg-up-1.0.1
+    >=dev-nodejs/redent-1.0.0
+    >=dev-nodejs/trim-newlines-1.0.0
 "

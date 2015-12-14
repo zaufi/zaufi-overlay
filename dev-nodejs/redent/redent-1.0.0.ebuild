@@ -17,6 +17,6 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/indent-string-2.1.0
-    =dev-nodejs/strip-indent-1.0.1
+    >=dev-nodejs/indent-string-2.1.0
+    >=dev-nodejs/strip-indent-1.0.1
 "

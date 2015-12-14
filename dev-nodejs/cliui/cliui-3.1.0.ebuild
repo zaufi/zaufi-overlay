@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/string-width-1.0.1
-    =dev-nodejs/strip-ansi-3.0.0
-    =dev-nodejs/wrap-ansi-1.0.0
+    >=dev-nodejs/string-width-1.0.1
+    >=dev-nodejs/strip-ansi-3.0.0
+    >=dev-nodejs/wrap-ansi-1.0.0
 "

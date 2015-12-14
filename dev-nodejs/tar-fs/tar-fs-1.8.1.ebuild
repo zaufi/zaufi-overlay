@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/mkdirp-0.5.0
-    =dev-nodejs/pump-1.0.0
-    =dev-nodejs/tar-stream-1.1.2
+    >=dev-nodejs/mkdirp-0.5.0
+    >=dev-nodejs/pump-1.0.0
+    >=dev-nodejs/tar-stream-1.1.2
 "

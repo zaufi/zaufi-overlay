@@ -17,8 +17,8 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/deep-extend-0.4.0
-    =dev-nodejs/ext-name-3.0.0
-    =dev-nodejs/graceful-fs-3.0.0
-    =dev-nodejs/intersect-1.0.1
+    >=dev-nodejs/deep-extend-0.4.0
+    >=dev-nodejs/ext-name-3.0.0
+    >=dev-nodejs/graceful-fs-3.0.0
+    >=dev-nodejs/intersect-1.0.1
 "

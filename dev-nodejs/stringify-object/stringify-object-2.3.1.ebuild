@@ -17,6 +17,6 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/is-plain-obj-1.0.0
-    =dev-nodejs/is-regexp-1.0.0
+    >=dev-nodejs/is-plain-obj-1.0.0
+    >=dev-nodejs/is-regexp-1.0.0
 "

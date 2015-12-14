@@ -17,5 +17,5 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/spdx-license-ids-1.0.2
+    >=dev-nodejs/spdx-license-ids-1.0.2
 "

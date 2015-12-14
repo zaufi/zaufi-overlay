@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/minimist-1.1.0
+    >=dev-nodejs/minimist-1.1.0
 "
 
 src_install() {

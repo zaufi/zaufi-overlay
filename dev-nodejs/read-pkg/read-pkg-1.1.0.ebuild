@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/load-json-file-1.0.0
-    =dev-nodejs/normalize-package-data-2.3.2
-    =dev-nodejs/path-type-1.0.0
+    >=dev-nodejs/load-json-file-1.0.0
+    >=dev-nodejs/normalize-package-data-2.3.2
+    >=dev-nodejs/path-type-1.0.0
 "

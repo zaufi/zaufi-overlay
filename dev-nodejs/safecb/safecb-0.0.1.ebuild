@@ -17,6 +17,6 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/dezalgo-1.0.2
-    =dev-nodejs/once-1.3.2
+    >=dev-nodejs/dezalgo-1.0.2
+    >=dev-nodejs/once-1.3.2
 "

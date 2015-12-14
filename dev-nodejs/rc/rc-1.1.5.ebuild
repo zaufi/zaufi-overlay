@@ -19,7 +19,7 @@ DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
     >=dev-nodejs/deep-extend-0.4.0
     >=dev-nodejs/ini-1.3.0
-    =dev-nodejs/minimist-1.2.0
+    >=dev-nodejs/minimist-1.2.0
     >=dev-nodejs/strip-json-comments-1.0.4
 "
 

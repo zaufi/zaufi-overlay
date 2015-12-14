@@ -17,5 +17,5 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/unc-path-regex-0.1.0
+    >=dev-nodejs/unc-path-regex-0.1.0
 "

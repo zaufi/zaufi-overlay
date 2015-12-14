@@ -18,5 +18,5 @@ IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
     =dev-nodejs/end-of-stream-1.0.0
-    =dev-nodejs/readable-stream-2.0.0
+    >=dev-nodejs/readable-stream-2.0.0
 "

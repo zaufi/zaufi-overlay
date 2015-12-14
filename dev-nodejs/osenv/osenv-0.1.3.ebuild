@@ -17,6 +17,6 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/os-homedir-1.0.0
-    =dev-nodejs/os-tmpdir-1.0.0
+    >=dev-nodejs/os-homedir-1.0.0
+    >=dev-nodejs/os-tmpdir-1.0.0
 "

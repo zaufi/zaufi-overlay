@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/code-point-at-1.0.0
-    =dev-nodejs/is-fullwidth-code-point-1.0.0
-    =dev-nodejs/strip-ansi-3.0.0
+    >=dev-nodejs/code-point-at-1.0.0
+    >=dev-nodejs/is-fullwidth-code-point-1.0.0
+    >=dev-nodejs/strip-ansi-3.0.0
 "

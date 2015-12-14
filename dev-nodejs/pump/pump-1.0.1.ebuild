@@ -17,6 +17,6 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/end-of-stream-1.1.0
-    =dev-nodejs/once-1.3.1
+    >=dev-nodejs/end-of-stream-1.1.0
+    >=dev-nodejs/once-1.3.1
 "

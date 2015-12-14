@@ -17,8 +17,8 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.8.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/bl-1.0.0
-    =dev-nodejs/end-of-stream-1.0.0
-    =dev-nodejs/readable-stream-2.0.0
-    =dev-nodejs/xtend-4.0.0
+    >=dev-nodejs/bl-1.0.0
+    >=dev-nodejs/end-of-stream-1.0.0
+    >=dev-nodejs/readable-stream-2.0.0
+    >=dev-nodejs/xtend-4.0.0
 "

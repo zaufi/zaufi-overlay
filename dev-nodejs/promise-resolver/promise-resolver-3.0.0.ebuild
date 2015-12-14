@@ -17,6 +17,6 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.8.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/native-or-bluebird-1.2.0
+    >=dev-nodejs/native-or-bluebird-1.2.0
     =dev-nodejs/safecb-0.0.1
 "

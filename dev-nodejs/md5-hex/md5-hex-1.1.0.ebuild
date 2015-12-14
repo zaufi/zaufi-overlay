@@ -17,5 +17,5 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/md5-o-matic-0.1.1
+    >=dev-nodejs/md5-o-matic-0.1.1
 "
