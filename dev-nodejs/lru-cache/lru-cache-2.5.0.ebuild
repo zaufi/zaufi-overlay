@@ -13,6 +13,6 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND=">=net-libs/nodejs-0.8.10"
-DEPEND=""
+DEPEND=">=dev-nodejs/pseudomap-1.0.1"
 
 NPM_EXTRA_FILES="s.js"

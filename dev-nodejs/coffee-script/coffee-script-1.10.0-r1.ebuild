@@ -23,8 +23,8 @@ src_install() {
 	npm_src_install
 
 	exeinto "$(get_nodemoduledir)"/bin
-	doexe bin/cofee bin/cake
-	dosym "$(get_nodemoduledir)"/bin/cofee /usr/bin/cofee
+	doexe bin/coffee bin/cake
+	dosym "$(get_nodemoduledir)"/bin/coffee /usr/bin/coffee
 	dosym "$(get_nodemoduledir)"/bin/cake /usr/bin/cake
 
 	if use extras; then
