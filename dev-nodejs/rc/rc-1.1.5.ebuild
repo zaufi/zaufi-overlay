@@ -11,7 +11,7 @@ inherit npm
 DESCRIPTION="hardwired configuration loader"
 HOMEPAGE="https://github.com/dominictarr/rc#readme"
 
-LICENSE="(BSD-2-Clause OR MIT OR Apache-2.0)"
+LICENSE="Complicated"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

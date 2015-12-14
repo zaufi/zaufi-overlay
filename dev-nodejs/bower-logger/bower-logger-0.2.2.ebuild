@@ -10,7 +10,7 @@ inherit npm
 
 DESCRIPTION="The logger used in the various architecture components of Bower."
 
-LICENSE=""
+LICENSE="UNLICENSED"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

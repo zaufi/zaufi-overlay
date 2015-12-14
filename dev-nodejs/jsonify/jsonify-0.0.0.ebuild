@@ -10,7 +10,7 @@ inherit npm
 
 DESCRIPTION="JSON without touching any globals"
 
-LICENSE="Public Domain"
+LICENSE="Unknown"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

@@ -11,7 +11,7 @@ inherit npm
 DESCRIPTION="Lightweight library for composing asynchronous and event-based operations in JavaScript"
 HOMEPAGE="https://github.com/Reactive-Extensions/RxJS"
 
-LICENSE=""
+LICENSE="UNLICENSED"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

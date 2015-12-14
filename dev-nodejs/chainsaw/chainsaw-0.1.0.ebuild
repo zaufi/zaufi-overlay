@@ -10,7 +10,7 @@ inherit npm
 
 DESCRIPTION="Build chainable fluent interfaces the easy way... with a freakin&#39; chainsaw!"
 
-LICENSE="MIT&#x2F;X11"
+LICENSE="Unknown"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

@@ -11,7 +11,7 @@ inherit npm
 DESCRIPTION="Rigorous implementation of RFC4122 (v1 and v4) UUIDs."
 HOMEPAGE="https://github.com/broofa/node-uuid"
 
-LICENSE=""
+LICENSE="UNLICENSED"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

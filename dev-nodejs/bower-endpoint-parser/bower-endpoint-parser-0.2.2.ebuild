@@ -11,7 +11,7 @@ inherit npm
 DESCRIPTION="Little module that helps with endpoints parsing."
 HOMEPAGE="https://github.com/bower/endpoint-parser"
 
-LICENSE=""
+LICENSE="UNLICENSED"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

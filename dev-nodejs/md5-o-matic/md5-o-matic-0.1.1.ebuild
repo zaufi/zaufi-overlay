@@ -11,7 +11,7 @@ inherit npm
 DESCRIPTION="Fast and simple MD5 hashing utility with zero module dependencies. View MD5 Shootout results, http:&#x2F;&#x2F;jsperf.com&#x2F;md5-shootout&#x2F;39"
 HOMEPAGE="https://github.com/trentmillar/md5-o-matic"
 
-LICENSE=""
+LICENSE="UNLICENSED"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

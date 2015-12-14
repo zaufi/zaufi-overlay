@@ -11,7 +11,7 @@ inherit npm
 DESCRIPTION="parse SPDX license expressions"
 HOMEPAGE="https://github.com/kemitchell/spdx-expression-parse.js#readme"
 
-LICENSE="(MIT AND CC-BY-3.0)"
+LICENSE="Complicated"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

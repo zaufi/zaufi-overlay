@@ -11,7 +11,7 @@ inherit npm
 DESCRIPTION="A library for promises (CommonJS&#x2F;Promises&#x2F;A,B,D)"
 HOMEPAGE="https://github.com/kriskowal/q"
 
-LICENSE="[object Object]"
+LICENSE="Unknown"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

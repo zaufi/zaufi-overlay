@@ -11,7 +11,7 @@ inherit npm
 DESCRIPTION="NodeJS wrapper for the GitHub API"
 HOMEPAGE="http://github.com/mikedeboer/node-github"
 
-LICENSE=""
+LICENSE="UNLICENSED"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

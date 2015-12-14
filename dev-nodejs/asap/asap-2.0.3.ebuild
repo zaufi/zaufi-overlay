@@ -11,7 +11,7 @@ inherit npm
 DESCRIPTION="High-priority task queue for Node.js and browsers"
 HOMEPAGE="https://github.com/kriskowal/asap#readme"
 
-LICENSE="[object Object]"
+LICENSE="Unknown"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

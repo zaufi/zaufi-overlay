@@ -11,7 +11,7 @@ inherit npm
 DESCRIPTION="A comprehensive library for mime-type mapping"
 HOMEPAGE="https://github.com/broofa/node-mime"
 
-LICENSE=""
+LICENSE="UNLICENSED"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

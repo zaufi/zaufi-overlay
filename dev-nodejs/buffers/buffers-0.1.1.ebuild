@@ -10,7 +10,7 @@ inherit npm
 
 DESCRIPTION="Treat a collection of Buffers as a single contiguous partially mutable Buffer."
 
-LICENSE=""
+LICENSE="UNLICENSED"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

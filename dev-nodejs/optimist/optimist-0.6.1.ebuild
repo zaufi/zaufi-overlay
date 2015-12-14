@@ -11,7 +11,7 @@ inherit npm
 DESCRIPTION="Light-weight option parsing with an argv hash. No optstrings attached."
 HOMEPAGE="https://github.com/substack/node-optimist"
 
-LICENSE="MIT&#x2F;X11"
+LICENSE="Unknown"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

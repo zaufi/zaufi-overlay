@@ -11,7 +11,7 @@ inherit npm
 DESCRIPTION="Tools for manipulating semver strings and objects"
 HOMEPAGE="https://github.com/coolaj86/semver-utils#readme"
 
-LICENSE="APACHEv2"
+LICENSE="Unknown"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

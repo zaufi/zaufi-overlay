@@ -11,7 +11,7 @@ inherit npm
 DESCRIPTION="The jsbn library is a fast, portable implementation of large-number math in pure JavaScript, enabling public-key crypto and other applications on desktop and mobile browsers."
 HOMEPAGE="https://github.com/andyperlitch/jsbn"
 
-LICENSE="BSD"
+LICENSE="Unknown"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

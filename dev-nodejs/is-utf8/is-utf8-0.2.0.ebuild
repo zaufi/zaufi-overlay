@@ -10,7 +10,7 @@ inherit npm
 
 DESCRIPTION="detect if a buffer is utf8 encoded."
 
-LICENSE="BSD"
+LICENSE="Unknown"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
