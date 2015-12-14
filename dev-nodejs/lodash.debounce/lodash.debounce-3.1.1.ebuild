@@ -17,5 +17,5 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    =dev-nodejs/lodash._getnative-3.0.0
+    =dev-nodejs/lodash-getnative-3.0.0
 "

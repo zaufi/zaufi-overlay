@@ -8,6 +8,8 @@ EAPI=5
 
 inherit npm
 
+NPM_MODULE="lodash._getnative"
+
 DESCRIPTION="The modern build of lodash’s internal &#x60;getNative&#x60; as a module."
 HOMEPAGE="https://lodash.com/"
 
