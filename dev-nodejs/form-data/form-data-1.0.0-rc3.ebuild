@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="A library to create readable &quot;multipart&#x2F;form-data&quot; streams. Can be used to submit forms and file uploads to other web applications."
+DESCRIPTION="A library to create readable 'multipart/form-data' streams. Can be used to submit forms and file uploads to other web applications."
 HOMEPAGE="https://github.com/form-data/form-data#readme"
 
 LICENSE="MIT"

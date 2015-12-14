@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Returns &#x60;true&#x60; if the path appears to be relative."
+DESCRIPTION="Returns `true` if the path appears to be relative."
 HOMEPAGE="https://github.com/jonschlinkert/is-relative"
 
 LICENSE="MIT"

@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Tracks the download progress of a request made with mikeal&#x2F;request"
+DESCRIPTION="Tracks the download progress of a request made with mikeal/request"
 HOMEPAGE="https://github.com/IndigoUnited/node-request-progress#readme"
 
 LICENSE="MIT"

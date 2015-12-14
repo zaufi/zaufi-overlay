@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Prepend http:&#x2F;&#x2F; to humanized URLs like todomvc.com and localhost"
+DESCRIPTION="Prepend http:// to humanized URLs like todomvc.com and localhost"
 HOMEPAGE="https://github.com/sindresorhus/prepend-http#readme"
 
 LICENSE="MIT"

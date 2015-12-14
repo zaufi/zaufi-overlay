@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="url.parse() with support for protocol-less URLs &amp; IPs"
+DESCRIPTION="url.parse() with support for protocol-less URLs & IPs"
 HOMEPAGE="https://github.com/sindresorhus/url-parse-lax#readme"
 
 LICENSE="MIT"

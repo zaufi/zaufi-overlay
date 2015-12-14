@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="The Node.js &#x60;util.deprecate()&#x60; function with browser support"
+DESCRIPTION="The Node.js `util.deprecate()` function with browser support"
 HOMEPAGE="https://github.com/TooTallNate/util-deprecate"
 
 LICENSE="MIT"

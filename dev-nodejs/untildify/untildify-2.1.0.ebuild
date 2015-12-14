@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Convert a tilde path to an absolute path: ~&#x2F;dev &#x3D;&gt; &#x2F;Users&#x2F;sindresorhus&#x2F;dev"
+DESCRIPTION="Convert a tilde path to an absolute path: ~/dev => /Users/sindresorhus/dev"
 HOMEPAGE="https://github.com/sindresorhus/untildify"
 
 LICENSE="MIT"

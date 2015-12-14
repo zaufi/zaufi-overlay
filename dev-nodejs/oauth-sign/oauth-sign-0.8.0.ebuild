@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="OAuth 1 signing. Formerly a vendor lib in mikeal&#x2F;request, now a standalone module."
+DESCRIPTION="OAuth 1 signing. Formerly a vendor lib in mikeal/request, now a standalone module."
 HOMEPAGE="https://github.com/mikeal/oauth-sign#readme"
 
 LICENSE="Apache-2.0"

@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Caseless object set&#x2F;get&#x2F;has, very useful when working with HTTP headers."
+DESCRIPTION="Caseless object set/get/has, very useful when working with HTTP headers."
 HOMEPAGE="https://github.com/mikeal/caseless#readme"
 
 LICENSE="Apache-2.0"

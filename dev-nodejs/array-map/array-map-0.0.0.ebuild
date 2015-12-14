@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="&#x60;[].map(f)&#x60; for older browsers"
+DESCRIPTION="`[].map(f)` for older browsers"
 HOMEPAGE="https://github.com/substack/array-map"
 
 LICENSE="MIT"

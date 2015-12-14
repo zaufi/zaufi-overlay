@@ -10,7 +10,7 @@ inherit npm
 
 NPM_MODULE="lodash.debounce"
 
-DESCRIPTION="The modern build of lodash’s &#x60;_.debounce&#x60; as a module."
+DESCRIPTION="The modern build of lodash’s `_.debounce` as a module."
 HOMEPAGE="https://lodash.com/"
 
 LICENSE="MIT"

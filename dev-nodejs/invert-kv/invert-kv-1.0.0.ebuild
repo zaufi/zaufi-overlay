@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Invert the key&#x2F;value of an object. Example: {foo: &#39;bar&#39;} → {bar: &#39;foo&#39;}"
+DESCRIPTION="Invert the key/value of an object. Example: {foo: 'bar'} → {bar: 'foo'}"
 HOMEPAGE="https://github.com/sindresorhus/invert-kv"
 
 LICENSE="MIT"

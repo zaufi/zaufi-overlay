@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Utility method to run function either synchronously or asynchronously using the common &#x60;this.async()&#x60; style."
+DESCRIPTION="Utility method to run function either synchronously or asynchronously using the common `this.async()` style."
 HOMEPAGE="https://github.com/SBoudrias/run-async"
 
 LICENSE="MIT"

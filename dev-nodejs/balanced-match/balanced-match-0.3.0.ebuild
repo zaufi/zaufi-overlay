@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Match balanced character pairs, like &quot;{&quot; and &quot;}&quot;"
+DESCRIPTION="Match balanced character pairs, like '{' and '}'"
 HOMEPAGE="https://github.com/juliangruber/balanced-match"
 
 LICENSE="MIT"

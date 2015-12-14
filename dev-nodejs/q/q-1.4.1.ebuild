@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="A library for promises (CommonJS&#x2F;Promises&#x2F;A,B,D)"
+DESCRIPTION="A library for promises (CommonJS/Promises/A,B,D)"
 HOMEPAGE="https://github.com/kriskowal/q"
 
 LICENSE="Unknown"

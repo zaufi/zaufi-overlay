@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="tar-stream is a streaming tar parser and generator and nothing else. It is streams2 and operates purely using streams which means you can easily extract&#x2F;parse tarballs without ever hitting the file system."
+DESCRIPTION="tar-stream is a streaming tar parser and generator and nothing else. It is streams2 and operates purely using streams which means you can easily extract/parse tarballs without ever hitting the file system."
 HOMEPAGE="https://github.com/mafintosh/tar-stream"
 
 LICENSE="MIT"

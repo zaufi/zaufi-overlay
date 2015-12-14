@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Stringify an object&#x2F;array like JSON.stringify just without all the double-quotes"
+DESCRIPTION="Stringify an object/array like JSON.stringify just without all the double-quotes"
 HOMEPAGE="https://github.com/yeoman/stringify-object"
 
 LICENSE="BSD-2-Clause"

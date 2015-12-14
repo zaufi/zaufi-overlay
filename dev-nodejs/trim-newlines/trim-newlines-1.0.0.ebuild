@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Trim newlines from the start and&#x2F;or end of a string"
+DESCRIPTION="Trim newlines from the start and/or end of a string"
 HOMEPAGE="https://github.com/sindresorhus/trim-newlines"
 
 LICENSE="MIT"

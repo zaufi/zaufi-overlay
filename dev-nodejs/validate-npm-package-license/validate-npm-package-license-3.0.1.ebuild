@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Give me a string and I&#39;ll tell you if it&#39;s a valid npm package license string"
+DESCRIPTION="Give me a string and I'll tell you if it's a valid npm package license string"
 HOMEPAGE="https://github.com/kemitchell/validate-npm-package-license.js#readme"
 
 LICENSE="Apache-2.0"

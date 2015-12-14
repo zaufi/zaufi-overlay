@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="like &#x60;chmod -R&#x60;"
+DESCRIPTION="like `chmod -R`"
 HOMEPAGE="https://github.com/isaacs/chmodr#readme"
 
 LICENSE="ISC"

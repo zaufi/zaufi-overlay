@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Call a callback when a readable&#x2F;writable&#x2F;duplex stream has completed or failed."
+DESCRIPTION="Call a callback when a readable/writable/duplex stream has completed or failed."
 HOMEPAGE="https://github.com/mafintosh/end-of-stream"
 
 LICENSE="MIT"

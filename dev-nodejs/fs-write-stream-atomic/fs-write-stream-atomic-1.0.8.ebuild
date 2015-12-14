@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Like &#x60;fs.createWriteStream(...)&#x60;, but atomic."
+DESCRIPTION="Like `fs.createWriteStream(...)`, but atomic."
 HOMEPAGE="https://github.com/npm/fs-write-stream-atomic"
 
 LICENSE="ISC"

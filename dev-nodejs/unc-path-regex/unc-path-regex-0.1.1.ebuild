@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Regular expression for testing if a file path is a windows UNC file path. Can also be used as a component of another regexp via the &#x60;.source&#x60; property."
+DESCRIPTION="Regular expression for testing if a file path is a windows UNC file path. Can also be used as a component of another regexp via the `.source` property."
 HOMEPAGE="https://github.com/jonschlinkert/unc-path-regex"
 
 LICENSE="MIT"

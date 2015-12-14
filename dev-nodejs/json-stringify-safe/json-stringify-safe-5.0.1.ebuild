@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Like JSON.stringify, but doesn&#39;t blow up on circular refs."
+DESCRIPTION="Like JSON.stringify, but doesn't blow up on circular refs."
 HOMEPAGE="https://github.com/isaacs/json-stringify-safe"
 
 LICENSE="ISC"

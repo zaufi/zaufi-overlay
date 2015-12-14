@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="HTTP Agent that keeps socket connections alive between keep-alive requests. Formerly part of mikeal&#x2F;request, now a standalone module."
+DESCRIPTION="HTTP Agent that keeps socket connections alive between keep-alive requests. Formerly part of mikeal/request, now a standalone module."
 HOMEPAGE="https://github.com/mikeal/forever-agent"
 
 LICENSE="Apache-2.0"

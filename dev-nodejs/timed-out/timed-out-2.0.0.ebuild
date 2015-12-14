@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Emit &#x60;ETIMEDOUT&#x60; or &#x60;ESOCKETTIMEDOUT&#x60; when ClientRequest is hanged"
+DESCRIPTION="Emit `ETIMEDOUT` or `ESOCKETTIMEDOUT` when ClientRequest is hanged"
 HOMEPAGE="https://github.com/floatdrop/timed-out"
 
 LICENSE="MIT"

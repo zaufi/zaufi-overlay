@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Extra assertions on top of node&#39;s assert module"
+DESCRIPTION="Extra assertions on top of node's assert module"
 HOMEPAGE="https://github.com/mcavage/node-assert-plus#readme"
 
 LICENSE="MIT"

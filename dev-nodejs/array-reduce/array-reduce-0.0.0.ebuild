@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="&#x60;[].reduce()&#x60; for old browsers"
+DESCRIPTION="`[].reduce()` for old browsers"
 HOMEPAGE="https://github.com/substack/array-reduce"
 
 LICENSE="MIT"

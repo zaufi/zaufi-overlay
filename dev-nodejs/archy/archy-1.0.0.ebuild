@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="render nested hierarchies &#x60;npm ls&#x60; style with unicode pipes"
+DESCRIPTION="render nested hierarchies `npm ls` style with unicode pipes"
 HOMEPAGE="https://github.com/substack/node-archy"
 
 LICENSE="MIT"

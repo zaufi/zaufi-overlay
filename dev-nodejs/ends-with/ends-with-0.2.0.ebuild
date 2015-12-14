@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Returns &#x60;true&#x60; if the given &#x60;string&#x60; or &#x60;array&#x60; ends with &#x60;suffix&#x60; using strict equality for comparisons."
+DESCRIPTION="Returns `true` if the given `string` or `array` ends with `suffix` using strict equality for comparisons."
 HOMEPAGE="https://github.com/jonschlinkert/ends-with"
 
 LICENSE="UNLICENSED"

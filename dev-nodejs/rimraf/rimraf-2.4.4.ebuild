@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="A deep deletion module for node (like &#x60;rm -rf&#x60;)"
+DESCRIPTION="A deep deletion module for node (like `rm -rf`)"
 HOMEPAGE="https://github.com/isaacs/rimraf#readme"
 
 LICENSE="ISC"

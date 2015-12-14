@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Turn a writeable and readable stream into a streams2 duplex stream with support for async initialization and streams1&#x2F;streams2 input"
+DESCRIPTION="Turn a writeable and readable stream into a streams2 duplex stream with support for async initialization and streams1/streams2 input"
 HOMEPAGE="https://github.com/mafintosh/duplexify"
 
 LICENSE="MIT"

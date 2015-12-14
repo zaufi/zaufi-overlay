@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Fast and simple MD5 hashing utility with zero module dependencies. View MD5 Shootout results, http:&#x2F;&#x2F;jsperf.com&#x2F;md5-shootout&#x2F;39"
+DESCRIPTION="Fast and simple MD5 hashing utility with zero module dependencies. View MD5 Shootout results, http://jsperf.com/md5-shootout/39"
 HOMEPAGE="https://github.com/trentmillar/md5-o-matic"
 
 LICENSE="UNLICENSED"

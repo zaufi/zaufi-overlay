@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Like ruby&#39;s abbrev module, but in js"
+DESCRIPTION="Like ruby's abbrev module, but in js"
 HOMEPAGE="https://github.com/isaacs/abbrev-js#readme"
 
 LICENSE="ISC"

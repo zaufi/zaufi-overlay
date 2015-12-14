@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="JavaScript parser, mangler&#x2F;compressor and beautifier toolkit"
+DESCRIPTION="JavaScript parser, mangler/compressor and beautifier toolkit"
 HOMEPAGE="http://lisperator.net/uglifyjs"
 
 LICENSE="BSD-2-Clause"

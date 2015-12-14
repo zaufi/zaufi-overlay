@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Node.js &#x60;http.STATUS_CODES&#x60; ponyfill"
+DESCRIPTION="Node.js `http.STATUS_CODES` ponyfill"
 HOMEPAGE="https://github.com/sindresorhus/node-status-codes#readme"
 
 LICENSE="MIT"

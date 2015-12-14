@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Build chainable fluent interfaces the easy way... with a freakin&#39; chainsaw!"
+DESCRIPTION="Build chainable fluent interfaces the easy way... with a freakin' chainsaw!"
 
 LICENSE="Unknown"
 SLOT="0"

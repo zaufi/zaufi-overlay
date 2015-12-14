@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Contain async insanity so that the dark pony lord doesn&#39;t eat souls"
+DESCRIPTION="Contain async insanity so that the dark pony lord doesn't eat souls"
 HOMEPAGE="https://github.com/npm/dezalgo"
 
 LICENSE="ISC"

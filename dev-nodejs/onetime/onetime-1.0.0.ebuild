@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Only call a function once. Unlike the module &#x60;once&#x60;, this one isn&#39;t naughty extending &#x60;Function.prototype&#x60;."
+DESCRIPTION="Only call a function once. Unlike the module `once`, this one isn't naughty extending `Function.prototype`."
 HOMEPAGE="https://github.com/sindresorhus/onetime"
 
 LICENSE="MIT"

@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="The &#x60;util.is*&#x60; functions introduced in Node v0.12."
+DESCRIPTION="The `util.is*` functions introduced in Node v0.12."
 HOMEPAGE="https://github.com/isaacs/core-util-is#readme"
 
 LICENSE="MIT"

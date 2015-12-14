@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Write files in an atomic fashion w&#x2F;configurable ownership"
+DESCRIPTION="Write files in an atomic fashion w/configurable ownership"
 HOMEPAGE="https://github.com/iarna/write-file-atomic"
 
 LICENSE="ISC"

@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Reference implementation of Joyent&#39;s HTTP Signature scheme."
+DESCRIPTION="Reference implementation of Joyent's HTTP Signature scheme."
 HOMEPAGE="https://github.com/joyent/node-http-signature/"
 
 LICENSE="MIT"

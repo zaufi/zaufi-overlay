@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Check if the process is running as root user, eg. started with &#x60;sudo&#x60;."
+DESCRIPTION="Check if the process is running as root user, eg. started with `sudo`."
 HOMEPAGE="https://github.com/sindresorhus/is-root"
 
 LICENSE="MIT"

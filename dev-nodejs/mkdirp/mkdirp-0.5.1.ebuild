@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Recursively mkdir, like &#x60;mkdir -p&#x60;"
+DESCRIPTION="Recursively mkdir, like `mkdir -p`"
 HOMEPAGE="https://github.com/substack/node-mkdirp#readme"
 
 LICENSE="MIT"

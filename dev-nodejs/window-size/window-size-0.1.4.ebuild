@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Reliable way to to get the height and width of the terminal&#x2F;console in a node.js environment."
+DESCRIPTION="Reliable way to to get the height and width of the terminal/console in a node.js environment."
 HOMEPAGE="https://github.com/jonschlinkert/window-size"
 
 LICENSE="MIT"

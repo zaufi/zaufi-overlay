@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Strip UTF-8 byte order mark (BOM) from a string&#x2F;buffer"
+DESCRIPTION="Strip UTF-8 byte order mark (BOM) from a string/buffer"
 HOMEPAGE="https://github.com/sindresorhus/strip-bom"
 
 LICENSE="MIT"

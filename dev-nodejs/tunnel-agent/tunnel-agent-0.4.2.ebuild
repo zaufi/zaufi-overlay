@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="HTTP proxy tunneling agent. Formerly part of mikeal&#x2F;request, now a standalone module."
+DESCRIPTION="HTTP proxy tunneling agent. Formerly part of mikeal/request, now a standalone module."
 HOMEPAGE="https://github.com/mikeal/tunnel-agent#readme"
 
 LICENSE="Apache-2.0"

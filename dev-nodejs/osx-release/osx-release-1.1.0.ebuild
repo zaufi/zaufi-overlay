@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Get the name and version of a OS X release from the Darwin version. Example: 13.2.0 → {name: &#39;Mavericks&#39;, version: &#39;10.9&#39;}"
+DESCRIPTION="Get the name and version of a OS X release from the Darwin version. Example: 13.2.0 → {name: 'Mavericks', version: '10.9'}"
 HOMEPAGE="https://github.com/sindresorhus/osx-release#readme"
 
 LICENSE="MIT"

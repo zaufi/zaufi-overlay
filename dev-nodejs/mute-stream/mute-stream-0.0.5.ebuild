@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Bytes go in, but they don&#39;t come out (when muted)."
+DESCRIPTION="Bytes go in, but they don't come out (when muted)."
 HOMEPAGE="https://github.com/isaacs/mute-stream#readme"
 
 LICENSE="ISC"

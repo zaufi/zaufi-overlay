@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="An ini encoder&#x2F;decoder for node"
+DESCRIPTION="An ini encoder/decoder for node"
 HOMEPAGE="https://github.com/isaacs/ini#readme"
 
 LICENSE="ISC"

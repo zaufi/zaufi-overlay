@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="A thing that is a lot like ES6 &#x60;Map&#x60;, but without iterators, for use in environments where &#x60;for..of&#x60; syntax and &#x60;Map&#x60; are not available."
+DESCRIPTION="A thing that is a lot like ES6 `Map`, but without iterators, for use in environments where `for..of` syntax and `Map` are not available."
 HOMEPAGE="https://github.com/isaacs/pseudomap#readme"
 
 LICENSE="ISC"

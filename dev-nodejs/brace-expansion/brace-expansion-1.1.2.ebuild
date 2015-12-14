@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Brace expansion as known from sh&#x2F;bash"
+DESCRIPTION="Brace expansion as known from sh/bash"
 HOMEPAGE="https://github.com/juliangruber/brace-expansion"
 
 LICENSE="MIT"

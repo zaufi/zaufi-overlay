@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="AWS signing. Originally pulled from LearnBoost&#x2F;knox, maintained as vendor in request, now a standalone module."
+DESCRIPTION="AWS signing. Originally pulled from LearnBoost/knox, maintained as vendor in request, now a standalone module."
 HOMEPAGE="https://github.com/mikeal/aws-sign#readme"
 
 LICENSE="Apache-2.0"

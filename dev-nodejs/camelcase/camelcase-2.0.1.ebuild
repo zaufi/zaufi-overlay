@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Convert a dash&#x2F;dot&#x2F;underscore&#x2F;space separated string to camelCase: foo-bar → fooBar"
+DESCRIPTION="Convert a dash/dot/underscore/space separated string to camelCase: foo-bar → fooBar"
 HOMEPAGE="https://github.com/sindresorhus/camelcase"
 
 LICENSE="MIT"

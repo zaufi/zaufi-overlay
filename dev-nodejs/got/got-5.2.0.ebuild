@@ -8,7 +8,7 @@ EAPI=5
 
 inherit npm
 
-DESCRIPTION="Simplified HTTP&#x2F;HTTPS requests"
+DESCRIPTION="Simplified HTTP/HTTPS requests"
 HOMEPAGE="https://github.com/sindresorhus/got"
 
 LICENSE="MIT"
