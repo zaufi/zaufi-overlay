@@ -18,5 +18,5 @@ IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
     >=dev-nodejs/once-1.3.0
-    dev-nodejs/wrappy
+    ~dev-nodejs/wrappy-1
 "

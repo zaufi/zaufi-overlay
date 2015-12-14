@@ -20,7 +20,7 @@ RDEPEND="${DEPEND}
     >=dev-nodejs/async-1.4.0
     >=dev-nodejs/optimist-0.6.1
     >=dev-nodejs/source-map-0.4.4
-    >=dev-nodejs/uglify-js
+    >=dev-nodejs/uglify-js-2.6
 "
 
 src_install() {
