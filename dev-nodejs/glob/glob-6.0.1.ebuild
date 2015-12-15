@@ -18,8 +18,8 @@ IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
     >=dev-nodejs/inflight-1.0.4
-    ~dev-nodejs/inherits-2.0.0
-    ~dev-nodejs/minimatch-2.0.0
+    =dev-nodejs/inherits-2*
+    =dev-nodejs/minimatch-2*
     >=dev-nodejs/once-1.3.0
     >=dev-nodejs/path-is-absolute-1.0.0
 "

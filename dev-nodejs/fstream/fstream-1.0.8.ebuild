@@ -19,6 +19,6 @@ DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
     >=dev-nodejs/graceful-fs-4.1.2
     >=dev-nodejs/inherits-2.0.0
-    >=dev-nodejs/mkdirp-0.5.0
-    ~dev-nodejs/rimraf-2.0.0
+    =dev-nodejs/mkdirp-0.5*
+    =dev-nodejs/rimraf-2*
 "
