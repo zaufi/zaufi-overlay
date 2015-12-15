@@ -17,5 +17,5 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    ~dev-nodejs/wrappy-1
+    ~dev-nodejs/wrappy-1.0.0
 "

@@ -17,8 +17,8 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-4.0.0"
 RDEPEND="${DEPEND}
-    =dev-nodejs/hoek-3.*
-    =dev-nodejs/boom-3.*
-    =dev-nodejs/cryptiles-3.*
-    =dev-nodejs/sntp-2.*
+    =dev-nodejs/hoek-3*
+    =dev-nodejs/boom-3*
+    =dev-nodejs/cryptiles-3*
+    =dev-nodejs/sntp-2*
 "

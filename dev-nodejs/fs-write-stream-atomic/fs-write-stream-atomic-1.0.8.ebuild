@@ -20,5 +20,5 @@ RDEPEND="${DEPEND}
     >=dev-nodejs/graceful-fs-4.1.2
     >=dev-nodejs/iferr-0.1.5
     >=dev-nodejs/imurmurhash-0.1.4
-    ~dev-nodejs/readable-stream-1
+    ~dev-nodejs/readable-stream-1.0.0
 "

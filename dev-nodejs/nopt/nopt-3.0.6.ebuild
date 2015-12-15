@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 DEPEND=">=net-libs/nodejs-0.10"
 RDEPEND="${DEPEND}
-    ~dev-nodejs/abbrev-1
+    ~dev-nodejs/abbrev-1.0.0
 "
 
 src_install() {

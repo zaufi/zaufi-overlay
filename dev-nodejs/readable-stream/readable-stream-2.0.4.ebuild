@@ -21,6 +21,6 @@ RDEPEND="${DEPEND}
     >=dev-nodejs/inherits-2.0.1
     ~dev-nodejs/isarray-0.0.1
     >=dev-nodejs/process-nextick-args-1.0.0
-    =dev-nodejs/string_decoder-0.10.*
+    =dev-nodejs/string_decoder-0.10*
     >=dev-nodejs/util-deprecate-1.0.1
 "
