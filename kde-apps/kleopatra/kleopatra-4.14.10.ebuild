@@ -18,8 +18,8 @@ DEPEND="
 	dev-libs/boost:=
 	dev-libs/libassuan
 	dev-libs/libgpg-error
-	$(add_kdebase_dep kdepimlibs 'akonadi(+)')
-	$(add_kdebase_dep kdepim-common-libs)
+	$(add_kdeapps_dep kdepimlibs 'akonadi(+)')
+	$(add_kdeapps_dep kdepim-common-libs)
 "
 RDEPEND="${DEPEND}
 	app-crypt/gnupg
