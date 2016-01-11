@@ -115,7 +115,7 @@
  	    $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) \
  	    $(AM_LDFLAGS) $(LDFLAGS) \
 -	    -I@PYTHON_INCLUDE_DIR@ @BOOST_PYTHON_LIB@  $(PTHREAD_LIBS) \
-+	    @PYTHON_CFLAGS@@ @BOOST_PYTHON_LIB@  $(PTHREAD_LIBS) \
++	    @PYTHON_CFLAGS@ @BOOST_PYTHON_LIB@  $(PTHREAD_LIBS) \
  	    -o $@ \
  	    .libs/paludis_python_so.o \
  	    -L$(top_builddir)/python/.libs -lpaludispython_@PALUDIS_PC_SLOT@
@@ -124,7 +124,7 @@
  	    $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) \
  	    $(AM_LDFLAGS) $(LDFLAGS) \
 -	    -I@PYTHON_INCLUDE_DIR@ @BOOST_PYTHON_LIB@  $(PTHREAD_LIBS) \
-+	    @PYTHON_CFLAGS@@ @BOOST_PYTHON_LIB@  $(PTHREAD_LIBS) \
++	    @PYTHON_CFLAGS@ @BOOST_PYTHON_LIB@  $(PTHREAD_LIBS) \
  	    -o $@ \
  	    .libs/additional_tests_so.o \
  	    -L$(top_builddir)/python/.libs -ladditionaltests_@PALUDIS_PC_SLOT@
