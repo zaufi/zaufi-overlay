@@ -8,6 +8,7 @@ inherit cmake-utils
 DESCRIPTION="C++ library to integrate various testing libraries/frameworks with JetBrains TeamCity"
 HOMEPAGE="https://github.com/zaufi/teamcity-cpp"
 SRC_URI="https://github.com/zaufi/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+RESTRICT="fetch"
 
 IUSE="boost cppunit gtest"
 LICENSE="Apache-2.0"
@@ -24,6 +25,7 @@ RDEPEND=""
 
 src_configure() {
     local mycmakeargs=(
+        -DCMAKE_INSTALL_PREFIX="${EPREFIX}${PREFIX}/share"
         $(cmake-utils_use_enable boost BOOST)
         $(cmake-utils_use_enable cppunit CPPUNIT)
         $(cmake-utils_use_enable gtest GTEST)
