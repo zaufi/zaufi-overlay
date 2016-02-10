@@ -14,7 +14,7 @@ HOMEPAGE="https://github.com/zaufi/paludis-hooks"
 
 # TODO Introduce USE flags to select what to install?
 # I think it covers all variants of installation
-IUSE="+autopatch +filesystem-manager +workdir-tmpfs +package-env"
+IUSE="+autopatch +fs-manager +workdir-tmpfs +package-env"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~hppa ~ppc ~sparc ~x86"
@@ -35,7 +35,7 @@ RDEPEND="${PYTHON_DEPS}
 src_configure() {
 	local mycmakeargs=(
 		$(cmake-utils_use_with autopatch AUTOPATCH)
-		$(cmake-utils_use_with filesystem-manager FS_MANAGER)
+		$(cmake-utils_use_with fs-manager FS_MANAGER)
 		$(cmake-utils_use_with package-env PACKAGE_ENV)
 		$(cmake-utils_use_with workdir-tmpfs WORKDIR_TMPFS)
 	)
@@ -73,8 +73,8 @@ src_install() {
 	#dosym "${config_cache_cleaner}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_configure_pre
 	#local -r config_cache_cleaner="${EPREFIX}"/usr/share/${PN}/config-cache-cleaner.bash
 
-	if use filesystem-manager; then
-		local -r filesystem_manager="${EPREFIX}"/usr/share/${PN}/filesystem-manager.bash
+	if use fs-manager; then
+		local -r filesystem_manager="${EPREFIX}"/usr/share/${PN}/fs-manager.bash
 		dosym "${filesystem_manager}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_install_post
 	fi
 

@@ -3,7 +3,7 @@
 <pkgmetadata>
 <use>
   <flag name="autopatch">Hook to apply patches in the easy way</flag>
-  <flag name="filesystem-manager">Hook for modifying contents of packages before installation</flag>
+  <flag name="fs-manager">Hook for modifying contents of packages before installation</flag>
   <flag name="package-env">Analogue for portage's package.env functionality</flag>
   <flag name="workdir-tmpfs">Hook for smart building packages in RAM</flag>
 </use>
