@@ -69,10 +69,6 @@ src_install() {
 		dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/install_all_post
 	fi
 
-	# Is it exists for now? I didn't found
-	#dosym "${config_cache_cleaner}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_configure_pre
-	#local -r config_cache_cleaner="${EPREFIX}"/usr/share/${PN}/config-cache-cleaner.bash
-
 	if use fs-manager; then
 		local -r filesystem_manager="${EPREFIX}"/usr/share/${PN}/filesystem-manager.bash
 		dosym "${filesystem_manager}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_install_post
