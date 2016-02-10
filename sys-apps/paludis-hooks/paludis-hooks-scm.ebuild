@@ -43,20 +43,20 @@ src_configure() {
 }
 
 src_install() {
-    cmake-utils_src_install
+	cmake-utils_src_install
 
-    # Rename non-versioned doc dir
-    mv "${D}"/usr/share/doc/${PN} "${D}"/usr/share/doc/${P}
+	# Rename non-versioned doc dir
+	mv "${D}"/usr/share/doc/${PN} "${D}"/usr/share/doc/${P}
 
-    einfo "Installing hooks into paludis configuration dir..."
+	einfo "Installing hooks into paludis configuration dir..."
 
-    # Create all necessary directories
-    keepdir "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_{compile,configure,init,install,tidyup,unpack}_{pre,post}
-    keepdir "${PALUDIS_CONFIG_DIR}"/hooks/install_{all_post,fail}
-    # Create 'empty' directories for autopatch hook
-    keepdir "${EPREFIX}"/var/db/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre,unpack_post}
+	# Create all necessary directories
+	keepdir "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_{compile,configure,init,install,tidyup,unpack}_{pre,post}
+	keepdir "${PALUDIS_CONFIG_DIR}"/hooks/install_{all_post,fail}
+	# Create 'empty' directories for autopatch hook
+	keepdir "${EPREFIX}"/var/db/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre,unpack_post}
 
-    # Symlink hooks into configuration dirs
+	# Symlink hooks into configuration dirs
 
 	if use autopatch; then
 		local -r auto_patch="${EPREFIX}"/usr/share/${PN}/auto-patch.bash
@@ -86,5 +86,5 @@ src_install() {
 		dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/install_fail
 	fi
 
-    python_fix_shebang "${D}"/usr/libexec/cave/commands/print-ebuild-path
+	python_fix_shebang "${D}"/usr/libexec/cave/commands/print-ebuild-path
 }
