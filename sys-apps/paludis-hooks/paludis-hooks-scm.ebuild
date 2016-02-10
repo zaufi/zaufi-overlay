@@ -74,7 +74,7 @@ src_install() {
 	#local -r config_cache_cleaner="${EPREFIX}"/usr/share/${PN}/config-cache-cleaner.bash
 
 	if use fs-manager; then
-		local -r filesystem_manager="${EPREFIX}"/usr/share/${PN}/fs-manager.bash
+		local -r filesystem_manager="${EPREFIX}"/usr/share/${PN}/filesystem-manager.bash
 		dosym "${filesystem_manager}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_install_post
 	fi
 
