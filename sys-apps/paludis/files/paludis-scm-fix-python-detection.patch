@@ -1,0 +1,149 @@
+From e3fada3c6e09760bff090dc6d98e66b138d31426 Mon Sep 17 00:00:00 2001
+From: Alex Turbov <i.zaufi@gmail.com>
+Date: Thu, 25 Feb 2016 13:26:03 +0530
+Subject: [PATCH] use pkg-config to get actual python paths and avoid hardcoded
+ names
+
+---
+ configure.ac           | 33 +++++++--------------------------
+ paludis/Makefile.am.m4 |  2 +-
+ python/Makefile.am     | 14 +++++++-------
+ 3 files changed, 15 insertions(+), 34 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 7c1fe4f..2b04fae 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -742,29 +742,10 @@ if test "x$enable_python" = "xyes" ; then
+ 	[AC_MSG_RESULT([no])]
+ 	 AC_MSG_ERROR([Your gcc is too old for Python support]))
+ 
+-	AC_MSG_CHECKING(for headers required to compile python extensions)
+-	py_prefix=`$PYTHON -c "import sys; print(sys.prefix)"`
+-	py_exec_prefix=`$PYTHON -c "import sys; print(sys.exec_prefix)"`
+-	PYTHON_INCLUDE_DIR="${py_prefix}/include/python${PYTHON_VERSION}"
+-	if test "$py_prefix" != "$py_exec_prefix"; then
+-		PYTHON_INCLUDE_DIR="$PYTHON_INCLUDE_DIR -I${py_exec_prefix}/include/python${PYTHON_VERSION}"
+-	fi
+-	AC_MSG_RESULT([$PYTHON_INCLUDE_DIR])
+-	AC_SUBST(PYTHON_INCLUDE_DIR)
+-
+-	dnl {{{ check for Python.h
+-	AC_MSG_CHECKING([for Python.h])
+-	save_CXXFLAGS="$CXXFLAGS"
+-	CXXFLAGS="$CXXFLAGS -I$PYTHON_INCLUDE_DIR"
+-	AC_COMPILE_IFELSE([AC_LANG_SOURCE([
+-	#include <Python.h>
+-	])],
+-		[AC_MSG_RESULT([yes])],
+-		[AC_MSG_RESULT([no])
+-		AC_MSG_ERROR([Python.h not found in $PYTHON_INCLUDE_DIR])])
+-	dnl Restore the C++ flags
+-	CXXFLAGS="$save_CXXFLAGS"
+-	dnl }}}
++	PKG_CHECK_MODULES(PYTHON, [python-${PYTHON_VERSION}], [], [
++		AC_MSG_ERROR([Python $PYTHON_VERSION is required for --enable-python])
++	])
++	
+ 
+ 	AC_ARG_WITH([python-install-dir],
+ 		AS_HELP_STRING([--with-python-install-dir=dir], [Specify Python installation dir]),
+@@ -779,7 +760,7 @@ if test "x$enable_python" = "xyes" ; then
+ 	dnl {{{ we need boost.Python
+ 	AC_MSG_CHECKING([for boost.python])
+ 	save_CXXFLAGS="$CXXFLAGS"
+-	CXXFLAGS="$CXXFLAGS -I$PYTHON_INCLUDE_DIR"
++	CXXFLAGS="$CXXFLAGS $PYTHON_CFLAGS"
+ 	AC_COMPILE_IFELSE([AC_LANG_SOURCE([
+ 	#include <boost/python.hpp>
+ 	struct Foo {};
+@@ -800,10 +781,10 @@ if test "x$enable_python" = "xyes" ; then
+ 	AC_MSG_CHECKING([for boost.python library name])
+ 	save_CXXFLAGS="$CXXFLAGS"
+ 	save_LIBS="$LIBS"
+-	CXXFLAGS="$CXXFLAGS -I$PYTHON_INCLUDE_DIR"
++	CXXFLAGS="$CXXFLAGS $PYTHON_CFLAGS"
+ 	BOOST_PYTHON_LIB=
+ 	for lib in boost_python-$PYTHON_VERSION boost_python-$PYTHON_VERSION-mt boost_python boost_python-mt; do
+-		LIBS="$LIBS -l$lib -lpython$PYTHON_VERSION"
++		LIBS="$LIBS -l$lib $PYTHON_LIBS"
+ 		AC_LINK_IFELSE([AC_LANG_SOURCE([
+ #include <boost/python.hpp>
+ int main() { boost::python::throw_error_already_set(); return 0; }
+diff --git a/paludis/Makefile.am.m4 b/paludis/Makefile.am.m4
+index da050b4..f04b7e5 100644
+--- a/paludis/Makefile.am.m4
++++ b/paludis/Makefile.am.m4
+@@ -76,7 +76,7 @@ libpaludispythonhooks_@PALUDIS_PC_SLOT@_la_SOURCES = python_hooks.cc
+ libpaludispythonhooks_@PALUDIS_PC_SLOT@_la_CXXFLAGS = $(AM_CXXFLAGS) \
+ 	@PALUDIS_CXXFLAGS_NO_STRICT_ALIASING@ \
+ 	-I@PYTHON_INCLUDE_DIR@
+-libpaludispythonhooks_@PALUDIS_PC_SLOT@_la_LDFLAGS = -version-info @VERSION_LIB_CURRENT@:@VERSION_LIB_REVISION@:0 @BOOST_PYTHON_LIB@ -lpython@PYTHON_VERSION@
++libpaludispythonhooks_@PALUDIS_PC_SLOT@_la_LDFLAGS = -version-info @VERSION_LIB_CURRENT@:@VERSION_LIB_REVISION@:0 @BOOST_PYTHON_LIB@ @PYTHON_LIBS@
+ libpaludispythonhooks_@PALUDIS_PC_SLOT@_la_LIBADD = libpaludis_@PALUDIS_PC_SLOT@.la
+ 
+ libpaludissohooks_TEST_@PALUDIS_PC_SLOT@_la_SOURCES = sohooks_TEST.cc
+diff --git a/python/Makefile.am b/python/Makefile.am
+index 92a145f..64426ac 100644
+--- a/python/Makefile.am
++++ b/python/Makefile.am
+@@ -89,7 +89,7 @@ if ENABLE_PYTHON
+ 
+ lib_LTLIBRARIES = libpaludispython_@PALUDIS_PC_SLOT@.la
+ 
+-libpaludispython_@PALUDIS_PC_SLOT@_la_CXXFLAGS = $(AM_CXXFLAGS) -I. -I@PYTHON_INCLUDE_DIR@
++libpaludispython_@PALUDIS_PC_SLOT@_la_CXXFLAGS = $(AM_CXXFLAGS) -I. @PYTHON_CFLAGS@
+ libpaludispython_@PALUDIS_PC_SLOT@_la_LDFLAGS = \
+ 	@BOOST_PYTHON_LIB@ \
+ 	-version-info @VERSION_LIB_CURRENT@:@VERSION_LIB_REVISION@:0 \
+@@ -97,17 +97,17 @@ libpaludispython_@PALUDIS_PC_SLOT@_la_LDFLAGS = \
+ 
+ check_LTLIBRARIES = libadditionaltests_@PALUDIS_PC_SLOT@.la
+ 
+-libadditionaltests_@PALUDIS_PC_SLOT@_la_CXXFLAGS = $(AM_CXXFLAGS) -I. -I@PYTHON_INCLUDE_DIR@
++libadditionaltests_@PALUDIS_PC_SLOT@_la_CXXFLAGS = $(AM_CXXFLAGS) -I. @PYTHON_CFLAGS@
+ libadditionaltests_@PALUDIS_PC_SLOT@_la_LDFLAGS = @BOOST_PYTHON_LIB@ -rpath /nowhere
+ 
+ paludis_python_so.o : paludis_python_so.cc
+ 	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) \
+-	    $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(AM_CXXFLAGS) -I$(PYTHON_INCLUDE_DIR) -c \
++	    $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(AM_CXXFLAGS) $(PYTHON_CFLAGS) -c \
+ 	    -o $@ $(srcdir)/paludis_python_so.cc ; then ln -fs .libs/paludis_python_so.o $@ ; else rm -f $@ ; exit 1 ; fi
+ 
+ additional_tests_so.o : additional_tests_so.cc
+ 	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) \
+-	    $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(AM_CXXFLAGS) -I$(PYTHON_INCLUDE_DIR) -c \
++	    $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(AM_CXXFLAGS) $(PYTHON_CFLAGS) -c \
+ 	    -o $@ $(srcdir)/additional_tests_so.cc ; then ln -fs .libs/addtional_tests_so.o $@ ; else rm -f $@ ; exit 1 ; fi
+ 
+ libpaludispython_@PALUDIS_PC_SLOT@_la_SOURCES = $(IF_PYTHON_SOURCES)
+@@ -129,7 +129,7 @@ pythonlib_DATA = paludis.so paludis_output_wrapper.py
+ 	$(CXX) -fPIC -shared $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+ 	    $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) \
+ 	    $(AM_LDFLAGS) $(LDFLAGS) \
+-	    -I@PYTHON_INCLUDE_DIR@ @BOOST_PYTHON_LIB@  $(PTHREAD_LIBS) \
++	    @PYTHON_CFLAGS@ @BOOST_PYTHON_LIB@  $(PTHREAD_LIBS) \
+ 	    -o $@ \
+ 	    .libs/paludis_python_so.o \
+ 	    -L$(top_builddir)/python/.libs -lpaludispython_@PALUDIS_PC_SLOT@
+@@ -138,7 +138,7 @@ paludis.so : libpaludispython_@PALUDIS_PC_SLOT@.la paludis_python_so.o
+ 	$(CXX) -fPIC -shared $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+ 	    $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) \
+ 	    $(AM_LDFLAGS) $(LDFLAGS) \
+-	    -I@PYTHON_INCLUDE_DIR@ @BOOST_PYTHON_LIB@  $(PTHREAD_LIBS) \
++	    @PYTHON_CFLAGS@ @BOOST_PYTHON_LIB@  $(PTHREAD_LIBS) \
+ 	    -o $@ \
+ 	    .libs/paludis_python_so.o \
+ 	    -L$(top_builddir)/python/.libs -lpaludispython_@PALUDIS_PC_SLOT@
+@@ -147,7 +147,7 @@ paludis.so : libpaludispython_@PALUDIS_PC_SLOT@.la paludis_python_so.o
+ 	$(CXX) -fPIC -shared $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+ 	    $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) \
+ 	    $(AM_LDFLAGS) $(LDFLAGS) \
+-	    -I@PYTHON_INCLUDE_DIR@ @BOOST_PYTHON_LIB@  $(PTHREAD_LIBS) \
++	    @PYTHON_CFLAGS@ @BOOST_PYTHON_LIB@  $(PTHREAD_LIBS) \
+ 	    -o $@ \
+ 	    .libs/additional_tests_so.o \
+ 	    -L$(top_builddir)/python/.libs -ladditionaltests_@PALUDIS_PC_SLOT@
+-- 
+2.7.0
+

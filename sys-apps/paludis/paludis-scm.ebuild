@@ -90,6 +90,7 @@ src_prepare() {
 	# https://bugs.gentoo.org/show_bug.cgi?id=439372#c2
 	sed -i -e "1s/ruby/&${RUBY_VER/./}/" ruby/demos/*.rb || die
 
+	epatch "${FILESDIR}/${PN}-scm-fix-python-detection.patch"
 	epatch_user
 	
 	# Regenerate autotools configs
