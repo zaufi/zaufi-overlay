@@ -1,4 +1,4 @@
-From e3fada3c6e09760bff090dc6d98e66b138d31426 Mon Sep 17 00:00:00 2001
+From 5858800fcc83d96abee5cc3e333c13acb285c4ba Mon Sep 17 00:00:00 2001
 From: Alex Turbov <i.zaufi@gmail.com>
 Date: Thu, 25 Feb 2016 13:26:03 +0530
 Subject: [PATCH] use pkg-config to get actual python paths and avoid hardcoded
@@ -6,9 +6,9 @@ Subject: [PATCH] use pkg-config to get actual python paths and avoid hardcoded
 
 ---
  configure.ac           | 33 +++++++--------------------------
- paludis/Makefile.am.m4 |  2 +-
+ paludis/Makefile.am.m4 |  4 ++--
  python/Makefile.am     | 14 +++++++-------
- 3 files changed, 15 insertions(+), 34 deletions(-)
+ 3 files changed, 16 insertions(+), 35 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
 index 7c1fe4f..2b04fae 100644
@@ -71,14 +71,16 @@ index 7c1fe4f..2b04fae 100644
  #include <boost/python.hpp>
  int main() { boost::python::throw_error_already_set(); return 0; }
 diff --git a/paludis/Makefile.am.m4 b/paludis/Makefile.am.m4
-index da050b4..f04b7e5 100644
+index da050b4..3ebce7f 100644
 --- a/paludis/Makefile.am.m4
 +++ b/paludis/Makefile.am.m4
-@@ -76,7 +76,7 @@ libpaludispythonhooks_@PALUDIS_PC_SLOT@_la_SOURCES = python_hooks.cc
+@@ -75,8 +75,8 @@ libpaludis_@PALUDIS_PC_SLOT@_la_LDFLAGS = -version-info @VERSION_LIB_CURRENT@:@V
+ libpaludispythonhooks_@PALUDIS_PC_SLOT@_la_SOURCES = python_hooks.cc
  libpaludispythonhooks_@PALUDIS_PC_SLOT@_la_CXXFLAGS = $(AM_CXXFLAGS) \
  	@PALUDIS_CXXFLAGS_NO_STRICT_ALIASING@ \
- 	-I@PYTHON_INCLUDE_DIR@
+-	-I@PYTHON_INCLUDE_DIR@
 -libpaludispythonhooks_@PALUDIS_PC_SLOT@_la_LDFLAGS = -version-info @VERSION_LIB_CURRENT@:@VERSION_LIB_REVISION@:0 @BOOST_PYTHON_LIB@ -lpython@PYTHON_VERSION@
++	@PYTHON_CFLAGS@
 +libpaludispythonhooks_@PALUDIS_PC_SLOT@_la_LDFLAGS = -version-info @VERSION_LIB_CURRENT@:@VERSION_LIB_REVISION@:0 @BOOST_PYTHON_LIB@ @PYTHON_LIBS@
  libpaludispythonhooks_@PALUDIS_PC_SLOT@_la_LIBADD = libpaludis_@PALUDIS_PC_SLOT@.la
  
