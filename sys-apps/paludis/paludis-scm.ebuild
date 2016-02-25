@@ -13,7 +13,6 @@ inherit autotools-utils bash-completion-r1 eutils git-r3 python-single-r1 user
 
 DESCRIPTION="paludis, the other package mangler"
 HOMEPAGE="http://paludis.exherbo.org/"
-SRC_URI="http://paludis.exherbo.org/download/${P}.tar.bz2"
 
 IUSE="doc pbins pink python ruby search-index test xml"
 LICENSE="GPL-2 vim"
