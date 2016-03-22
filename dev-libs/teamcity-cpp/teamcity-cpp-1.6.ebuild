@@ -19,6 +19,7 @@ IUSE="+boost cppunit gtest"
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
+RESTRICT="mirror"
 
 DEPEND="dev-util/cmake >= 2.8"
 RDEPEND="
