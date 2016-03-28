@@ -8,7 +8,7 @@ inherit cmake-utils
 DESCRIPTION="C++ library to integrate various testing libraries/frameworks with JetBrains TeamCity"
 HOMEPAGE="https://github.com/zaufi/teamcity-cpp"
 SRC_URI="https://github.com/zaufi/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
-RESTRICT="fetch"
+RESTRICT="mirror"
 
 IUSE="boost cppunit gtest"
 LICENSE="Apache-2.0"
