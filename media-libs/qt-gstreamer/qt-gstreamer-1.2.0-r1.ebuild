@@ -1,7 +1,7 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=5
 
 QT_MINIMAL="4.7.0"
 
@@ -14,7 +14,7 @@ else
 	KEYWORDS=""
 fi
 
-inherit cmake-utils ${GIT_ECLASS}
+inherit cmake-utils eutils ${GIT_ECLASS}
 
 DESCRIPTION="QtGStreamer provides C++ bindings for GStreamer with a Qt-style API"
 HOMEPAGE="http://gstreamer.freedesktop.org/modules/qt-gstreamer.html"
@@ -43,7 +43,7 @@ RESTRICT="test"
 
 src_prepare() {
 	# `qt-gstreamer` incorrectly detects `gstreamer-1.0`
-	eapply "${FILESDIR}/use-pkg-config-to-find-gstreamer.patch"
+	epatch "${FILESDIR}/use-pkg-config-to-find-gstreamer.patch"
 
 	# Wrap all boost #include due a bug:
 	# https://bugreports.qt.io/browse/QTBUG-22829
