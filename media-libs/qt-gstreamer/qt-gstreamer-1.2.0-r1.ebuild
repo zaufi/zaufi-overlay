@@ -1,7 +1,7 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI=6
 
 QT_MINIMAL="4.7.0"
 
@@ -42,6 +42,9 @@ DEPEND="
 RESTRICT="test"
 
 src_prepare() {
+	# `qt-gstreamer` incorrectly detects `gstreamer-1.0`
+	eapply "${FILESDIR}/use-pkg-config-to-find-gstreamer.patch"
+
 	# Wrap all boost #include due a bug:
 	# https://bugreports.qt.io/browse/QTBUG-22829
 	ebegin "Wrapping #include <boost/...> into #ifndef Q_MOC_RUN/#endif"
