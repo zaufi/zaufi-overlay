@@ -84,3 +84,20 @@ src_install() {
 
 	python_fix_shebang "${D}"/usr/libexec/cave/commands/print-ebuild-path
 }
+
+pkg_postinst() {
+	if [[ -z "`mount | grep 'shm on /dev/shm type tmpfs'`" ]]; then
+	    eerror ""
+		eerror "There is no tmpfs mounted on /dev/shm on your system. That mountpoint is necessary for workdir-tmpfs extension's normal work."
+		eerror "Or you can disable the extension by setting IN_MEMORY_BUILD_ENABLED=false in /etc/paludis/hooks/configs/workdir-tmpfs.conf."
+		eerror "ATTENTION! You might not be able to resolve packages otherwise."
+	    eerror ""
+	else if [[ -n "mount | grep 'shm on /dev/shm type tmpfs.*noexec'" ]]; then
+	    eerror ""
+		eerror "tmpfs mounted on /dev/shm with noexec option. You need to switch the option and remount /dev/shm for workdir-tmpfs extension's normal work."
+		eerror "Or you can disable the extension by setting IN_MEMORY_BUILD_ENABLED=false in /etc/paludis/hooks/configs/workdir-tmpfs.conf."
+		eerror "ATTENTION! You might not be able to resolve packages otherwise."
+	    eerror ""
+	fi
+	fi
+}
