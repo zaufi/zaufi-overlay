@@ -87,7 +87,7 @@ src_install() {
 
 pkg_postinst() {
 	if use workdir-tmpfs; then
-		if mountpoint /dev/shm; then
+		if ! mountpoint /dev/shm; then
 			eerror ""
 			eerror "There is no tmpfs mounted on /dev/shm on your system. That mountpoint is necessary for workdir-tmpfs extension's normal work."
 			eerror "Or you can disable the extension by setting IN_MEMORY_BUILD_ENABLED=false in /etc/paludis/hooks/configs/workdir-tmpfs.conf."
