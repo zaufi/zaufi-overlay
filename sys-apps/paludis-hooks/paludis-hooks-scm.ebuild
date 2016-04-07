@@ -21,7 +21,7 @@ KEYWORDS="~alpha ~amd64 ~hppa ~ppc ~sparc ~x86"
 
 COMMON_DEPEND="sys-apps/paludis[python,${PYTHON_USEDEP}]"
 
-DEPEND="${COMMON_DEPEND} dev-util/cmake"
+DEPEND="${COMMON_DEPEND} dev-util/cmake sys-apps/util-linux"
 RDEPEND="${PYTHON_DEPS}
     ${COMMON_DEPEND}
     sys-apps/coreutils
@@ -87,13 +87,13 @@ src_install() {
 
 pkg_postinst() {
 	if use workdir-tmpfs; then
-		if [[ -z "`mount | grep 'shm on /dev/shm type tmpfs'`" ]]; then
+		if mountpoint /dev/shm; then
 			eerror ""
 			eerror "There is no tmpfs mounted on /dev/shm on your system. That mountpoint is necessary for workdir-tmpfs extension's normal work."
 			eerror "Or you can disable the extension by setting IN_MEMORY_BUILD_ENABLED=false in /etc/paludis/hooks/configs/workdir-tmpfs.conf."
 			eerror "ATTENTION! You might not be able to resolve packages otherwise."
 			eerror ""
-		else if [[ -n "`mount | grep 'shm on /dev/shm type tmpfs.*noexec'`" ]]; then
+		else if [[ -n "`/bin/mount | grep 'on /dev/shm .*noexec'`" ]]; then
 			eerror ""
 			eerror "tmpfs mounted on /dev/shm with noexec option. You need to switch the option and remount /dev/shm for workdir-tmpfs extension's normal work."
 			eerror "Or you can disable the extension by setting IN_MEMORY_BUILD_ENABLED=false in /etc/paludis/hooks/configs/workdir-tmpfs.conf."
