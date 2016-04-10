@@ -18,8 +18,8 @@ KEYWORDS="~amd64 ~x86"
 #Refrain for now setting IUSE test and deps of test given test restricted.
 IUSE="doc"
 
+# >=dev-libs/cryptlib-3.3.3[python,${PYTHON_USEDEP}]
 DEPEND="
-	>=dev-libs/cryptlib-3.3.3[python,${PYTHON_USEDEP}]
 	|| (
 		dev-python/m2crypto[${PYTHON_USEDEP}]
 		dev-python/pycrypto[${PYTHON_USEDEP}]
