@@ -67,6 +67,7 @@ src_prepare() {
 	fi
 	python_copy_sources
 
+	epatch "${FILESDIR}/${PN}-fix-link-errors.patch"
 }
 
 src_configure() {
