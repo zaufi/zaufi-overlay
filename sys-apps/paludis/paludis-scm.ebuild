@@ -5,7 +5,7 @@ EAPI=5
 
 PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3,3_4,3_5} )
 # matching profile defaults for now
-RUBY_VER=2.0
+RUBY_VER=2.1
 
 EGIT_REPO_URI='git://git.exherbo.org/paludis/paludis.git'
 
@@ -21,7 +21,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sparc ~x86"
 
 COMMON_DEPEND="
 	>=app-admin/eselect-1.2.13
-	>=app-shells/bash-3.2
+	>=app-shells/bash-3.2:0
 	>=sys-devel/gcc-4.7
 	dev-libs/libpcre[cxx]
 	sys-apps/file
@@ -38,7 +38,7 @@ DEPEND="${COMMON_DEPEND}
 	app-text/xmlto
 	app-text/htmltidy
 	doc? (
-		|| ( >=app-doc/doxygen-1.5.3 <=app-doc/doxygen-1.5.1 )
+		app-doc/doxygen
 		media-gfx/imagemagick
 		python? ( dev-python/sphinx[${PYTHON_USEDEP}] )
 		ruby? ( dev-ruby/syntax[ruby_targets_ruby${RUBY_VER/./}] )
