@@ -3,7 +3,7 @@
 # $Id$
 
 EAPI="5"
-MYREV=a3
+MYREV="${PR/r/a}"
 DESCRIPTION="HTML documentation for Python"
 HOMEPAGE="http://www.python.org/doc/"
 SRC_URI="http://www.python.org/ftp/python/doc/${PV}/python-${PV}${MYREV}-docs-html.tar.bz2"
