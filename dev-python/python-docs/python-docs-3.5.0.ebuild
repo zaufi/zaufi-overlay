@@ -3,10 +3,10 @@
 # $Id$
 
 EAPI="5"
-
+MYREV=a3
 DESCRIPTION="HTML documentation for Python"
 HOMEPAGE="http://www.python.org/doc/"
-SRC_URI="http://www.python.org/ftp/python/doc/${PV}/python-${PV}-docs-html.tar.bz2"
+SRC_URI="http://www.python.org/ftp/python/doc/${PV}/python-${PV}${MYREV}-docs-html.tar.bz2"
 
 LICENSE="PSF-2"
 SLOT="3.4"
@@ -16,7 +16,7 @@ IUSE=""
 DEPEND=""
 RDEPEND=""
 
-S="${WORKDIR}/python-${PV}-docs-html"
+S="${WORKDIR}/python-${PV}${MYREV}-docs-html"
 
 src_install() {
 	dohtml -A xml -A inv -r ./
