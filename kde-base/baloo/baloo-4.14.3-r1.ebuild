@@ -14,7 +14,7 @@ DEPEND="
 	$(add_kdeapps_dep kdepimlibs)
 	$(add_kdebase_dep kfilemetadata)
 	dev-libs/qjson
-	=dev-libs/xapian[chert]
+	dev-libs/xapian[chert]
 	sys-apps/attr
 	!<kde-base/nepomuk-4.12.50
 "
