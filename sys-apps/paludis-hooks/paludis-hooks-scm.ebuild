@@ -21,7 +21,7 @@ KEYWORDS="~alpha ~amd64 ~hppa ~ppc ~sparc ~x86"
 
 COMMON_DEPEND="sys-apps/paludis[python,${PYTHON_USEDEP}]"
 
-DEPEND="${COMMON_DEPEND} dev-util/cmake sys-apps/util-linux"
+DEPEND="${COMMON_DEPEND} >=dev-util/cmake-3.4 sys-apps/util-linux"
 RDEPEND="${PYTHON_DEPS}
     ${COMMON_DEPEND}
     sys-apps/coreutils
