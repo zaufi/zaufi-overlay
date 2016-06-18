@@ -86,7 +86,7 @@
 +    INSTALL(
 +        EXPORT ${target}
 +        DESTINATION ${CMAKE_INSTALL_CMAKE_MODULESDIR}
-+        NAMESPACE PCRE::
++        NAMESPACE PCRE8::
 +        EXPORT_LINK_INTERFACE_LIBRARIES
 +      )
 +ENDFOREACH()
@@ -138,7 +138,7 @@
 +INCLUDE(CMakePackageConfigHelpers)
 +CONFIGURE_PACKAGE_CONFIG_FILE(
 +    pcre-config.cmake.in
-+    ${PROJECT_BINARY_DIR}/pcre8-config.cmake
++    ${PROJECT_BINARY_DIR}/PCRE8Config.cmake
 +    INSTALL_DESTINATION "${CMAKE_INSTALL_CMAKE_MODULESDIR}"
 +    PATH_VARS
 +        CMAKE_INSTALL_PREFIX
@@ -147,13 +147,13 @@
 +        CMAKE_INSTALL_CMAKE_MODULESDIR
 +  )
 +WRITE_BASIC_PACKAGE_VERSION_FILE(
-+    ${PROJECT_BINARY_DIR}/pcre8-config-version.cmake
++    ${PROJECT_BINARY_DIR}/PCRE8ConfigVersion.cmake
 +    COMPATIBILITY SameMajorVersion
 +  )
 +INSTALL(
 +    FILES
-+        ${PROJECT_BINARY_DIR}/pcre8-config.cmake
-+        ${PROJECT_BINARY_DIR}/pcre8-config-version.cmake
++        ${PROJECT_BINARY_DIR}/PCRE8Config.cmake
++        ${PROJECT_BINARY_DIR}/PCRE8ConfigVersion.cmake
 +    DESTINATION ${CMAKE_INSTALL_CMAKE_MODULESDIR}
 +  )
 +
