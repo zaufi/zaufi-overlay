@@ -162,71 +162,69 @@
    IF (CMAKE_C_FLAGS)
 --- /dev/null
 +++ b/pcre-config.cmake.in
-@@ -0,0 +1,67 @@
+@@ -0,0 +1,65 @@
 +# - Find PCRE Libraries package
 +
 +@PACKAGE_INIT@
 +
 +# Set and check some paths
-+if(NOT PCRE_INSTALL_PREFIX)
-+    set_and_check(PCRE_INSTALL_PREFIX "@PACKAGE_CMAKE_INSTALL_PREFIX@")
++if(NOT PCRE8_INSTALL_PREFIX)
++    set_and_check(PCRE8_INSTALL_PREFIX "@PACKAGE_CMAKE_INSTALL_PREFIX@")
 +endif()
-+if(NOT PCRE_INCLUDE_DIR)
-+    set_and_check(PCRE_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
++if(NOT PCRE8_INCLUDE_DIR)
++    set_and_check(PCRE8_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
 +endif()
-+if(NOT PCRE_LIBRARIES_DIR)
-+    set_and_check(PCRE_LIBRARIES_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
++if(NOT PCRE8_LIBRARIES_DIR)
++    set_and_check(PCRE8_LIBRARIES_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
 +endif()
-+if(NOT PCRE_CMAKE_MODULESDIR)
-+    set_and_check(PCRE_CMAKE_MODULESDIR "@PACKAGE_CMAKE_INSTALL_CMAKE_MODULESDIR@")
++if(NOT PCRE8_CMAKE_MODULESDIR)
++    set_and_check(PCRE8_CMAKE_MODULESDIR "@PACKAGE_CMAKE_INSTALL_CMAKE_MODULESDIR@")
 +endif()
 +
 +# Setup some version strings as recommended by CMake guidelines
-+set(PCRE_VERSION "@PROJECT_VERSION@")
-+set(PCRE_VERSION_MAJOR "@PROJECT_VERSION_MAJOR@")
-+set(PCRE_VERSION_MINOR "@PROJECT_VERSION_MINOR@")
++set(PCRE8_VERSION "@PROJECT_VERSION@")
++set(PCRE8_VERSION_MAJOR "@PROJECT_VERSION_MAJOR@")
++set(PCRE8_VERSION_MINOR "@PROJECT_VERSION_MINOR@")
 +
 +# Find components if requested
-+set(_PCRE_NOTFOUND_MESSAGE)
-+set(_PCRE_FOUND_COMPONENTS)
-+foreach(module ${pcre_FIND_COMPONENTS})
++set(_PCRE8_NOTFOUND_MESSAGE)
++set(_PCRE8_FOUND_COMPONENTS)
++foreach(module ${PCRE8_FIND_COMPONENTS})
 +    # TODO Make sure component is supported
 +    include(
-+        "${PCRE_CMAKE_MODULESDIR}/${module}.cmake"
++        "${PCRE8_CMAKE_MODULESDIR}/${module}.cmake"
 +        OPTIONAL
-+        RESULT_VARIABLE PCRE_${module}_FOUND
++        RESULT_VARIABLE PCRE8_${module}_FOUND
 +      )
-+    if(NOT PCRE_${module}_FOUND)
-+        if (pcre_FIND_REQUIRED_${module})
-+            if(NOT _PCRE_NOTFOUND_MESSAGE)
-+                set(_PCRE_NOTFOUND_MESSAGE "Failed to find the following requested PCRE component(s):")
++    if(NOT PCRE8_${module}_FOUND)
++        if (PCRE8_FIND_REQUIRED_${module})
++            if(NOT _PCRE8_NOTFOUND_MESSAGE)
++                set(_PCRE8_NOTFOUND_MESSAGE "Failed to find the following requested PCRE component(s):")
 +            endif()
-+            set(_PCRE_NOTFOUND_MESSAGE "${_PCRE_NOTFOUND_MESSAGE}\n  ${module}")
-+        elseif(NOT pcre_FIND_QUIETLY)
++            set(_PCRE8_NOTFOUND_MESSAGE "${_PCRE8_NOTFOUND_MESSAGE}\n  ${module}")
++        elseif(NOT PCRE8_FIND_QUIETLY)
 +            message(WARNING "Failed to find PCRE component: ${module}")
 +        endif()
 +    else()
-+        list(APPEND _PCRE_FOUND_COMPONENTS ${module})
++        list(APPEND _PCRE8_FOUND_COMPONENTS ${module})
 +    endif()
 +endforeach()
 +
-+if(NOT PCRE_FIND_QUIETLY)
-+    message(STATUS "Found PCRE: ${PCRE_VERSION}")
-+    foreach(module ${_PCRE_FOUND_COMPONENTS})
++if(NOT PCRE8_FIND_QUIETLY)
++    message(STATUS "Found PCRE: ${PCRE8_VERSION}")
++    foreach(module ${_PCRE8_FOUND_COMPONENTS})
 +        message(STATUS "  ${module}")
 +    endforeach()
 +endif()
 +
-+if(_PCRE_NOTFOUND_MESSAGE)
-+    set(pcre_NOT_FOUND_MESSAGE "${_PCRE_NOTFOUND_MESSAGE}")
-+    set(pcre_FOUND NOTFOUND)
-+    set(PCRE_FOUND NOTFOUND)
++if(_PCRE8_NOTFOUND_MESSAGE)
++    set(PCRE8_NOT_FOUND_MESSAGE "${_PCRE8_NOTFOUND_MESSAGE}")
++    set(PCRE8_FOUND NOTFOUND)
 +else()
-+    set(pcre_FOUND TRUE)
-+    set(PCRE_FOUND TRUE)
++    set(PCRE8_FOUND TRUE)
 +endif()
 +
-+unset(_PCRE_NOTFOUND_MESSAGE)
-+unset(_PCRE_FOUND_COMPONENTS)
++unset(_PCRE8_NOTFOUND_MESSAGE)
++unset(_PCRE8_FOUND_COMPONENTS)
 +
 +# kate: hl CMake;
