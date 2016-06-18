@@ -45,11 +45,10 @@ multilib_src_configure() {
 		$(cmake-utils_use jit PCRE_SUPPORT_JIT)
 		$(cmake-utils_use pcre16 PCRE_BUILD_PCRE16)
 		$(cmake-utils_use pcre32 PCRE_BUILD_PCRE32)
-		$(cmake-utils_use_build shared-libs SHARED_LIBS)
-		$(cmake-utils_use_build static-libs STATIC_LIBS)
 		$(cmake-utils_use unicode PCRE_SUPPORT_UNICODE_PROPERTIES)
 		-DPCRE_BUILD_PCREGREP=OFF
 		-DPCRE_BUILD_TESTS=OFF
+		-DBUILD_SHARED_LIBS=OFF
 	)
 	cmake-utils_src_configure
 }

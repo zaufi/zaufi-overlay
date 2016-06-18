@@ -1,132 +1,26 @@
-diff -u -Nrub pcre-8.36.org/cmake/MacroSetupMSVCRuntime.cmake pcre-8.36/cmake/MacroSetupMSVCRuntime.cmake
---- pcre-8.36.org/cmake/MacroSetupMSVCRuntime.cmake	1970-01-01 07:00:00.000000000 +0700
-+++ pcre-8.36/cmake/MacroSetupMSVCRuntime.cmake	2014-07-10 02:47:13.000000000 +0700
-@@ -0,0 +1,87 @@
-+# - Configure MSVC runtime library compiler options
-+# Configure corresponding compiler options to use static or dynamic MSVC runtime
-+#
-+# Synopsis:
-+#   setup_msvc_runtime(<STATIC|SHARED> [VARIABLES <LIST-OF-VARS-TO-FIX>])
-+#
-+# List of variables w/ compiler options always includes the follwing:
-+#     CMAKE_C_FLAGS_DEBUG
-+#     CMAKE_C_FLAGS_MINSIZEREL
-+#     CMAKE_C_FLAGS_RELEASE
-+#     CMAKE_C_FLAGS_RELWITHDEBINFO
-+#     CMAKE_CXX_FLAGS_DEBUG
-+#     CMAKE_CXX_FLAGS_MINSIZEREL
-+#     CMAKE_CXX_FLAGS_RELEASE
-+#     CMAKE_CXX_FLAGS_RELWITHDEBINFO
-+#
-+# You can add others if there is some other "profile" has configured.
-+#
-+
-+#=============================================================================
-+# Copyright 2014 by Alex Turbov <i.zaufi@gmail.com>
-+#
-+# Distributed under the OSI-approved BSD License (the "License");
-+# see accompanying file LICENSE for details.
-+#
-+# This software is distributed WITHOUT ANY WARRANTY; without even the
-+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-+# See the License for more information.
-+#=============================================================================
-+# (To distribute this file outside of this repository, substitute the full
-+#  License text for the above reference.)
-+
-+include(CMakeParseArguments)
-+
-+if(NOT WIN32 OR NOT MSVC)
-+    message(FATAL_ERROR "No need to use setup_msvc_runtime for non Windows/MSVC")
-+endif()
-+
-+macro(setup_msvc_runtime runtime_type)
-+    set(options)
-+    set(one_value_args)
-+    set(multi_value_args VARIABLES)
-+    cmake_parse_arguments(setup_msvc_runtime "${options}" "${one_value_args}" "${multi_value_args}" ${ARGN})
-+
-+    string(TOUPPER "${runtime_type}" _setup_msvc_runtime_type)
-+    if(_setup_msvc_runtime_type STREQUAL "SHARED")
-+        set(_setup_msvc_runtime_what "/MT")
-+        set(_setup_msvc_runtime_repl "/MD")
-+        message(STATUS "Forcing use of dynamically-linked runtime")
-+    elseif(_setup_msvc_runtime_type STREQUAL "STATIC")
-+        set(_setup_msvc_runtime_what "/MD")
-+        set(_setup_msvc_runtime_repl "/MT")
-+        message(STATUS "Forcing use of statically-linked runtime")
-+    else()
-+        message(FATAL_ERROR "Invalid RUNTIME option value ${setup_msvc_runtime_RUNTIME}")
-+    endif()
-+
-+    # Add predefined profiles
-+    list(
-+        APPEND setup_msvc_runtime_VARIABLES
-+            CMAKE_C_FLAGS_DEBUG
-+            CMAKE_C_FLAGS_MINSIZEREL
-+            CMAKE_C_FLAGS_RELEASE
-+            CMAKE_C_FLAGS_RELWITHDEBINFO
-+            CMAKE_CXX_FLAGS_DEBUG
-+            CMAKE_CXX_FLAGS_MINSIZEREL
-+            CMAKE_CXX_FLAGS_RELEASE
-+            CMAKE_CXX_FLAGS_RELWITHDEBINFO
-+      )
-+
-+    foreach(variable ${setup_msvc_runtime_VARIABLES})
-+        if(${variable} MATCHES "${_setup_msvc_runtime_what}")
-+            string(
-+              REGEX REPLACE
-+                    "${_setup_msvc_runtime_what}"
-+                    "${_setup_msvc_runtime_repl}"
-+                ${variable}
-+                "${${variable}}"
-+              )
-+        endif()
-+    endforeach()
-+endmacro()
-+
-+# X-Chewy-RepoBase: https://raw.githubusercontent.com/mutanabbi/chewy-cmake-rep/master/
-+# X-Chewy-Path: MacroSetupMSVCRuntime.cmake
-+# X-Chewy-Version: 1.0
-+# X-Chewy-Description: Configure MSVC runtime library compiler options
-diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
---- pcre-8.36.org/CMakeLists.txt	2014-01-31 21:32:09.000000000 +0700
-+++ pcre-8.36/CMakeLists.txt	2015-03-25 11:47:42.000000000 +0700
-@@ -65,12 +65,17 @@
- #            so it has been removed.
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -66,15 +66,16 @@
  # 2013-10-08 PH got rid of the "source" command, which is a bash-ism (use ".")
  # 2013-11-05 PH added support for PARENS_NEST_LIMIT
-+# 2015-03-18 Modernize and refactoring by Alex Turbov
- 
+ # 2016-03-01 PH applied Chris Wilson's patch for MSVC static build
+-
 -PROJECT(PCRE C CXX)
-+# Increased minimum to 3.1.3 to support newer add_test features
-+cmake_minimum_required(VERSION 3.1.3)
++# 2016-06-18 Use exported targets and provide CMake configuration files
  
--# Increased minimum to 2.8.0 to support newer add_test features
-+cmake_policy(SET CMP0022 NEW)
-+cmake_policy(SET CMP0028 NEW)
-+cmake_policy(SET CMP0048 NEW)
-+cmake_policy(SET CMP0054 NEW)
+ # Increased minimum to 2.8.0 to support newer add_test features. Set policy
+ # CMP0026 to avoid warnings for the use of LOCATION in GET_TARGET_PROPERTY.
  
 -CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
-+PROJECT(pcre VERSION 8.36 LANGUAGES C CXX)
++CMAKE_MINIMUM_REQUIRED(VERSION 3.1.3)
+ CMAKE_POLICY(SET CMP0026 OLD)
  
++PROJECT(PCRE VERSION 8.39 LANGUAGES C CXX)
++
  SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake) # for FindReadline.cmake
  
-@@ -113,8 +118,10 @@
- # (Note: CMakeSetup displays these in alphabetical order, regardless of
- # the order we use here)
- 
--SET(BUILD_SHARED_LIBS OFF CACHE BOOL
--    "Build shared libraries instead of static ones.")
-+SET(BUILD_SHARED_LIBS ON CACHE BOOL
-+    "Build shared libraries.")
-+SET(BUILD_STATIC_LIBS ON CACHE BOOL
-+    "Build static libraries.")
- 
- OPTION(PCRE_BUILD_PCRE8 "Build 8 bit PCRE library" ON)
- 
-@@ -124,6 +131,9 @@
+ # external packages
+@@ -127,6 +128,9 @@ OPTION(PCRE_BUILD_PCRE32 "Build 32 bit P
  
  OPTION(PCRE_BUILD_PCRECPP "Build the PCRE C++ library (pcrecpp)." ON)
  
@@ -136,485 +30,30 @@ diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
  SET(PCRE_EBCDIC OFF CACHE BOOL
      "Use EBCDIC coding instead of ASCII. (This is rarely used outside of mainframe systems.)")
  
-@@ -187,6 +197,8 @@
- ENDIF(MINGW)
+@@ -614,6 +618,20 @@ ENDIF(WIN32)
  
- IF(MSVC)
-+  SET(MSVC_RUNTIME "shared" CACHE STRING "MSVC runtime to use: static (default) or shared")
-+
-   OPTION(INSTALL_MSVC_PDB
-          "ON=Install .pdb files built by MSVC, if generated"
-          OFF)
-@@ -248,9 +260,9 @@
-         SET(pcre_have_ulong_long 1)
- ENDIF(HAVE_UNSIGNED_LONG_LONG)
+ SET(targets)
  
--IF(NOT BUILD_SHARED_LIBS)
-+IF(BUILD_STATIC_LIBS)
-         SET(PCRE_STATIC 1)
--ENDIF(NOT BUILD_SHARED_LIBS)
-+ENDIF(BUILD_STATIC_LIBS)
- 
- IF(NOT PCRE_BUILD_PCRE8 AND NOT PCRE_BUILD_PCRE16 AND NOT PCRE_BUILD_PCRE32)
-         MESSAGE(FATAL_ERROR "At least one of PCRE_BUILD_PCRE8, PCRE_BUILD_PCRE16 or PCRE_BUILD_PCRE32 must be enabled")
-@@ -533,52 +545,52 @@
- )
- ENDIF(PCRE_BUILD_PCRE32)
- 
--IF(MINGW AND NOT PCRE_STATIC)
--IF (EXISTS ${PROJECT_SOURCE_DIR}/pcre.rc)
--ADD_CUSTOM_COMMAND(OUTPUT ${PROJECT_SOURCE_DIR}/pcre.o
--PRE-LINK
--COMMAND windres ARGS pcre.rc pcre.o
--WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
--COMMENT Using pcre coff info in mingw build)
--SET(PCRE_SOURCES
--  ${PCRE_SOURCES} ${PROJECT_SOURCE_DIR}/pcre.o
--)
--ENDIF(EXISTS ${PROJECT_SOURCE_DIR}/pcre.rc)
--IF (EXISTS ${PROJECT_SOURCE_DIR}/pcreposix.rc)
--ADD_CUSTOM_COMMAND(OUTPUT ${PROJECT_SOURCE_DIR}/pcreposix.o
--PRE-LINK
--COMMAND windres ARGS pcreposix.rc pcreposix.o
--WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
--COMMENT Using pcreposix coff info in mingw build)
--SET(PCREPOSIX_SOURCES
--  ${PCREPOSIX_SOURCES} ${PROJECT_SOURCE_DIR}/pcreposix.o
--)
--ENDIF(EXISTS ${PROJECT_SOURCE_DIR}/pcreposix.rc)
--ENDIF(MINGW AND NOT PCRE_STATIC)
-+IF(MINGW)
-+    IF (EXISTS ${PROJECT_SOURCE_DIR}/pcre.rc)
-+        ADD_CUSTOM_COMMAND(
-+            OUTPUT ${PROJECT_SOURCE_DIR}/pcre.o
-+            PRE-LINK
-+            COMMAND windres ARGS pcre.rc pcre.o
-+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-+            COMMENT Using pcre coff info in mingw build
-+          )
-+        SET(PCRE_AUX_SOURCES ${PROJECT_SOURCE_DIR}/pcre.o)
-+    ENDIF(EXISTS ${PROJECT_SOURCE_DIR}/pcre.rc)
-+    IF (EXISTS ${PROJECT_SOURCE_DIR}/pcreposix.rc)
-+        ADD_CUSTOM_COMMAND(
-+            OUTPUT ${PROJECT_SOURCE_DIR}/pcreposix.o
-+            PRE-LINK
-+            COMMAND windres ARGS pcreposix.rc pcreposix.o
-+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-+            COMMENT Using pcreposix coff info in mingw build
-+          )
-+        SET(PCREPOSIX_AUX_SOURCES ${PROJECT_SOURCE_DIR}/pcreposix.o)
-+    ENDIF(EXISTS ${PROJECT_SOURCE_DIR}/pcreposix.rc)
-+ENDIF(MINGW)
- 
--IF(MSVC AND NOT PCRE_STATIC)
--IF (EXISTS ${PROJECT_SOURCE_DIR}/pcre.rc)
--SET(PCRE_SOURCES
--  ${PCRE_SOURCES} pcre.rc)
--ENDIF(EXISTS ${PROJECT_SOURCE_DIR}/pcre.rc)
--IF (EXISTS ${PROJECT_SOURCE_DIR}/pcreposix.rc)
--SET(PCREPOSIX_SOURCES
--  ${PCREPOSIX_SOURCES} pcreposix.rc)
--ENDIF (EXISTS ${PROJECT_SOURCE_DIR}/pcreposix.rc)
--ENDIF(MSVC AND NOT PCRE_STATIC)
-+IF(MSVC)
-+    IF (EXISTS ${PROJECT_SOURCE_DIR}/pcre.rc)
-+        SET(PCRE_AUX_SOURCES pcre.rc)
-+    ENDIF(EXISTS ${PROJECT_SOURCE_DIR}/pcre.rc)
-+    IF (EXISTS ${PROJECT_SOURCE_DIR}/pcreposix.rc)
-+        SET(PCREPOSIX_AUX_SOURCES pcreposix.rc)
-+    ENDIF (EXISTS ${PROJECT_SOURCE_DIR}/pcreposix.rc)
-+ENDIF(MSVC)
- 
--SET(PCRECPP_HEADERS
-+SET(
-+    PCRECPP_HEADERS
-   pcrecpp.h
-   pcre_scanner.h
-   ${PROJECT_BINARY_DIR}/pcrecpparg.h
-   ${PROJECT_BINARY_DIR}/pcre_stringpiece.h
--)
-+  )
- 
--SET(PCRECPP_SOURCES
-+SET(
-+    PCRECPP_SOURCES
-         pcrecpp.cc
-         pcre_scanner.cc
-         pcre_stringpiece.cc
--)
-+  )
- 
- # Build setup
- 
-@@ -589,295 +601,157 @@
- ENDIF(MSVC)
- 
- SET(CMAKE_INCLUDE_CURRENT_DIR 1)
--# needed to make sure to not link debug libs
--# against release libs and vice versa
--IF(WIN32)
--  SET(CMAKE_DEBUG_POSTFIX "d")
--ENDIF(WIN32)
- 
--SET(targets)
-+IF(NOT CMAKE_BUILD_TYPE)
-+    SET(CMAKE_BUILD_TYPE "Debug")
-+ENDIF()
-+
 +# NOTE Append version suffix to all library targets, so this build may coexists w/ a system-wide
 +IF(UNIX)
++    IF(NOT CMAKE_BUILD_TYPE)
++        SET(CMAKE_BUILD_TYPE "Debug")
++    ENDIF()
++
 +    STRING(TOUPPER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_UPCASE)
 +    SET(CMAKE_${CMAKE_BUILD_TYPE_UPCASE}_POSTFIX "${CMAKE_${CMAKE_BUILD_TYPE_UPCASE}_POSTFIX}-${PCRE_MAJOR}.${PCRE_MINOR}")
-+    SET(targets)
 +ENDIF(UNIX)
-+
-+# Set desired runtime
-+IF(MSVC)
-+    INCLUDE(MacroSetupMSVCRuntime)
-+    STRING(TOUPPER "${MSVC_RUNTIME}" MSVC_RUNTIME)
-+    SETUP_MSVC_RUNTIME(${MSVC_RUNTIME})
-+ENDIF(MSVC)
 +
 +# NOTE @OnixS: All libraries (even static) would have PIC
 +# TODO It is not quite good...
 +set(CMAKE_POSITION_INDEPENDENT_CODE ON)
- 
++
  # Libraries
  # pcre
  IF(PCRE_BUILD_PCRE8)
--ADD_LIBRARY(pcre ${PCRE_HEADERS} ${PCRE_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
--SET(targets ${targets} pcre)
--ADD_LIBRARY(pcreposix ${PCREPOSIX_HEADERS} ${PCREPOSIX_SOURCES})
--SET(targets ${targets} pcreposix)
--TARGET_LINK_LIBRARIES(pcreposix pcre)
--
--IF(MINGW AND NOT PCRE_STATIC)
--  IF(NON_STANDARD_LIB_PREFIX)
--    SET_TARGET_PROPERTIES(pcre pcreposix
--                        PROPERTIES PREFIX ""
--    )
--  ENDIF(NON_STANDARD_LIB_PREFIX)
--
--  IF(NON_STANDARD_LIB_SUFFIX)
--    SET_TARGET_PROPERTIES(pcre pcreposix
--                        PROPERTIES SUFFIX "-0.dll"
--    )
--  ENDIF(NON_STANDARD_LIB_SUFFIX)
--ENDIF(MINGW AND NOT PCRE_STATIC)
-+    IF(BUILD_STATIC_LIBS)
-+        ADD_LIBRARY(pcre_static STATIC ${PCRE_HEADERS} ${PCRE_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
-+        SET_TARGET_PROPERTIES(pcre_static PROPERTIES OUTPUT_NAME pcre)
-+        SET(targets ${targets} pcre_static)
-+
-+        ADD_LIBRARY(pcreposix_static STATIC ${PCREPOSIX_HEADERS} ${PCREPOSIX_SOURCES})
-+        TARGET_LINK_LIBRARIES(pcreposix_static PUBLIC pcre_static)
-+        SET_TARGET_PROPERTIES(pcreposix_static PROPERTIES OUTPUT_NAME pcreposix)
-+        SET(targets ${targets} pcreposix_static)
-+
-+        SET(libs2link pcreposix_static pcrep_static)
-+    ENDIF(BUILD_STATIC_LIBS)
-+
-+    IF(BUILD_SHARED_LIBS)
-+        ADD_LIBRARY(pcre SHARED ${PCRE_HEADERS} ${PCRE_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
-+        SET(targets ${targets} pcre)
-+
-+        ADD_LIBRARY(pcreposix SHARED ${PCREPOSIX_HEADERS} ${PCREPOSIX_SOURCES})
-+        TARGET_LINK_LIBRARIES(pcreposix PUBLIC pcre)
-+        SET(targets ${targets} pcreposix)
- 
-+        SET(PCREGREP_LIBS ${PCREGREP_LIBS} ${ZLIB_LIBRARIES})
-+        SET(libs2link pcreposix)
-+    ENDIF(BUILD_SHARED_LIBS)
- ENDIF(PCRE_BUILD_PCRE8)
- 
- IF(PCRE_BUILD_PCRE16)
--ADD_LIBRARY(pcre16 ${PCRE_HEADERS} ${PCRE16_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
--SET(targets ${targets} pcre16)
--
--IF(MINGW AND NOT PCRE_STATIC)
--  IF(NON_STANDARD_LIB_PREFIX)
--    SET_TARGET_PROPERTIES(pcre16
--                        PROPERTIES PREFIX ""
--    )
--  ENDIF(NON_STANDARD_LIB_PREFIX)
--
--  IF(NON_STANDARD_LIB_SUFFIX)
--    SET_TARGET_PROPERTIES(pcre16
--                        PROPERTIES SUFFIX "-0.dll"
--    )
--  ENDIF(NON_STANDARD_LIB_SUFFIX)
--ENDIF(MINGW AND NOT PCRE_STATIC)
--
-+    IF(BUILD_STATIC_LIBS)
-+        ADD_LIBRARY(pcre16_static STATIC ${PCRE_HEADERS} ${PCRE16_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
-+        SET_TARGET_PROPERTIES(pcre16_static PROPERTIES OUTPUT_NAME pcre16)
-+        SET(targets ${targets} pcre16_static)
-+    ENDIF(BUILD_STATIC_LIBS)
-+    IF(BUILD_SHARED_LIBS)
-+        ADD_LIBRARY(pcre16 ${PCRE_HEADERS} ${PCRE16_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
-+        SET(targets ${targets} pcre16)
-+    ENDIF(BUILD_SHARED_LIBS)
- ENDIF(PCRE_BUILD_PCRE16)
- 
- IF(PCRE_BUILD_PCRE32)
--ADD_LIBRARY(pcre32 ${PCRE_HEADERS} ${PCRE32_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
--SET(targets ${targets} pcre32)
--
--IF(MINGW AND NOT PCRE_STATIC)
--  IF(NON_STANDARD_LIB_PREFIX)
--    SET_TARGET_PROPERTIES(pcre32
--                        PROPERTIES PREFIX ""
--    )
--  ENDIF(NON_STANDARD_LIB_PREFIX)
--
--  IF(NON_STANDARD_LIB_SUFFIX)
--    SET_TARGET_PROPERTIES(pcre32
--                        PROPERTIES SUFFIX "-0.dll"
--    )
--  ENDIF(NON_STANDARD_LIB_SUFFIX)
--ENDIF(MINGW AND NOT PCRE_STATIC)
--
-+    IF(BUILD_STATIC_LIBS)
-+        ADD_LIBRARY(pcre32_static STATIC ${PCRE_HEADERS} ${PCRE32_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
-+        SET_TARGET_PROPERTIES(pcre32_static PROPERTIES OUTPUT_NAME pcre32)
-+        SET(targets ${targets} pcre32_static)
-+    ENDIF(BUILD_STATIC_LIBS)
-+    IF(BUILD_SHARED_LIBS)
-+        ADD_LIBRARY(pcre32 ${PCRE_HEADERS} ${PCRE32_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
-+        SET(targets ${targets} pcre32)
-+    ENDIF(BUILD_SHARED_LIBS)
- ENDIF(PCRE_BUILD_PCRE32)
- 
- # pcrecpp
- IF(PCRE_BUILD_PCRECPP)
--ADD_LIBRARY(pcrecpp ${PCRECPP_HEADERS} ${PCRECPP_SOURCES})
--SET(targets ${targets} pcrecpp)
--TARGET_LINK_LIBRARIES(pcrecpp pcre)
-+    IF(BUILD_STATIC_LIBS)
-+        ADD_LIBRARY(pcrecpp_static STATIC ${PCRECPP_HEADERS} ${PCRECPP_SOURCES})
-+        TARGET_LINK_LIBRARIES(pcrecpp_static PUBLIC pcre_static)
-+        SET_TARGET_PROPERTIES(pcrecpp_static PROPERTIES OUTPUT_NAME "pcrecpp")
-+        SET(targets ${targets} pcrecpp_static)
-+    ENDIF(BUILD_STATIC_LIBS)
-+    IF(BUILD_SHARED_LIBS)
-+        ADD_LIBRARY(pcrecpp SHARED ${PCRECPP_HEADERS} ${PCRECPP_SOURCES})
-+        SET(targets ${targets} pcrecpp)
-+        TARGET_LINK_LIBRARIES(pcrecpp PUBLIC pcre)
-+    ENDIF(BUILD_SHARED_LIBS)
-+ENDIF(PCRE_BUILD_PCRECPP)
- 
--  IF(MINGW AND NOT PCRE_STATIC)
-+
-+IF(MINGW)
-     IF(NON_STANDARD_LIB_PREFIX)
--      SET_TARGET_PROPERTIES(pcrecpp
--                            PROPERTIES PREFIX ""
--      )
-+        SET_TARGET_PROPERTIES(${targets} PROPERTIES PREFIX "")
-     ENDIF(NON_STANDARD_LIB_PREFIX)
- 
-     IF(NON_STANDARD_LIB_SUFFIX)
--      SET_TARGET_PROPERTIES(pcrecpp
--                          PROPERTIES SUFFIX "-0.dll"
--      )
-+        SET_TARGET_PROPERTIES(${targets} PROPERTIES SUFFIX "-0.dll")
-     ENDIF(NON_STANDARD_LIB_SUFFIX)
--  ENDIF(MINGW AND NOT PCRE_STATIC)
--ENDIF(PCRE_BUILD_PCRECPP)
--
-+ENDIF(MINGW)
- 
- # Executables
- 
--# Removed by PH (2008-01-23) because pcredemo shouldn't really be built
--# automatically, and it gave trouble in some environments anyway.
--# ADD_EXECUTABLE(pcredemo pcredemo.c)
--# TARGET_LINK_LIBRARIES(pcredemo pcreposix)
--# IF(NOT BUILD_SHARED_LIBS)
--#     # make sure to not use declspec(dllimport) in static mode on windows
--#         SET_TARGET_PROPERTIES(pcredemo PROPERTIES COMPILE_FLAGS "-DPCRE_STATIC")
--# ENDIF(NOT BUILD_SHARED_LIBS)
--
- IF(PCRE_BUILD_PCREGREP)
-   ADD_EXECUTABLE(pcregrep pcregrep.c)
-   SET(targets ${targets} pcregrep)
-+    IF(BUILD_SHARED_LIBS)
-   TARGET_LINK_LIBRARIES(pcregrep pcreposix ${PCREGREP_LIBS})
-+    ELSE(BUILD_SHARED_LIBS)
-+        TARGET_LINK_LIBRARIES(pcregrep pcreposix_static pcre_static ${PCREGREP_LIBS})
-+    ENDIF(BUILD_SHARED_LIBS)
- ENDIF(PCRE_BUILD_PCREGREP)
- 
--# Testing
--IF(PCRE_BUILD_TESTS)
--  ENABLE_TESTING()
--
--  SET(PCRETEST_SOURCES pcretest.c)
--  IF(PCRE_BUILD_PCRE8)
--    LIST(APPEND PCRETEST_SOURCES pcre_printint.c)
--  ENDIF(PCRE_BUILD_PCRE8)
--  IF(PCRE_BUILD_PCRE16)
--    LIST(APPEND PCRETEST_SOURCES pcre16_printint.c)
--  ENDIF(PCRE_BUILD_PCRE16)
--  IF(PCRE_BUILD_PCRE32)
--    LIST(APPEND PCRETEST_SOURCES pcre32_printint.c)
--  ENDIF(PCRE_BUILD_PCRE32)
--
--  ADD_EXECUTABLE(pcretest ${PCRETEST_SOURCES})
--  SET(targets ${targets} pcretest)
--  IF(PCRE_BUILD_PCRE8)
--    LIST(APPEND PCRETEST_LIBS pcreposix pcre)
--  ENDIF(PCRE_BUILD_PCRE8)
--  IF(PCRE_BUILD_PCRE16)
--    LIST(APPEND PCRETEST_LIBS pcre16)
--  ENDIF(PCRE_BUILD_PCRE16)
--  IF(PCRE_BUILD_PCRE32)
--    LIST(APPEND PCRETEST_LIBS pcre32)
--  ENDIF(PCRE_BUILD_PCRE32)
--  TARGET_LINK_LIBRARIES(pcretest ${PCRETEST_LIBS})
--
--  IF(PCRE_SUPPORT_JIT)
--    ADD_EXECUTABLE(pcre_jit_test pcre_jit_test.c)
--    SET(targets ${targets} pcre_jit_test)
--    SET(PCRE_JIT_TEST_LIBS )
--    IF(PCRE_BUILD_PCRE8)
--      LIST(APPEND PCRE_JIT_TEST_LIBS pcre)
--    ENDIF(PCRE_BUILD_PCRE8)
--    IF(PCRE_BUILD_PCRE16)
--      LIST(APPEND PCRE_JIT_TEST_LIBS pcre16)
--    ENDIF(PCRE_BUILD_PCRE16)
--    IF(PCRE_BUILD_PCRE32)
--      LIST(APPEND PCRE_JIT_TEST_LIBS pcre32)
--    ENDIF(PCRE_BUILD_PCRE32)
--    TARGET_LINK_LIBRARIES(pcre_jit_test ${PCRE_JIT_TEST_LIBS})
--  ENDIF(PCRE_SUPPORT_JIT)
--
--  IF(PCRE_BUILD_PCRECPP)
--    ADD_EXECUTABLE(pcrecpp_unittest pcrecpp_unittest.cc)
--    SET(targets ${targets} pcrecpp_unittest)
--    TARGET_LINK_LIBRARIES(pcrecpp_unittest pcrecpp)
--    IF(MINGW AND NON_STANDARD_LIB_NAMES AND NOT PCRE_STATIC)
--      SET_TARGET_PROPERTIES(pcrecpp
--                        PROPERTIES PREFIX ""
--      )
--    ENDIF(MINGW AND NON_STANDARD_LIB_NAMES AND NOT PCRE_STATIC)
--
--    ADD_EXECUTABLE(pcre_scanner_unittest pcre_scanner_unittest.cc)
--    SET(targets ${targets} pcre_scanner_unittest)
--    TARGET_LINK_LIBRARIES(pcre_scanner_unittest pcrecpp)
--
--    ADD_EXECUTABLE(pcre_stringpiece_unittest pcre_stringpiece_unittest.cc)
--    SET(targets ${targets} pcre_stringpiece_unittest)
--    TARGET_LINK_LIBRARIES(pcre_stringpiece_unittest pcrecpp)
--  ENDIF(PCRE_BUILD_PCRECPP)
--
--  # exes in Debug location tested by the RunTest shell script
--  # via "make test"
--  IF(PCRE_BUILD_PCREGREP)
--    GET_TARGET_PROPERTY(PCREGREP_EXE pcregrep DEBUG_LOCATION)
--  ENDIF(PCRE_BUILD_PCREGREP)
--
--  GET_TARGET_PROPERTY(PCRETEST_EXE pcretest DEBUG_LOCATION)
--
--# =================================================
--  # Write out a CTest configuration file
--  #
--  FILE(WRITE ${PROJECT_BINARY_DIR}/CTestCustom.ctest
--  "# This is a generated file.
--MESSAGE(\"When testing is complete, review test output in the
--\\\"${PROJECT_BINARY_DIR}/Testing/Temporary\\\" folder.\")
--MESSAGE(\" \")
--")
--
--  FILE(WRITE ${PROJECT_BINARY_DIR}/pcre_test.sh
--  "#! /bin/sh
--# This is a generated file.
--srcdir=${PROJECT_SOURCE_DIR}
--pcretest=${PCRETEST_EXE}
--. ${PROJECT_SOURCE_DIR}/RunTest
--if test \"$?\" != \"0\"; then exit 1; fi
--# End
--")
--
--  IF(UNIX)
--    ADD_TEST(pcre_test      sh ${PROJECT_BINARY_DIR}/pcre_test.sh)
--  ENDIF(UNIX)
--
--  IF(PCRE_BUILD_PCREGREP)
--    FILE(WRITE ${PROJECT_BINARY_DIR}/pcre_grep_test.sh
--    "#! /bin/sh
--# This is a generated file.
--srcdir=${PROJECT_SOURCE_DIR}
--pcregrep=${PCREGREP_EXE}
--pcretest=${PCRETEST_EXE}
--. ${PROJECT_SOURCE_DIR}/RunGrepTest
--if test \"$?\" != \"0\"; then exit 1; fi
--# End
--")
--
--    IF(UNIX)
--      ADD_TEST(pcre_grep_test sh ${PROJECT_BINARY_DIR}/pcre_grep_test.sh)
--    ENDIF(UNIX)
--  ENDIF(PCRE_BUILD_PCREGREP)
--
--  IF(WIN32)
--    # Provide environment for executing the bat file version of RunTest
--    FILE(TO_NATIVE_PATH ${PROJECT_SOURCE_DIR} winsrc)
--    FILE(TO_NATIVE_PATH ${PROJECT_BINARY_DIR} winbin)
--    FILE(TO_NATIVE_PATH ${PCRETEST_EXE} winexe)
--
--    FILE(WRITE ${PROJECT_BINARY_DIR}/pcre_test.bat
--    "\@REM This is a generated file.
--\@echo off
--setlocal
--SET srcdir=\"${winsrc}\"
--SET pcretest=\"${winexe}\"
--if not [%CMAKE_CONFIG_TYPE%]==[] SET pcretest=\"${winbin}\\%CMAKE_CONFIG_TYPE%\\pcretest.exe\"
--call %srcdir%\\RunTest.Bat
--if errorlevel 1 exit /b 1
--echo RunTest.bat tests successfully completed
--")
--
--  ADD_TEST(NAME pcre_test_bat
--  COMMAND pcre_test.bat)
--  SET_TESTS_PROPERTIES(pcre_test_bat PROPERTIES
--  PASS_REGULAR_EXPRESSION "RunTest\\.bat tests successfully completed")
--
--    IF("$ENV{OSTYPE}" STREQUAL "msys")
--      # Both the sh and bat file versions of RunTest are run if make test is used
--      # in msys
--      ADD_TEST(pcre_test_sh    sh.exe ${PROJECT_BINARY_DIR}/pcre_test.sh)
--      IF(PCRE_BUILD_PCREGREP)
--        ADD_TEST(pcre_grep_test  sh.exe ${PROJECT_BINARY_DIR}/pcre_grep_test.sh)
--      ENDIF(PCRE_BUILD_PCREGREP)
--    ENDIF("$ENV{OSTYPE}" STREQUAL "msys")
--
--  ENDIF(WIN32)
--
--  # Changed to accommodate testing whichever location was just built
--
--  IF(PCRE_SUPPORT_JIT)
--    ADD_TEST(pcre_jit_test         pcre_jit_test)
--  ENDIF(PCRE_SUPPORT_JIT)
--
--  IF(PCRE_BUILD_PCRECPP)
--    ADD_TEST(pcrecpp_test          pcrecpp_unittest)
--    ADD_TEST(pcre_scanner_test     pcre_scanner_unittest)
--    ADD_TEST(pcre_stringpiece_test pcre_stringpiece_unittest)
--  ENDIF(PCRE_BUILD_PCRECPP)
--
--ENDIF(PCRE_BUILD_TESTS)
--
+@@ -881,19 +899,42 @@ ENDIF(PCRE_BUILD_TESTS)
  # Installation
  SET(CMAKE_INSTALL_ALWAYS 1)
-+INCLUDE(GNUInstallDirs)
-+# Fix some paths to allow this package to be multislotted (in terms of Gentoo)
-+SET(
-+    PCRE_VERSIONED_PATH_SUFFIX
-+    "pcre-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
-+  )
-+SET(CMAKE_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}/${PCRE_VERSIONED_PATH_SUFFIX}")
-+SET(CMAKE_INSTALL_CMAKE_MODULESDIR "${CMAKE_INSTALL_LIBDIR}/${PCRE_VERSIONED_PATH_SUFFIX}/cmake")
  
 -INSTALL(TARGETS ${targets}
 -        RUNTIME DESTINATION bin
@@ -626,6 +65,15 @@ diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
 -FILE(GLOB html ${PROJECT_SOURCE_DIR}/doc/html/*.html)
 -FILE(GLOB man1 ${PROJECT_SOURCE_DIR}/doc/*.1)
 -FILE(GLOB man3 ${PROJECT_SOURCE_DIR}/doc/*.3)
++INCLUDE(GNUInstallDirs)
++# Fix some paths to allow this package to be multislotted (in terms of Gentoo)
++SET(
++    PCRE_VERSIONED_PATH_SUFFIX
++    "pcre-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
++  )
++SET(CMAKE_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}/${PCRE_VERSIONED_PATH_SUFFIX}")
++SET(CMAKE_INSTALL_CMAKE_MODULESDIR "${CMAKE_INSTALL_LIBDIR}/${PCRE_VERSIONED_PATH_SUFFIX}/cmake")
++
 +FOREACH(target ${targets})
 +    INSTALL(
 +        TARGETS ${target}
@@ -638,6 +86,8 @@ diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
 +    INSTALL(
 +        EXPORT ${target}
 +        DESTINATION ${CMAKE_INSTALL_CMAKE_MODULESDIR}
++        NAMESPACE PCRE::
++        EXPORT_LINK_INTERFACE_LIBRARIES
 +      )
 +ENDFOREACH()
 +
@@ -651,18 +101,13 @@ diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
  
  IF(PCRE_BUILD_PCRECPP)
 -        INSTALL(FILES ${PCRECPP_HEADERS} DESTINATION include)
--ELSE(PCRE_BUILD_PCRECPP)
 +        INSTALL(FILES ${PCRECPP_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-+ELSEIF(PCRE_ENABLE_DOC)
+ ELSE(PCRE_BUILD_PCRECPP)
          # Remove pcrecpp.3
          FOREACH(man ${man3})
-                 GET_FILENAME_COMPONENT(man_tmp ${man} NAME)
-@@ -886,29 +760,46 @@
-                 ENDIF(NOT man_tmp STREQUAL "pcrecpp.3")
-         ENDFOREACH(man ${man3})
+@@ -905,18 +946,20 @@ ELSE(PCRE_BUILD_PCRECPP)
          SET(man3 ${man3_new})
--ENDIF(PCRE_BUILD_PCRECPP)
-+ENDIF(PCRE_ENABLE_DOC)
+ ENDIF(PCRE_BUILD_PCRECPP)
  
 -INSTALL(FILES ${man1} DESTINATION man/man1)
 -INSTALL(FILES ${man3} DESTINATION man/man3)
@@ -686,12 +131,10 @@ diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
              CONFIGURATIONS Debug)
  ENDIF(MSVC AND INSTALL_MSVC_PDB)
  
--# help, only for nice output
--IF(BUILD_SHARED_LIBS)
--  SET(BUILD_STATIC_LIBS OFF)
--ELSE(BUILD_SHARED_LIBS)
--  SET(BUILD_STATIC_LIBS ON)
--ENDIF(BUILD_SHARED_LIBS)
+@@ -927,6 +970,28 @@ ELSE(BUILD_SHARED_LIBS)
+   SET(BUILD_STATIC_LIBS ON)
+ ENDIF(BUILD_SHARED_LIBS)
+ 
 +INCLUDE(CMakePackageConfigHelpers)
 +CONFIGURE_PACKAGE_CONFIG_FILE(
 +    pcre-config.cmake.in
@@ -713,12 +156,12 @@ diff -u -Nrub pcre-8.36.org/CMakeLists.txt pcre-8.36/CMakeLists.txt
 +        ${PROJECT_BINARY_DIR}/pcre-config-version.cmake
 +    DESTINATION ${CMAKE_INSTALL_CMAKE_MODULESDIR}
 +  )
- 
++
  IF(PCRE_SHOW_REPORT)
    STRING(TOUPPER "${CMAKE_BUILD_TYPE}" buildtype)
-diff -u -Nrub pcre-8.36.org/pcre-config.cmake.in pcre-8.36/pcre-config.cmake.in
---- pcre-8.36.org/pcre-config.cmake.in	1970-01-01 07:00:00.000000000 +0700
-+++ pcre-8.36/pcre-config.cmake.in	2015-03-25 13:25:13.000000000 +0700
+   IF (CMAKE_C_FLAGS)
+--- /dev/null
++++ b/pcre-config.cmake.in
 @@ -0,0 +1,67 @@
 +# - Find PCRE Libraries package
 +
