@@ -15,18 +15,17 @@ SRC_URI="https://nodejs.org/dist/v${PV}/node-v${PV}.tar.xz"
 
 LICENSE="Apache-1.1 Apache-2.0 BSD BSD-2 MIT"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~x86 ~x64-macos"
+KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~x86 ~amd64-linux ~x64-macos"
 IUSE="cpu_flags_x86_sse2 debug doc icu +npm +snapshot +ssl test"
 
 RDEPEND="icu? ( >=dev-libs/icu-56:= )
 	npm? ( ${PYTHON_DEPS} )
-	>=net-libs/http-parser-2.6.1:=
-	>=dev-libs/libuv-1.8.0:=
-	>=dev-libs/openssl-1.0.2f:0=[-bindist]
+	>=net-libs/http-parser-2.6.2:=
+	>=dev-libs/libuv-1.9.0:=
+	>=dev-libs/openssl-1.0.2g:0=[-bindist]
 	sys-libs/zlib"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
-	!!net-libs/iojs
 	test? ( net-misc/curl )"
 
 S="${WORKDIR}/node-v${PV}"
@@ -95,12 +94,13 @@ src_configure() {
 	use debug && myconf+=( --debug )
 
 	case ${ABI} in
-		x86) myarch="ia32";;
 		amd64) myarch="x64";;
-		x32) myarch="x32";;
 		arm) myarch="arm";;
 		arm64) myarch="arm64";;
-		*) die "Unrecognized ARCH ${ARCH}";;
+		ppc64) myarch="ppc64";;
+		x32) myarch="x32";;
+		x86) myarch="ia32";;
+		*) myarch="${ABI}";;
 	esac
 
 	GYP_DEFINES="linux_use_gold_flags=0
@@ -123,7 +123,7 @@ src_compile() {
 
 src_install() {
 	local LIBDIR="${ED}/usr/$(get_libdir)"
-	emake install DESTDIR="${ED}"
+	emake install DESTDIR="${D}"
 	pax-mark -m "${ED}"usr/bin/node
 
 	# set up a symlink structure that node-gyp expects..
@@ -149,11 +149,11 @@ src_install() {
 		# We need to temporarily replace default config path since
 		# npm otherwise tries to write outside of the sandbox
 		local npm_config="usr/$(get_libdir)/node_modules/npm/lib/config/core.js"
-		sed -i -e "s|'/etc'|'${D}/etc'|g" "${ED}/${npm_config}" || die
+		sed -i -e "s|'/etc'|'${ED}/etc'|g" "${ED}/${npm_config}" || die
 		local tmp_npm_completion_file="$(emktemp)"
 		"${ED}/usr/bin/npm" completion > "${tmp_npm_completion_file}"
 		newbashcomp "${tmp_npm_completion_file}" npm
-		sed -i -e "s|'${D}/etc'|'/etc'|g" "${ED}/${npm_config}" || die
+		sed -i -e "s|'${ED}/etc'|'/etc'|g" "${ED}/${npm_config}" || die
 
 		# Move man pages
 		doman "${LIBDIR}"/node_modules/npm/man/man{1,5,7}/*
