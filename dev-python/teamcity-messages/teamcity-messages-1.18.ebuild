@@ -9,6 +9,7 @@ inherit distutils-r1
 DESCRIPTION="Send test results to TeamCity continuous integration server from unittest, nose, py.test, twisted trial (Python 2.4+)"
 HOMEPAGE="https://github.com/JetBrains/teamcity-messages"
 SRC_URI="https://github.com/JetBrains/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+RESTRICT="mirror"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -17,3 +18,5 @@ IUSE=""
 
 DEPEND="dev-python/setuptools[${PYTHON_USEDEP}]"
 RDEPEND="${DEPEND}"
+
+# TODO Introduce USE flags and remove unused modules
