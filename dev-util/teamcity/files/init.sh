@@ -1,4 +1,7 @@
-#!/sbin/runscript
+#!/sbin/openrc-run
+#
+# TODO Use `start-stop-daemon`
+#
 
 depend() {
     need net
