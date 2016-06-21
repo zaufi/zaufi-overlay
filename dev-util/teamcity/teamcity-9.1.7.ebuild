@@ -12,7 +12,7 @@ SRC_URI="http://download.jetbrains.com/teamcity/TeamCity-${PV}.tar.gz"
 RESTRICT="mirror"
 SLOT="0"
 KEYWORDS="x86 amd64"
-IUSE=""
+IUSE="windows"
 
 RDEPEND=">=virtual/jdk-1.7"
 
@@ -29,7 +29,7 @@ pkg_setup() {
 
 src_prepare() {
     cd "${S}"
-    find . \( -name \*.exe -or -name \*.bat -or -name \*.cmd -or -name \*.dll \) -delete
+    rm -rf buildAgent/contrib
     rm  buildAgent/launcher/lib/libwrapper-solaris-x86-32.so \
         buildAgent/launcher/lib/libwrapper-solaris-sparc-32.so \
         buildAgent/launcher/lib/libwrapper-solaris-sparc-64.so \
@@ -39,7 +39,11 @@ src_prepare() {
         buildAgent/launcher/bin/TeamCityAgentService-macosx-universal-32 \
         buildAgent/launcher/bin/TeamCityAgentService-solaris-sparc-32 \
         buildAgent/launcher/bin/TeamCityAgentService-solaris-sparc-64
-    rm -rf buildAgent/contrib
+
+    # Remove Windows files if server is not intended to be used w/ Windows build agent
+    if [ ! use windows ]; then
+        find . \( -name \*.exe -or -name \*.bat -or -name \*.cmd -or -name \*.dll \) -delete
+    fi
 }
 
 src_install() {
