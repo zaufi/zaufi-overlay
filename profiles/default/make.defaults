@@ -15,7 +15,6 @@ USE="${USE} -doc"
 
 # Do not install any languages
 USE="${USE} -nls"
-LINGUAS: -*
 
 # Generic system settings
 USE="${USE} acl caps gpg inotify logrotate lvm network threads urandom xattr"
