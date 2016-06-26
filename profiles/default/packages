@@ -1,0 +1,53 @@
+# Copyright 2004-2016 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License v2
+# $Id$
+
+#
+# The must have tool set
+#
+app-admin/eclean-kernel
+app-admin/logrotate
+app-admin/metalog
+app-admin/sudo
+app-arch/pbzip2
+app-arch/pigz
+app-arch/pxz
+app-arch/unrar
+app-eselect/eselect-timezone
+app-misc/mc
+app-shells/bash-completion
+app-shells/smart-prompt
+app-text/tree
+dev-util/pluggable-output-processor
+media-libs/exiftool
+media-sound/alsa-utils
+net-analyzer/mtr
+net-fs/autofs
+net-misc/ntp
+sys-apps/gptfdisk
+sys-apps/hdparm
+sys-apps/lm_sensors
+sys-apps/mlocate
+sys-apps/paludis-hooks
+sys-apps/pv
+sys-apps/sdparm
+sys-apps/smartmontools
+sys-apps/usbutils
+sys-auth/nss-mdns
+sys-boot/efibootmgr
+sys-fs/btrfs-progs
+sys-fs/dosfstools
+sys-fs/lvm2
+sys-fs/reiserfsprogs
+sys-kernel/genkernel
+sys-power/acpid
+sys-process/htop
+sys-process/iotop
+sys-process/lsof
+sys-process/schedtool
+sys-process/vixie-cron
+
+# This is also a system tools, because some repositories
+# for paludis are accessible via them
+dev-vcs/git
+dev-vcs/subversion

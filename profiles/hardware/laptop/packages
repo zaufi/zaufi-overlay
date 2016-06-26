@@ -1,0 +1,16 @@
+# Copyright 1999-2015 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Id$
+
+#
+# A set of packages usually usefull on laptops
+#
+
+*app-laptop/laptop-mode-tools
+
+*net-wireless/crda
+*net-wireless/rfkill
+*net-wireless/iw
+
+*sys-power/cpupower
+*sys-power/powertop

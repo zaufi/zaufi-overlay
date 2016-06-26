@@ -1,0 +1,7 @@
+# Copyright 2004-2016 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License v2
+# $Id$
+
+app-misc/mc slang
+
+dev-vcs/subversion -kde
