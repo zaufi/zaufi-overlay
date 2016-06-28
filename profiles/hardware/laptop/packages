@@ -12,5 +12,6 @@
 *net-wireless/rfkill
 *net-wireless/iw
 
+*sys-kernel/linux-firmware
 *sys-power/cpupower
 *sys-power/powertop
