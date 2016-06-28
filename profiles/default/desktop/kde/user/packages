@@ -3,3 +3,6 @@
 # $Id$
 
 net-misc/youtube-dl
+
+# GUI Based stuff
+media-video/vlc

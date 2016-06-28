@@ -1,0 +1,32 @@
+# Copyright 2004-2016 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License v2
+# $Id$
+
+# Must have developer's tools
+app-doc/doxygen
+dev-util/abi-compliance-checker
+dev-util/chewy
+dev-util/lcov
+dev-util/ltrace
+dev-util/oprofile
+dev-util/perf
+dev-util/quilt
+dev-util/strace
+dev-util/systemtap
+dev-util/valgrind
+media-gfx/mscgen
+sys-block/btrace
+sys-devel/autoconf-archive
+sys-devel/autogen
+sys-devel/clang
+sys-devel/gdb
+x11-misc/xrestop
+
+# Some must have docs
+app-doc/devmanual
+app-portage/eclass-manpages
+
+# GUI Based stuff
+app-editors/kile:4
+net-analyzer/wireshark
+net-misc/rdesktop
