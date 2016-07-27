@@ -12,11 +12,11 @@ JCE_URI="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2
 
 # This is a list of archs supported by this update.
 # Currently arm comes and goes.
-AT_AVAILABLE=( amd64 arm arm64 x86 x64-solaris sparc64-solaris x64-macos )
+AT_AVAILABLE=( amd64 x86 x64-solaris sparc64-solaris x64-macos )
 
 # Sometimes some or all of the demos are missing, this is to not have to rewrite half
 # the ebuild when it happens.
-DEMOS_AVAILABLE=( amd64 arm arm64 x86 x64-solaris sparc64-solaris x64-macos )
+DEMOS_AVAILABLE=( amd64 x86 x64-solaris sparc64-solaris x64-macos )
 
 if [[ "$(get_version_component_range 4)" == 0 ]] ; then
 	S_PV="$(get_version_component_range 1-3)"
@@ -60,7 +60,7 @@ SRC_URI+=" jce? ( ${JCE_FILE} )"
 
 LICENSE="Oracle-BCLA-JavaSE examples? ( BSD )"
 SLOT="1.8"
-KEYWORDS="amd64 ~arm ~arm64 x86 ~amd64-linux ~x86-linux ~x64-macos ~sparc64-solaris ~x64-solaris"
+KEYWORDS="amd64 x86 ~amd64-linux ~x86-linux ~x64-macos ~sparc64-solaris ~x64-solaris"
 IUSE="alsa cups derby doc examples +fontconfig headless-awt javafx jce nsplugin pax_kernel selinux source"
 REQUIRED_USE="javafx? ( alsa fontconfig )"
 
