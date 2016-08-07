@@ -3,7 +3,6 @@
 # $Id$
 
 EAPI="5"
-MYREV="${PR/r/a}"
 DESCRIPTION="HTML documentation for Python"
 HOMEPAGE="http://www.python.org/doc/"
 SRC_URI="https://docs.python.org/3/archives/python-${PV}-docs-html.tar.bz2"
@@ -16,7 +15,7 @@ IUSE=""
 DEPEND=""
 RDEPEND=""
 
-S="${WORKDIR}/python-${PV}${MYREV}-docs-html"
+S="${WORKDIR}/python-${PV}-docs-html"
 
 src_install() {
 	dohtml -A xml -A inv -r ./
