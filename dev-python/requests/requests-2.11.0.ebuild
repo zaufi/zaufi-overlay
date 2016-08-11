@@ -30,14 +30,14 @@ RDEPEND="
 	>=dev-python/flask-0.10.1[${PYTHON_USEDEP}]
 	>=dev-python/httpbin-0.4.1[${PYTHON_USEDEP}]
 	>=dev-python/itsdangerous-0.24[${PYTHON_USEDEP}]
-	>=dev-python/jinja-2.8.0[${PYTHON_USEDEP}]
+	>=dev-python/jinja-2.8[${PYTHON_USEDEP}]
 	>=dev-python/py-1.4.31[${PYTHON_USEDEP}]
 	>=dev-python/pygments-2.1.1[${PYTHON_USEDEP}]
 	>=dev-python/PySocks-1.5.6[${PYTHON_USEDEP}]
 	>=dev-python/pytz-2015.7[${PYTHON_USEDEP}]
 	>=dev-python/six-1.10.0[${PYTHON_USEDEP}]
 	>=dev-python/snowballstemmer-1.2.1[${PYTHON_USEDEP}]
-	>=dev-python/shpinx-1.3.5[${PYTHON_USEDEP}]
+	>=dev-python/sphinx-1.3.5[${PYTHON_USEDEP}]
 	>=dev-python/sphinx_rtd_theme-0.1.9[${PYTHON_USEDEP}]
 	"
 DEPEND="${RDEPEND}
