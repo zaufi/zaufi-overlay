@@ -65,11 +65,6 @@ python_prepare_all() {
 		from collections import OrderedDict
 	EOF
 
-	sed \
-		-e 's:\.packages\.six:six:g' \
-		-e 's:\.six:six:g' \
-		-i urllib3/util/response.py urllib3/response.py || die
-
 	sed -i '/cover-min-percentage/d' setup.cfg || die
 	# Fix tests
 	sed -i 's/urllib3.packages.six/six/' test/test_retry.py || die
