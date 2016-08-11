@@ -28,4 +28,5 @@ RDEPEND="${DEPEND}
 	>=dev-python/requests-2.10.0[${PYTHON_USEDEP}]
 	>=dev-python/six-1.10.0[${PYTHON_USEDEP}]
 	>=dev-python/tlslite-0.4.4[${PYTHON_USEDEP}]
+	dev-python/requests-toolbelt[${PYTHON_USEDEP}]
 	"
