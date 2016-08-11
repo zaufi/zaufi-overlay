@@ -28,6 +28,7 @@ RDEPEND="
 	$(python_gen_cond_dep 'dev-python/pyasn1[${PYTHON_USEDEP}]' python2_7 pypy)
 	"
 DEPEND="
+	dev-python/backports[${PYTHON_USEDEP}]
 	dev-python/setuptools[${PYTHON_USEDEP}]
 	test? (
 		${RDEPEND}
