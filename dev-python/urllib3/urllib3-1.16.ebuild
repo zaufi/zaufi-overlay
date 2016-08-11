@@ -41,8 +41,6 @@ DEPEND="
 
 # Testsuite written requiring mock to be installed under all Cpythons
 
-PATCHES=( "${FILESDIR}"/${PN}-1.13.1-unbundle.patch )
-
 python_prepare_all() {
 	# Replace bundled copy of dev-python/six
 	cat > urllib3/packages/six.py <<-EOF
