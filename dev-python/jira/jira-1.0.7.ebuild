@@ -8,7 +8,8 @@ inherit distutils-r1
 
 DESCRIPTION="Python library for interacting with the JIRA REST API"
 HOMEPAGE="http://jira.readthedocs.io/en/latest/"
-SRC_URI="https://github.com/pycontribs/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
+#SRC_URI="https://github.com/pycontribs/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://pypi.python.org/packages/4e/36/4f0ab121c3510fce29743c31e2f47e99c2be68ee4441ad395366489351b0/${P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
