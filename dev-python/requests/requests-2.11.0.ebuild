@@ -39,6 +39,7 @@ RDEPEND="
 	>=dev-python/snowballstemmer-1.2.1[${PYTHON_USEDEP}]
 	>=dev-python/sphinx-1.3.5[${PYTHON_USEDEP}]
 	>=dev-python/sphinx_rtd_theme-0.1.9[${PYTHON_USEDEP}]
+	>=dev-python/urllib3-1.16[${PYTHON_USEDEP}]
 	"
 DEPEND="${RDEPEND}
 	dev-python/setuptools[${PYTHON_USEDEP}]
