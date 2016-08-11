@@ -39,6 +39,8 @@ DEPEND="
 	doc? ( dev-python/sphinx[${PYTHON_USEDEP}] )
 	"
 
+PATCHES=( "${FILESDIR}"/${P}-unbundle.patch )
+
 # Testsuite written requiring mock to be installed under all Cpythons
 
 python_prepare_all() {
