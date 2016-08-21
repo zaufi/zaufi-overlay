@@ -3,11 +3,11 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3,3_4,3_5} )
+PYTHON_COMPAT=( python{2_7,3_2,3_3,3_4,3_5} )
 # matching profile defaults for now
 RUBY_VER=2.1
 
-inherit autotools-utils bash-completion-r1 eutils git-r3 python-single-r1 user
+inherit autotools-utils bash-completion-r1 eutils python-single-r1 user
 
 DESCRIPTION="paludis, the other package mangler"
 HOMEPAGE="http://paludis.exherbo.org/"
