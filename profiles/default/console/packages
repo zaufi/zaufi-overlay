@@ -30,6 +30,5 @@
 *sys-fs/fuse
 *sys-fs/ncdu
 *sys-process/atop
-*sys-process/incron
 *sys-process/latencytop
 *www-client/lynx
