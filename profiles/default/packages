@@ -21,7 +21,6 @@
 *media-libs/exiftool
 *net-analyzer/mtr
 *net-fs/autofs
-*net-misc/ntp
 *sys-apps/gptfdisk
 *sys-apps/hdparm
 *sys-apps/lm_sensors
