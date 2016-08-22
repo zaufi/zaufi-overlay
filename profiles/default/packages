@@ -37,7 +37,6 @@
 *sys-fs/dosfstools
 *sys-fs/lvm2
 *sys-fs/reiserfsprogs
-*sys-kernel/genkernel
 *sys-power/acpid
 *sys-process/htop
 *sys-process/iotop
