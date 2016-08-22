@@ -15,7 +15,7 @@ IUSE="kde plasma"
 
 RDEPEND="
 	kde? ( !plasma? ( $(add_kdebase_dep kactivitymanagerd) ) )
-	plasma? ( !kde? ( $(add_kdebase_dep kactivitymanagerd:5) ) )
+	plasma? ( !kde? ( kde-plasma/kactivitymanagerd:5 ) )
 "
 
 src_configure() {
