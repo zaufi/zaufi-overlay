@@ -5,6 +5,7 @@
 #
 # The must have tool set for console
 #
+*app-admin/pass
 *app-misc/task
 *app-text/dos2unix
 *app-text/multitail
