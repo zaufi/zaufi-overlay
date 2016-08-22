@@ -2,8 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-net-misc/youtube-dl
+*net-misc/youtube-dl
 
 # GUI Based stuff
-media-video/vlc
-www-client/firefox
+*media-video/vlc
+*www-client/firefox

@@ -3,25 +3,25 @@
 # $Id$
 
 # Must have developer's tools
-app-doc/doxygen
-dev-util/abi-compliance-checker
-dev-util/chewy
-dev-util/lcov
-dev-util/ltrace
-dev-util/oprofile
-dev-util/perf
-dev-util/quilt
-dev-util/strace
-dev-util/systemtap
-dev-util/valgrind
-media-gfx/mscgen
-sys-block/btrace
-sys-devel/autoconf-archive
-sys-devel/autogen
-sys-devel/clang
-sys-devel/gdb
-x11-misc/xrestop
+*app-doc/doxygen
+*app-misc/jq
+*dev-util/abi-compliance-checker
+*dev-util/chewy
+*dev-util/lcov
+*dev-util/ltrace
+*dev-util/perf
+*dev-util/quilt
+*dev-util/strace
+*dev-util/systemtap
+*dev-util/valgrind
+*media-gfx/mscgen
+*sys-block/btrace
+*sys-devel/autoconf-archive
+*sys-devel/autogen
+*sys-devel/clang
+*sys-devel/gdb
+*x11-misc/xrestop
 
 # Some must have docs
-app-doc/devmanual
-app-portage/eclass-manpages
+*app-doc/devmanual
+*app-portage/eclass-manpages

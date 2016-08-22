@@ -4,5 +4,5 @@
 
 # GUI Based stuff
 app-editors/kile:4
-net-analyzer/wireshark
-net-misc/rdesktop
+*net-analyzer/wireshark
+*net-misc/rdesktop
