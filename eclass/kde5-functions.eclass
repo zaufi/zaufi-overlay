@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -17,16 +17,16 @@ inherit toolchain-funcs versionator
 
 # @ECLASS-VARIABLE: EAPI
 # @DESCRIPTION:
-# Currently EAPI 5 is supported.
+# Currently EAPI 6 is supported.
 case ${EAPI} in
-	5) ;;
+	6) ;;
 	*) die "EAPI=${EAPI:-0} is not supported" ;;
 esac
 
 # @ECLASS-VARIABLE: FRAMEWORKS_MINIMAL
 # @DESCRIPTION:
 # Minimal Frameworks version to require for the package.
-: ${FRAMEWORKS_MINIMAL:=5.14.0}
+: ${FRAMEWORKS_MINIMAL:=5.23.0}
 
 # @ECLASS-VARIABLE: PLASMA_MINIMAL
 # @DESCRIPTION:
@@ -35,24 +35,22 @@ esac
 
 # @ECLASS-VARIABLE: KDE_APPS_MINIMAL
 # @DESCRIPTION:
-# Minimal KDE Applicaions version to require for the package.
+# Minimal KDE Applications version to require for the package.
 : ${KDE_APPS_MINIMAL:=14.12.0}
 
 # @ECLASS-VARIABLE: KDE_GCC_MINIMAL
+# @DEFAULT_UNSET
 # @DESCRIPTION:
 # Minimal GCC version to require for the package.
-: ${KDE_GCC_MINIMAL:=4.8}
 
 # @ECLASS-VARIABLE: KDEBASE
 # @DESCRIPTION:
-# This gets set to a non-zero value when a package is considered a kde or
+# This gets set to a non-zero value when a package is considered a
 # kdevelop ebuild.
-if [[ ${CATEGORY} = kde-base ]]; then
-	KDEBASE=kde-base
-elif [[ ${CATEGORY} = kde-frameworks ]]; then
-	KDEBASE=kde-frameworks
-elif [[ ${KMNAME-${PN}} = kdevelop ]]; then
+if [[ ${KMNAME-${PN}} = kdevelop ]]; then
 	KDEBASE=kdevelop
+elif [[ ${KMNAME} = kde-l10n || ${PN} = kde-l10n ]]; then
+	[[ ${PV} != 15.12.3 ]] && KDEBASE=kdel10n
 fi
 
 debug-print "${ECLASS}: ${KDEBASE} ebuild recognized"
@@ -63,7 +61,7 @@ debug-print "${ECLASS}: ${KDEBASE} ebuild recognized"
 : ${KDE_SCM:=git}
 
 case ${KDE_SCM} in
-	svn|git) ;;
+	git) ;;
 	*) die "KDE_SCM: ${KDE_SCM} is not supported" ;;
 esac
 
@@ -80,31 +78,42 @@ export KDE_BUILD_TYPE
 # @DESCRIPTION:
 # Determine if the current GCC version is acceptable, otherwise die.
 _check_gcc_version() {
-	if [[ ${MERGE_TYPE} != binary ]]; then
+	if [[ ${MERGE_TYPE} != binary && -v KDE_GCC_MINIMAL ]] && tc-is-gcc; then
+
 		local version=$(gcc-version)
 		local major=${version%.*}
 		local minor=${version#*.}
 		local min_major=${KDE_GCC_MINIMAL%.*}
 		local min_minor=${KDE_GCC_MINIMAL#*.}
 
+		debug-print "GCC version check activated"
+		debug-print "Version detected:"
+		debug-print "	- Full: ${version}"
+		debug-print "	- Major: ${major}"
+		debug-print "	- Minor: ${minor}"
+		debug-print "Version required:"
+		debug-print "	- Major: ${min_major}"
+		debug-print "	- Minor: ${min_minor}"
+
 		[[ ${major} -lt ${min_major} ]] || \
 				( [[ ${major} -eq ${min_major} && ${minor} -lt ${min_minor} ]] ) \
-			&& die "Sorry, but gcc-${KDE_GCC_MINIMAL} or later is required for this package."
+			&& die "Sorry, but gcc-${KDE_GCC_MINIMAL} or later is required for this package (found ${version})."
 	fi
 }
 
-# @FUNCTION: _add_kdecategory_dep
+# @FUNCTION: _add_category_dep
 # @INTERNAL
 # @DESCRIPTION:
-# Implementation of add_plasma_dep and add_frameworks_dep.
-_add_kdecategory_dep() {
+# Implementation of add_plasma_dep, add_frameworks_dep, add_kdeapps_dep,
+# and finally, add_qt_dep.
+_add_category_dep() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	local category=${1}
 	local package=${2}
 	local use=${3}
 	local version=${4}
-	local slot=
+	local slot=${5}
 
 	if [[ -n ${use} ]] ; then
 		local use="[${use}]"
@@ -115,8 +124,10 @@ _add_kdecategory_dep() {
 		local version="-$(get_version_component_range 1-3 ${version})"
 	fi
 
-	if [[ ${SLOT} = 4 || ${SLOT} = 5 ]] && ! has kde5-meta-pkg ${INHERITED} ; then
-		slot=":${SLOT}"
+	if [[ -n ${slot} ]] ; then
+		slot=":${slot}"
+	elif [[ ${SLOT%\/*} = 4 || ${SLOT%\/*} = 5 ]] && ! has kde5-meta-pkg ${INHERITED} ; then
+		slot=":${SLOT%\/*}"
 	fi
 
 	echo " ${operator}${category}/${package}${version}${slot}${use}"
@@ -126,14 +137,20 @@ _add_kdecategory_dep() {
 # @USAGE: <package> [USE flags] [minimum version]
 # @DESCRIPTION:
 # Create proper dependency for kde-frameworks/ dependencies.
-# This takes 1 to 3 arguments. The first being the package name, the optional
+# This takes 1 to 4 arguments. The first being the package name, the optional
 # second is additional USE flags to append, and the optional third is the
-# version to use instead of the automatic version (use sparingly).
+# version to use instead of the automatic version (use sparingly). In addition,
+# the optional fourth argument defines slot+operator instead of automatic slot
+# (use even more sparingly).
 # The output of this should be added directly to DEPEND/RDEPEND, and may be
 # wrapped in a USE conditional (but not an || conditional without an extra set
 # of parentheses).
 add_frameworks_dep() {
 	debug-print-function ${FUNCNAME} "$@"
+
+	if [[ $# -gt 4 ]]; then
+		die "${FUNCNAME} was called with too many arguments"
+	fi
 
 	local version
 
@@ -145,21 +162,27 @@ add_frameworks_dep() {
 		version=${FRAMEWORKS_MINIMAL}
 	fi
 
-	_add_kdecategory_dep kde-frameworks "${1}" "${2}" "${version}"
+	_add_category_dep kde-frameworks "${1}" "${2}" "${version}" "${4}"
 }
 
 # @FUNCTION: add_plasma_dep
 # @USAGE: <package> [USE flags] [minimum version]
 # @DESCRIPTION:
-# Create proper dependency for kde-base/ dependencies.
-# This takes 1 to 3 arguments. The first being the package name, the optional
+# Create proper dependency for kde-plasma/ dependencies.
+# This takes 1 to 4 arguments. The first being the package name, the optional
 # second is additional USE flags to append, and the optional third is the
-# version to use instead of the automatic version (use sparingly).
+# version to use instead of the automatic version (use sparingly). In addition,
+# the optional fourth argument defines slot+operator instead of automatic slot
+# (use even more sparingly).
 # The output of this should be added directly to DEPEND/RDEPEND, and may be
 # wrapped in a USE conditional (but not an || conditional without an extra set
 # of parentheses).
 add_plasma_dep() {
 	debug-print-function ${FUNCNAME} "$@"
+
+	if [[ $# -gt 4 ]]; then
+		die "${FUNCNAME} was called with too many arguments"
+	fi
 
 	local version
 
@@ -171,21 +194,27 @@ add_plasma_dep() {
 		version=${PLASMA_MINIMAL}
 	fi
 
-	_add_kdecategory_dep kde-plasma "${1}" "${2}" "${version}"
+	_add_category_dep kde-plasma "${1}" "${2}" "${version}" "${4}"
 }
 
 # @FUNCTION: add_kdeapps_dep
 # @USAGE: <package> [USE flags] [minimum version]
 # @DESCRIPTION:
 # Create proper dependency for kde-apps/ dependencies.
-# This takes 1 to 3 arguments. The first being the package name, the optional
+# This takes 1 to 4 arguments. The first being the package name, the optional
 # second is additional USE flags to append, and the optional third is the
-# version to use instead of the automatic version (use sparingly).
+# version to use instead of the automatic version (use sparingly). In addition,
+# the optional fourth argument defines slot+operator instead of automatic slot
+# (use even more sparingly).
 # The output of this should be added directly to DEPEND/RDEPEND, and may be
 # wrapped in a USE conditional (but not an || conditional without an extra set
 # of parentheses).
 add_kdeapps_dep() {
 	debug-print-function ${FUNCNAME} "$@"
+
+	if [[ $# -gt 4 ]]; then
+		die "${FUNCNAME} was called with too many arguments"
+	fi
 
 	local version
 
@@ -202,7 +231,37 @@ add_kdeapps_dep() {
 		fi
 	fi
 
-	_add_kdecategory_dep kde-apps "${1}" "${2}" "${version}"
+	_add_category_dep kde-apps "${1}" "${2}" "${version}" "${4}"
+}
+
+# @FUNCTION: add_qt_dep
+# @USAGE: <package> [USE flags] [minimum version]
+# @DESCRIPTION:
+# Create proper dependency for dev-qt/ dependencies.
+# This takes 1 to 4 arguments. The first being the package name, the optional
+# second is additional USE flags to append, and the optional third is the
+# version to use instead of the automatic version (use sparingly). In addition,
+# the optional fourth argument defines slot+operator instead of automatic slot
+# (use even more sparingly).
+# The output of this should be added directly to DEPEND/RDEPEND, and may be
+# wrapped in a USE conditional (but not an || conditional without an extra set
+# of parentheses).
+add_qt_dep() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	if [[ $# -gt 4 ]]; then
+		die "${FUNCNAME} was called with too many arguments"
+	fi
+
+	local version
+
+	if [[ -n ${3} ]]; then
+		version=${3}
+	elif [[ -z "${version}" ]] ; then
+		version=${QT_MINIMAL}
+	fi
+
+	_add_category_dep dev-qt "${1}" "${2}" "${version}" "${4}"
 }
 
 # @FUNCTION: get_kde_version
@@ -221,6 +280,26 @@ get_kde_version() {
 	fi
 }
 
+# @FUNCTION: kde_l10n2lingua
+# @USAGE: <l10n>...
+# @INTERNAL
+# @DESCRIPTION:
+# Output KDE lingua flag name(s) (without prefix(es)) appropriate for
+# given l10n(s).
+kde_l10n2lingua() {
+	local l
+	for l; do
+		case ${l} in
+			ca-valencia) echo ca@valencia;;
+			sr-ijekavsk) echo sr@ijekavian;;
+			sr-Latn-ijekavsk) echo sr@ijekavianlatin;;
+			sr-Latn) echo sr@latin;;
+			uz-Cyrl) echo uz@cyrillic;;
+			*) echo "${l/-/_}";;
+		esac
+	done
+}
+
 # @FUNCTION: punt_bogus_dep
 # @USAGE: <prefix> <dependency>
 # @DESCRIPTION:
@@ -229,7 +308,7 @@ punt_bogus_dep() {
 	local prefix=${1}
 	local dep=${2}
 
-	pcregrep -Mni "(?s)find_package\s*\(\s*${prefix}.[^)]*?${dep}.*?\)" CMakeLists.txt > "${T}/bogus${dep}"
+	pcregrep -Mni "(?s)find_package\s*\(\s*${prefix}[^)]*?${dep}.*?\)" CMakeLists.txt > "${T}/bogus${dep}"
 
 	# pcregrep returns non-zero on no matches/error
 	if [[ $? != 0 ]] ; then
@@ -243,7 +322,7 @@ punt_bogus_dep() {
 	sed -e "${first},${last}s/${dep}//" -i CMakeLists.txt || die
 
 	if [[ ${length} = 1 ]] ; then
-		sed -e "/find_package\s*(\s*${prefix}\s*REQUIRED\s*COMPONENTS\s*)/I d" -i CMakeLists.txt || die
+		sed -e "/find_package\s*(\s*${prefix}\(\s\+\(REQUIRED\|CONFIG\|COMPONENTS\|\${[A-Z0-9_]*}\)\)\+\s*)/Is/^/# removed by kde5-functions.eclass - /" -i CMakeLists.txt || die
 	fi
 }
 
