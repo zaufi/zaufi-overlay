@@ -1,0 +1,8 @@
+--- a/urlgrabber/__init__.py
++++ b/urlgrabber/__init__.py
+@@ -52,4 +52,4 @@ __author__  = 'Michael D. Stenner <msten
+               'Zdenek Pavlas <zpavlas@redhat.com>'
+ __url__     = 'http://urlgrabber.baseurl.org/'
+ 
+-from grabber import urlgrab, urlopen, urlread
++from .grabber import urlgrab, urlopen, urlread
