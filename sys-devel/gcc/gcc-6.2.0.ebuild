@@ -13,14 +13,13 @@ KEYWORDS="~amd64"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
-	elibc_glibc? ( >=sys-libs/glibc-2.8 )
+	elibc_glibc? ( >=sys-libs/glibc-2.13 )
 	>=${CATEGORY}/binutils-2.20"
 
 if [[ ${CATEGORY} != cross-* ]] ; then
-	PDEPEND="${PDEPEND} elibc_glibc? ( >=sys-libs/glibc-2.8 )"
+	PDEPEND="${PDEPEND} elibc_glibc? ( >=sys-libs/glibc-2.13 )"
 fi
 
 src_prepare() {
-
 	toolchain_src_prepare
 }
