@@ -15,7 +15,7 @@
 *dev-util/systemtap
 *dev-util/valgrind
 *media-gfx/mscgen
-*sys-block/btrace
+*sys-block/blktrace
 *sys-devel/autoconf-archive
 *sys-devel/autogen
 *sys-devel/clang
