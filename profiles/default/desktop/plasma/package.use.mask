@@ -5,3 +5,5 @@
 dev-vcs/subversion kde
 
 kde-base/systemsettings -gtk
+
+www-client/firefox -gtk3
