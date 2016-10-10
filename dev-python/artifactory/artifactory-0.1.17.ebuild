@@ -3,7 +3,7 @@
 
 EAPI=6
 
-PYTHON_COMPAT=(python{2_7,3_{3,4,5}})
+PYTHON_COMPAT=(python{2_7,3_{2,3,4,5}})
 
 inherit eutils distutils-r1
 
@@ -19,12 +19,12 @@ IUSE=""
 DOCS="README.md"
 
 RDEPEND="
+	dev-python/python-dateutil[${PYTHON_USEDEP}]
+	dev-python/requests[${PYTHON_USEDEP}]
+	$(python_gen_cond_dep 'dev-python/pathlib[${PYTHON_USEDEP}]' python2_7 python3_2 python3_3 )
 	${PYTHON_DEPS}
 "
 DEPEND="
-	dev-python/python-dateutil
-	dev-python/pathlib
-	dev-python/requests
 	dev-python/setuptools[${PYTHON_USEDEP}]
 	${RDEPEND}
 "
