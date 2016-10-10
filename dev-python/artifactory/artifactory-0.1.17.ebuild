@@ -10,6 +10,7 @@ inherit eutils distutils-r1
 DESCRIPTION="A Python client for Artifactory"
 HOMEPAGE="https://github.com/Parallels/artifactory"
 SRC_URI="https://github.com/Parallels/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
+RESTRICT="mirror"
 
 LICENSE="MIT"
 SLOT="0"
