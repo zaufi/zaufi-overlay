@@ -1,0 +1,30 @@
+# Copyright 1999-2016 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+EAPI=6
+
+PYTHON_COMPAT=(python{2_7,3_{3,4,5}})
+
+inherit eutils distutils-r1
+
+DESCRIPTION="A Python client for Artifactory"
+HOMEPAGE="https://github.com/Parallels/artifactory"
+SRC_URI="https://github.com/Parallels/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
+
+LICENSE="MIT"
+SLOT="0"
+KEYWORDS="~amd64 ~x86"
+IUSE=""
+
+DOCS="README.md"
+
+RDEPEND="
+	${PYTHON_DEPS}
+"
+DEPEND="
+	dev-python/python-dateutil
+	dev-python/pathlib
+	dev-python/requests
+	dev-python/setuptools[${PYTHON_USEDEP}]
+	${RDEPEND}
+"
