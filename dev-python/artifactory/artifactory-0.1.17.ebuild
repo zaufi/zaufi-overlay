@@ -28,3 +28,5 @@ DEPEND="
 	dev-python/setuptools[${PYTHON_USEDEP}]
 	${RDEPEND}
 "
+
+PATCHES=( "${FILESDIR}"/0001-pathlib-is-a-part-of-Python-since-3.4.patch )
