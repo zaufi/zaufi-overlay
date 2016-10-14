@@ -9,6 +9,7 @@ DESCRIPTION="Debian New Maintainers' Guide"
 HOMEPAGE="http://www.debian.org/doc/devel-manuals#maint-guide"
 DEB_NAME="maint-guide"
 SRC_URI="mirror://ubuntu/pool/universe/${DEB_NAME:0:1}/${DEB_NAME}/${DEB_NAME}_${PV}_all.deb"
+RESTRICT="mirror"
 
 LICENSE="GPL-2+"
 SLOT="0"

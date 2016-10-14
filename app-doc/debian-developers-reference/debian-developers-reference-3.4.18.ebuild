@@ -9,6 +9,7 @@ DESCRIPTION="Guidelines and information for Debian developers"
 HOMEPAGE="https://www.debian.org/doc/devel-manuals#devref"
 DEB_NAME="developers-reference"
 SRC_URI="http://archive.ubuntu.com/ubuntu/pool/universe/${DEB_NAME:0:1}/${DEB_NAME}/${DEB_NAME}_${PV}_all.deb mirror://ubuntu/pool/universe/${DEB_NAME:0:1}/${DEB_NAME}/${DEB_NAME}_${PV}_all.deb"
+RESTRICT="mirror"
 
 LICENSE="GPL-2+"
 SLOT="0"
