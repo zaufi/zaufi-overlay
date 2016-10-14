@@ -78,7 +78,7 @@ DEPEND="${RDEPEND}
 
 S="${WORKDIR}/RetroShare-${PV}"
 
-PATCHES=( "${FILESDIR}/${P}-c11-compat.patch" )
+#PATCHES=( "${FILESDIR}/${P}-c11-compat.patch" )
 
 src_prepare() {
 	local dir
