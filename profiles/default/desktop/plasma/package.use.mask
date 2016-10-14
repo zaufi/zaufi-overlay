@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
+app-crypt/gcr -gtk
+
 dev-vcs/subversion kde
 
 kde-base/systemsettings -gtk
