@@ -5,6 +5,7 @@
 # Must have developer's tools
 *app-doc/doxygen
 *app-misc/jq
+*app-text/pinfo
 *dev-util/abi-compliance-checker
 *dev-util/chewy
 *dev-util/lcov
@@ -20,7 +21,6 @@
 *sys-devel/autogen
 *sys-devel/clang
 *sys-devel/gdb
-*x11-misc/xrestop
 
 # Some must have docs
 *app-doc/devmanual
