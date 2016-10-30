@@ -1,6 +1,165 @@
+--- /dev/null
++++ b/cmake/AddNuGetPackage.cmake
+@@ -0,0 +1,156 @@
++#
++# Trivial helper to define a NuGet package.
++# It tries to reuse as much as it can from previosly defined (by ECM) variables.
++# (Far from perfect, but pretty good as a starting point)
++#
++
++set(_ANP_BASE_DIR "${CMAKE_CURRENT_LIST_DIR}")
++
++if(WIN32)
++    find_program(NUGET_EXECUTABLE NuGet)
++endif()
++
++function(add_nuget_package)
++    if(NOT WIN32)
++        return()
++    endif()
++
++    set(_options)
++    set(_one_value_args CHANGES DESCRIPTION HOMEPAGE ID OUTPUT_NUSPEC SUMMARY VENDOR VERSION)
++    set(_multi_value_args DEPENDS TAGS)
++    cmake_parse_arguments(_add_nuget_package "${_options}" "${_one_value_args}" "${_multi_value_args}" ${ARGN})
++
++    # ALERT If multi-configuration generator has been used, we should know
++    # what configuration is "primary" (i.e. to be installed).
++    # Everything is easy when `CMAKE_CONFIGURATION_TYPES` list has the only item...
++    if(NOT CMAKE_BUILD_TYPE)
++        list(LENGTH CMAKE_CONFIGURATION_TYPES _cfgs_len)
++        if(_cfgs_len EQUAL 1)
++            set(CMAKE_BUILD_TYPE "${CMAKE_CONFIGURATION_TYPES}")
++        else()
++            message(
++                WARNING
++                "There are zero or few `CMAKE_CONFIGURATION_TYPES` specified, but no `CMAKE_BUILD_TYPE` "
++                "has been given to `cmake`, skip NuGet package generation"
++              )
++            return()
++        endif()
++    endif()
++
++    if(NOT _add_nuget_package_ID)
++        if(PROJECT_NAME)
++            set(_add_nuget_package_ID "${PROJECT_NAME}")
++        else()
++            message(
++                FATAL_ERROR
++                "No `ID` has given to `add_nuget_package()` and no `PROJECT_NAME` has been set "
++              )
++        endif()
++    endif()
++
++    if(NOT _add_nuget_package_VERSION)
++        if(PROJECT_VERSION)
++            set(_add_nuget_package_VERSION "${PROJECT_VERSION}")
++        else()
++            message(
++                FATAL_ERROR
++                "No `VERSION` has given to `add_nuget_package()` and no `PROJECT_VERSION` has been set"
++              )
++        endif()
++    endif()
++
++    if(NOT _add_nuget_package_VENDOR)
++        if(CPACK_PACKAGE_VENDOR)
++            set(_add_nuget_package_VENDOR "${CPACK_PACKAGE_VENDOR}")
++        else()
++            message(
++                FATAL_ERROR
++                "No `VENDOR` has given to `add_nuget_package()` and no `CPACK_PACKAGE_VENDOR` has been set"
++              )
++        endif()
++    endif()
++
++    if(NOT _add_nuget_package_HOMEPAGE)
++        if(CPACK_RPM_PACKAGE_URL)
++            set(_add_nuget_package_HOMEPAGE "${CPACK_RPM_PACKAGE_URL}")
++        elseif(CPACK_DEBIAN_PACKAGE_HOMEPAGE)
++            set(_add_nuget_package_HOMEPAGE "${CPACK_DEBIAN_PACKAGE_HOMEPAGE}")
++        else()
++            message(
++                FATAL_ERROR
++                "No `HOMEPAGE` has given to `add_nuget_package()` and no `CPACK_RPM_PACKAGE_URL` "
++                "or `CPACK_DEBIAN_PACKAGE_HOMEPAGE` has been set"
++              )
++        endif()
++    endif()
++
++    if(NOT _add_nuget_package_DESCRIPTION)
++        if(CPACK_RPM_PACKAGE_DESCRIPTION)
++            set(_add_nuget_package_DESCRIPTION "${CPACK_RPM_PACKAGE_DESCRIPTION}")
++        else()
++            message(
++                FATAL_ERROR
++                "No `DESCRIPTION` has given to `add_nuget_package()` and no `CPACK_RPM_PACKAGE_DESCRIPTION` has been set"
++              )
++        endif()
++    endif()
++
++    if(NOT _add_nuget_package_SUMMARY)
++        if(CPACK_PACKAGE_DESCRIPTION_SUMMARY)
++            set(_add_nuget_package_SUMMARY "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
++        else()
++            message(
++                FATAL_ERROR
++                "No `SUMMARY` has given to `add_nuget_package()` and no `CPACK_PACKAGE_DESCRIPTION_SUMMARY` has been set"
++              )
++        endif()
++    endif()
++
++    if(_add_nuget_package_CHANGES)
++        set(_add_nuget_package_CHANGES "<releaseNotes>${_add_nuget_package_CHANGES}</releaseNotes>")
++    endif()
++
++    if(NOT _add_nuget_package_TAGS)
++        set(_add_nuget_package_TAGS "OnixS")
++    else()
++        string(REPLACE ";" " " _add_nuget_package_TAGS "${_add_nuget_package_TAGS}")
++    endif()
++
++    if(NOT _add_nuget_package_OUTPUT_NUSPEC)
++        if(PROJECT_NAME)
++            set(_add_nuget_package_OUTPUT_NUSPEC "${PROJECT_BINARY_DIR}/${PROJECT_NAME}.nuspec")
++        else()
++            message(
++                FATAL_ERROR
++                "No `OUTPUT_NUSPEC` has given to `add_nuget_package()` and no `PROJECT_NAME` has been set"
++              )
++        endif()
++    endif()
++
++    if(_add_nuget_package_DEPENDS)
++        set(_deps)
++        foreach(_dep IN LISTS _add_nuget_package_DEPENDS)
++            string(REGEX MATCH "^([^ ]+) ?(.*)?$" _ "${_dep}")
++            if(CMAKE_MATCH_COUNT LESS 1 OR CMAKE_MATCH_COUNT GREATER 2)
++                message(FATAL_ERROR "Incorrect `DEPENDS` item `${_dep}` in call to `add_nuget_package()` (${CMAKE_MATCH_COUNT})")
++            elseif(CMAKE_MATCH_COUNT EQUAL 1)
++                string(APPEND _deps "      <dependency id=\"${CMAKE_MATCH_1}\" />\n")
++            elseif(CMAKE_MATCH_COUNT EQUAL 2)
++                string(APPEND _deps "      <dependency id=\"${CMAKE_MATCH_1}\" version=\"${CMAKE_MATCH_2}\" />\n")
++            endif()
++        endforeach()
++        if(_deps)
++            set(_add_nuget_package_DEPENDS "<dependencies>\n${_deps}    </dependencies>")
++        endif()
++    endif()
++
++    configure_file("${_ANP_BASE_DIR}/template.nuspec.in" "${_add_nuget_package_OUTPUT_NUSPEC}" @ONLY)
++    configure_file("${_ANP_BASE_DIR}/nuget-package.cmake.in" "${PROJECT_BINARY_DIR}/nuget-package.cmake" @ONLY)
++
++    add_custom_target(
++        nuget-package
++        COMMAND "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/nuget-package.cmake"
++        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
++        COMMENT "Making a NuGet package"
++      )
++endfunction()
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -66,15 +66,16 @@
+@@ -66,16 +66,17 @@
  # 2013-10-08 PH got rid of the "source" command, which is a bash-ism (use ".")
  # 2013-11-05 PH added support for PARENS_NEST_LIMIT
  # 2016-03-01 PH applied Chris Wilson's patch for MSVC static build
@@ -12,14 +171,16 @@
  # CMP0026 to avoid warnings for the use of LOCATION in GET_TARGET_PROPERTY.
  
 -CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
-+CMAKE_MINIMUM_REQUIRED(VERSION 3.1.3)
++CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
  CMAKE_POLICY(SET CMP0026 OLD)
  
+-SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake) # for FindReadline.cmake
 +PROJECT(PCRE VERSION 8.39 LANGUAGES C CXX)
 +
- SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake) # for FindReadline.cmake
++LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
  
  # external packages
+ FIND_PACKAGE( BZip2 )
 @@ -127,6 +128,9 @@ OPTION(PCRE_BUILD_PCRE32 "Build 32 bit P
  
  OPTION(PCRE_BUILD_PCRECPP "Build the PCRE C++ library (pcrecpp)." ON)
@@ -30,7 +191,65 @@
  SET(PCRE_EBCDIC OFF CACHE BOOL
      "Use EBCDIC coding instead of ASCII. (This is rarely used outside of mainframe systems.)")
  
-@@ -614,6 +618,20 @@ ENDIF(WIN32)
+@@ -190,6 +194,7 @@ IF (MINGW)
+ ENDIF(MINGW)
+ 
+ IF(MSVC)
++  SET(MSVC_RUNTIME "shared" CACHE STRING "MSVC runtime to use: static (default) or shared")
+   OPTION(INSTALL_MSVC_PDB
+          "ON=Install .pdb files built by MSVC, if generated"
+          OFF)
+@@ -385,6 +390,13 @@ IF(PCRE_NO_RECURSE)
+         SET(NO_RECURSE 1)
+ ENDIF(PCRE_NO_RECURSE)
+ 
++# Set desired runtime
++IF(MSVC)
++  INCLUDE(MacroSetupMSVCRuntime)
++  STRING(TOUPPER "${MSVC_RUNTIME}" MSVC_RUNTIME)
++  SETUP_MSVC_RUNTIME(${MSVC_RUNTIME})
++ENDIF(MSVC)
++
+ # Output files
+ CONFIGURE_FILE(config-cmake.h.in
+                ${PROJECT_BINARY_DIR}/config.h
+@@ -570,19 +582,6 @@ SET(PCREPOSIX_SOURCES
+ ENDIF (EXISTS ${PROJECT_SOURCE_DIR}/pcreposix.rc)
+ ENDIF(MSVC AND NOT PCRE_STATIC)
+ 
+-# Fix static compilation with MSVC: https://bugs.exim.org/show_bug.cgi?id=1681
+-# This code was taken from the CMake wiki, not from WebM.
+-
+-IF(MSVC AND PCRE_STATIC)
+-  MESSAGE(STATUS "** MSVC and PCRE_STATIC: modifying compiler flags to use static runtime library")
+-  foreach(flag_var
+-          CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+-          CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
+-          CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+-          CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+-    string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+-  endforeach()
+-ENDIF(MSVC AND PCRE_STATIC)
+ 
+ SET(PCRECPP_HEADERS
+   pcrecpp.h
+@@ -599,10 +598,14 @@ SET(PCRECPP_SOURCES
+ 
+ # Build setup
+ 
++# NOTE @OnixS: All libraries (even static) would have PIC
++# TODO It is not quite good...ADD_DEFINITIONS(-DHAVE_CONFIG_H)
++SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
++
+ ADD_DEFINITIONS(-DHAVE_CONFIG_H)
+ 
+ IF(MSVC)
+-        ADD_DEFINITIONS(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
++    ADD_DEFINITIONS(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
+ ENDIF(MSVC)
+ 
+ SET(CMAKE_INCLUDE_CURRENT_DIR 1)
+@@ -614,6 +617,20 @@ ENDIF(WIN32)
  
  SET(targets)
  
@@ -51,7 +270,7 @@
  # Libraries
  # pcre
  IF(PCRE_BUILD_PCRE8)
-@@ -881,19 +899,42 @@ ENDIF(PCRE_BUILD_TESTS)
+@@ -881,19 +898,42 @@ ENDIF(PCRE_BUILD_TESTS)
  # Installation
  SET(CMAKE_INSTALL_ALWAYS 1)
  
@@ -72,7 +291,7 @@
 +    "pcre8-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
 +  )
 +SET(CMAKE_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}/${PCRE_VERSIONED_PATH_SUFFIX}")
-+SET(CMAKE_INSTALL_CMAKE_MODULESDIR "${CMAKE_INSTALL_LIBDIR}/${PCRE_VERSIONED_PATH_SUFFIX}/cmake")
++SET(CMAKE_INSTALL_CMAKE_MODULESDIR "${CMAKE_INSTALL_DATADIR}/${PCRE_VERSIONED_PATH_SUFFIX}/cmake")
 +
 +FOREACH(target ${targets})
 +    INSTALL(
@@ -105,7 +324,7 @@
  ELSE(PCRE_BUILD_PCRECPP)
          # Remove pcrecpp.3
          FOREACH(man ${man3})
-@@ -905,18 +946,20 @@ ELSE(PCRE_BUILD_PCRECPP)
+@@ -905,18 +945,20 @@ ELSE(PCRE_BUILD_PCRECPP)
          SET(man3 ${man3_new})
  ENDIF(PCRE_BUILD_PCRECPP)
  
@@ -131,7 +350,7 @@
              CONFIGURATIONS Debug)
  ENDIF(MSVC AND INSTALL_MSVC_PDB)
  
-@@ -927,6 +970,28 @@ ELSE(BUILD_SHARED_LIBS)
+@@ -927,6 +969,57 @@ ELSE(BUILD_SHARED_LIBS)
    SET(BUILD_STATIC_LIBS ON)
  ENDIF(BUILD_SHARED_LIBS)
  
@@ -157,9 +376,182 @@
 +    DESTINATION ${CMAKE_INSTALL_CMAKE_MODULESDIR}
 +  )
 +
++#
++# Ok, going to build NuGet package specification
++#
++# TODO Need a native support in CMake for that!
++#
++IF(WIN32)
++    INCLUDE(AddNugetPackage)
++    add_nuget_package(
++        ID "PCRE8"
++        VENDOR "University of Cambridge"
++        HOMEPAGE "http://www.pcre.org/"
++        SUMMARY "Perl-compatible regular expression library"
++        DESCRIPTION
++            [=[
++                PCRE is written in C, and it has its own API. There are three sets of
++                functions, one for the 8-bit library, which processes strings of bytes, one for
++                the 16-bit library, which processes strings of 16-bit values, and one for the
++                32-bit library, which processes strings of 32-bit values. The distribution also
++                includes a set of C++ wrapper functions (see the pcrecpp man page for details),
++                courtesy of Google Inc., which can be used to call the 8-bit PCRE library from
++                C++. Other C++ wrappers have been created from time to time. See, for example:
++                https://github.com/YasserAsmi/regexp, which aims to be simple and similar in
++                style to the C API.
++            ]=]
++        TAGS "PCRE"
++        OUTPUT_NUSPEC "${PROJECT_BINARY_DIR}/PCRE8.nuspec"
++      )
++ENDIF()
++
  IF(PCRE_SHOW_REPORT)
    STRING(TOUPPER "${CMAKE_BUILD_TYPE}" buildtype)
    IF (CMAKE_C_FLAGS)
+--- /dev/null
++++ b/cmake/MacroSetupMSVCRuntime.cmake
+@@ -0,0 +1,87 @@
++# - Configure MSVC runtime library compiler options
++# Configure corresponding compiler options to use static or dynamic MSVC runtime
++#
++# Synopsis:
++#   setup_msvc_runtime(<STATIC|SHARED> [VARIABLES <LIST-OF-VARS-TO-FIX>])
++#
++# List of variables w/ compiler options always includes the follwing:
++#     CMAKE_C_FLAGS_DEBUG
++#     CMAKE_C_FLAGS_MINSIZEREL
++#     CMAKE_C_FLAGS_RELEASE
++#     CMAKE_C_FLAGS_RELWITHDEBINFO
++#     CMAKE_CXX_FLAGS_DEBUG
++#     CMAKE_CXX_FLAGS_MINSIZEREL
++#     CMAKE_CXX_FLAGS_RELEASE
++#     CMAKE_CXX_FLAGS_RELWITHDEBINFO
++#
++# You can add others if there is some other "profile" has configured.
++#
++
++#=============================================================================
++# Copyright 2014 by Alex Turbov <i.zaufi@gmail.com>
++#
++# Distributed under the OSI-approved BSD License (the "License");
++# see accompanying file LICENSE for details.
++#
++# This software is distributed WITHOUT ANY WARRANTY; without even the
++# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
++# See the License for more information.
++#=============================================================================
++# (To distribute this file outside of this repository, substitute the full
++#  License text for the above reference.)
++
++include(CMakeParseArguments)
++
++if(NOT WIN32 OR NOT MSVC)
++    message(FATAL_ERROR "No need to use setup_msvc_runtime for non Windows/MSVC")
++endif()
++
++macro(setup_msvc_runtime runtime_type)
++    set(options)
++    set(one_value_args)
++    set(multi_value_args VARIABLES)
++    cmake_parse_arguments(setup_msvc_runtime "${options}" "${one_value_args}" "${multi_value_args}" ${ARGN})
++
++    string(TOUPPER "${runtime_type}" _setup_msvc_runtime_type)
++    if(_setup_msvc_runtime_type STREQUAL "SHARED")
++        set(_setup_msvc_runtime_what "/MT")
++        set(_setup_msvc_runtime_repl "/MD")
++        message(STATUS "Forcing use of dynamically-linked runtime")
++    elseif(_setup_msvc_runtime_type STREQUAL "STATIC")
++        set(_setup_msvc_runtime_what "/MD")
++        set(_setup_msvc_runtime_repl "/MT")
++        message(STATUS "Forcing use of statically-linked runtime")
++    else()
++        message(FATAL_ERROR "Invalid RUNTIME option value ${setup_msvc_runtime_RUNTIME}")
++    endif()
++
++    # Add predefined profiles
++    list(
++        APPEND setup_msvc_runtime_VARIABLES
++            CMAKE_C_FLAGS_DEBUG
++            CMAKE_C_FLAGS_MINSIZEREL
++            CMAKE_C_FLAGS_RELEASE
++            CMAKE_C_FLAGS_RELWITHDEBINFO
++            CMAKE_CXX_FLAGS_DEBUG
++            CMAKE_CXX_FLAGS_MINSIZEREL
++            CMAKE_CXX_FLAGS_RELEASE
++            CMAKE_CXX_FLAGS_RELWITHDEBINFO
++      )
++
++    foreach(variable ${setup_msvc_runtime_VARIABLES})
++        if(${variable} MATCHES "${_setup_msvc_runtime_what}")
++            string(
++              REGEX REPLACE
++                    "${_setup_msvc_runtime_what}"
++                    "${_setup_msvc_runtime_repl}"
++                ${variable}
++                "${${variable}}"
++              )
++        endif()
++    endforeach()
++endmacro()
++
++# X-Chewy-RepoBase: https://raw.githubusercontent.com/mutanabbi/chewy-cmake-rep/master/
++# X-Chewy-Path: MacroSetupMSVCRuntime.cmake
++# X-Chewy-Version: 1.0
++# X-Chewy-Description: Configure MSVC runtime library compiler options
+--- /dev/null
++++ b/cmake/nuget-package.cmake.in
+@@ -0,0 +1,29 @@
++if(NOT "@NUGET_EXECUTABLE@" STREQUAL "")
++    set(_TMP_PATH "_CPack_Packages/NUGET")
++    if(EXISTS )
++        file(REMOVE_RECURSE "${_TMP_PATH}")
++    endif()
++
++    file(MAKE_DIRECTORY "${_TMP_PATH}")
++
++    execute_process(
++        COMMAND "@CMAKE_COMMAND@" -DCMAKE_INSTALL_PREFIX=${_TMP_PATH} -DBUILD_TYPE=@CMAKE_BUILD_TYPE@ -P cmake_install.cmake
++        WORKING_DIRECTORY "@PROJECT_BINARY_DIR@"
++      )
++
++    file(COPY "@_add_nuget_package_OUTPUT_NUSPEC@" DESTINATION "${_TMP_PATH}")
++
++    execute_process(
++        COMMAND "@NUGET_EXECUTABLE@" pack
++        WORKING_DIRECTORY "@PROJECT_BINARY_DIR@/${_TMP_PATH}"
++        RESULT_VARIABLE _NUGET_RESULT
++      )
++
++    if(_NUGET_RESULT EQUAL 0)
++        list(APPEND CMAKE_MODULE_PATH @ONIXS_ECM_PATH@)
++        include("@PROJECT_SOURCE_DIR@/cmake/TeamCityIntegration.cmake")
++        tc_publish_artefacts("@PROJECT_BINARY_DIR@/${_TMP_PATH}/*.nupkg")
++    endif()
++else()
++    message(STATUS "NuGet executable not found. Skip package building...")
++endif()
+--- /dev/null
++++ b/cmake/template.nuspec.in
+@@ -0,0 +1,19 @@
++<?xml version="1.0"?>
++<package>
++  <metadata>
++    <id>@_add_nuget_package_ID@</id>
++    <version>@_add_nuget_package_VERSION@</version>
++    <authors>@_add_nuget_package_VENDOR@</authors>
++    <owners>@_add_nuget_package_VENDOR@</owners>
++    <!--<licenseUrl>https://onixs.biz/#LICENSE</licenseUrl>-->
++    <projectUrl>@_add_nuget_package_HOMEPAGE@</projectUrl>
++    <!--<iconUrl>https://onxis.biz/favicon.ico</iconUrl>-->
++    <requireLicenseAcceptance>false</requireLicenseAcceptance>
++    <summary>@_add_nuget_package_SUMMARY@</summary>
++    <description>@_add_nuget_package_DESCRIPTION@</description>
++    <copyright>Copyright 2016</copyright>
++    <tags>@_add_nuget_package_TAGS@</tags>
++    @_add_nuget_package_CHANGES@
++    @_add_nuget_package_DEPENDS@
++  </metadata>
++</package>
 --- /dev/null
 +++ b/pcre-config.cmake.in
 @@ -0,0 +1,65 @@
@@ -228,3 +620,338 @@
 +unset(_PCRE8_FOUND_COMPONENTS)
 +
 +# kate: hl CMake;
+--- /dev/null
++++ b/cmake/TeamCityIntegration.cmake
+@@ -0,0 +1,332 @@
++# - Interact with TeamCity via serive messages
++#
++# See also: http://confluence.jetbrains.com/display/TCD8/Build+Script+Interaction+with+TeamCity
++#
++# TODO Docs!
++#
++
++#=============================================================================
++# Copyright 2012-2014 by Alex Turbov <i.zaufi@gmail.com>
++#
++# Distributed under the OSI-approved BSD License (the "License");
++# see accompanying file LICENSE for details.
++#
++# This software is distributed WITHOUT ANY WARRANTY; without even the
++# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
++# See the License for more information.
++#=============================================================================
++# (To distribute this file outside of this repository, substitute the full
++#  License text for the above reference.)
++
++include(CMakeParseArguments)
++
++macro(is_running_under_teamcity VAR)
++    if(NOT "$ENV{TEAMCITY_PROCESS_FLOW_ID}" STREQUAL "")
++        set(${VAR} TRUE)
++    else()
++        set(${VAR} FALSE)
++    endif()
++endmacro()
++
++macro(tc_escape_string VAR)
++    string(REPLACE "|"   "||" ${VAR} "${${VAR}}")
++    string(REPLACE "\n" "|n" ${VAR} "${${VAR}}")
++    string(REPLACE "'"   "|'" ${VAR} "${${VAR}}")
++    string(REPLACE "["   "|[" ${VAR} "${${VAR}}")
++    string(REPLACE "]"   "|]" ${VAR} "${${VAR}}")
++endmacro()
++
++function(_tc_bare_message NAME )
++    if(NOT "$ENV{TEAMCITY_PROCESS_FLOW_ID}" STREQUAL "")
++        # Setup message start
++        set(_message "##teamcity[${NAME}")
++
++        # Append preformatted key-value pairs
++        foreach(_p ${ARGN})
++            set(_message "${_message} ${_p}")
++        endforeach()
++
++        # Show message w/ closing ']'
++        message("${_message}]")
++    endif()
++endfunction()
++
++function(_tc_message NAME )
++    if(NOT "$ENV{TEAMCITY_PROCESS_FLOW_ID}" STREQUAL "")
++        # Setup message start
++        string(TIMESTAMP _timestamp "%Y-%m-%dT%H:%M:%S.000" UTC)
++        set(_message "##teamcity[${NAME} flowId='$ENV{TEAMCITY_PROCESS_FLOW_ID}' timestamp='${_timestamp}'")
++
++        # Append preformatted key-value pairs
++        foreach(_p ${ARGN})
++            set(_message "${_message} ${_p}")
++        endforeach()
++
++        # Show message w/ closing ']'
++        message("${_message}]")
++    endif()
++endfunction()
++
++function(_tc_push_prop_to_list PROP_PART ID)
++    get_property(_list_exists GLOBAL PROPERTY TC_${PROP_PART} SET)
++    if(_list_exists)
++        get_property(_list GLOBAL PROPERTY TC_${PROP_PART})
++    endif()
++
++    list(INSERT _list 0 "${ID}")
++    set_property(GLOBAL PROPERTY TC_${PROP_PART} ${_list})
++endfunction()
++
++macro(_tc_get_and_pop_prop_from_list PROP_PART)
++    get_property(_list_exists GLOBAL PROPERTY TC_${PROP_PART} SET)
++    if(_list_exists)
++        get_property(_list GLOBAL PROPERTY TC_${PROP_PART})
++    else()
++        message(FATAL_ERROR "Misbalanced block start/end calls")
++    endif()
++    list(GET _list 0 _id)
++    list(REMOVE_AT _list 0)
++
++    set_property(GLOBAL PROPERTY TC_${PROP_PART} ${_list})
++endmacro()
++
++macro(_tc_get_prop_from_list PROP_PART VAR)
++    get_property(_list_exists GLOBAL PROPERTY TC_${PROP_PART} SET)
++    if(_list_exists)
++        get_property(_list GLOBAL PROPERTY TC_${PROP_PART})
++    else()
++        message(FATAL_ERROR "Misbalanced block start/end calls")
++    endif()
++    list(GET _list 0 ${VAR})
++endmacro()
++
++function(_tc_generic_bare_block_start MSGTYPE PROP_PART ID)
++    _tc_bare_message("${MSGTYPE}" ${ID} ${ARGN})
++    _tc_push_prop_to_list(${PROP_PART} ${ID})
++endfunction()
++
++function(_tc_generic_bare_block_end MSGTYPE PROP_PART)
++    _tc_get_and_pop_prop_from_list(${PROP_PART})
++    _tc_bare_message("${MSGTYPE}" ${_id})
++endfunction()
++
++function(_tc_generic_block_start MSGTYPE PROP_PART ID)
++    _tc_message("${MSGTYPE}" ${ID} ${ARGN})
++    _tc_push_prop_to_list(${PROP_PART} ${ID})
++endfunction()
++
++function(_tc_generic_block_end MSGTYPE PROP_PART)
++    _tc_get_and_pop_prop_from_list(${PROP_PART})
++    _tc_message("${MSGTYPE}" ${_id})
++endfunction()
++
++##teamcity[blockOpened name='<blockName>']
++function(tc_block_start NAME)
++    tc_escape_string(NAME)
++    _tc_generic_block_start("blockOpened" "BLOCK" "name='${NAME}'")
++endfunction()
++
++##teamcity[blockClosed name='<blockName>']
++function(tc_block_end)
++    _tc_generic_block_end("blockClosed" "BLOCK")
++endfunction()
++
++##teamcity[message text='<message text>' errorDetails='<error details>' status='<status value>']
++list(APPEND _TC_MESSAGE_STATUSES NORMAL WARNING FAILURE ERROR)
++function(tc_message STATUS TEXT)
++    # Check status
++    list(FIND _TC_MESSAGE_STATUSES ${STATUS} _status)
++    if(_status EQUAL -1)
++        message(FATAL_ERROR "tc_message called with invalid status")
++    endif()
++
++    tc_escape_string(TEXT)
++    tc_escape_string(STATUS)
++    if(STATUS STREQUAL "ERROR" AND (NOT ARG2 STREQUAL ""))
++        tc_escape_string(ARGV2)
++        _tc_message("message" "text='${TEXT}'" "status='${STATUS}'" "errorDetails='${ARGV2}'")
++    else()
++        _tc_message("message" "text='${TEXT}'" "status='${STATUS}'")
++    endif()
++endfunction()
++
++##teamcity[compilationStarted compiler='<compiler name>']
++function(tc_compile_start COMPILER)
++    tc_escape_string(COMPILER)
++    _tc_generic_block_start("compilationStarted" "COMPILE" "compiler='${COMPILER}'")
++endfunction()
++
++##teamcity[compilationFinished compiler='<compiler name>']
++function(tc_compile_end)
++    _tc_generic_block_end("compilationFinished" "COMPILE")
++endfunction()
++
++##teamcity[progressStart '<message>']
++function(tc_progress_start TEXT)
++    tc_escape_string(TEXT)
++    _tc_generic_bare_block_start("progressStart" "PROGRESS" "'${TEXT}'")
++endfunction()
++
++##teamcity[progressFinish '<message>']
++function(tc_progress_end)
++    _tc_generic_bare_block_end("progressFinish" "PROGRESS")
++endfunction()
++
++##teamcity[progressMessage '<message>']
++function(tc_progress MESSAGE)
++    tc_escape_string(MESSAGE)
++    _tc_bare_message("progressMessage" "'${MESSAGE}'")
++endfunction()
++
++##teamcity[testSuiteStarted name='suiteName']
++function(tc_test_suite_start NAME)
++    tc_escape_string(NAME)
++    _tc_generic_bare_block_start("testSuiteStarted" "TEST_SUITE" "name='${NAME}'")
++endfunction()
++
++##teamcity[testSuiteFinished name='suiteName']
++function(tc_test_suite_end)
++    _tc_generic_bare_block_end("testSuiteFinished" "TEST_SUITE")
++endfunction()
++
++##teamcity[testStarted name='testName' captureStandardOutput='<true/false>']
++function(tc_test_start NAME)
++    tc_escape_string(NAME)
++    if(ARGV1 STREQUAL "CAPTURE_OUTPUT")
++        _tc_generic_bare_block_start("testStarted" "TEST" "name='${NAME}'" "captureStandardOutput='true'")
++    else()
++        _tc_generic_bare_block_start("testStarted" "TEST" "name='${NAME}'" "captureStandardOutput='false'")
++    endif()
++endfunction()
++
++##teamcity[testFinished name='testName' duration='<test_duration_in_milliseconds>']
++function(tc_test_end)
++    set(one_value_args DURATION)
++    cmake_parse_arguments(tc_test_end "" "${one_value_args}" "" ${ARGN})
++
++    tc_escape_string(TEST)
++    if(tc_test_end_DURATION)
++        tc_escape_string(tc_test_end_DURATION)
++        _tc_generic_bare_block_end("testFinished" "TEST" "duration='${tc_test_end_DURATION}'")
++    else()
++        _tc_generic_bare_block_end("testFinished" "TEST")
++    endif()
++endfunction()
++
++##teamcity[testFailed name='MyTest.test1' message='failure message' details='message and stack trace']
++##teamcity[testFailed type='comparisonFailure' name='MyTest.test2' message='failure message'
++##         details='message and stack trace' expected='expected value' actual='actual value']
++function(tc_test_failed MESSAGE)
++    set(one_value_args DETAILS TYPE EXPECTED ACTUAL)
++    cmake_parse_arguments(tc_test_failed "" "${one_value_args}" "" ${ARGN})
++
++    set(_aux_args)
++    if(tc_test_failed_DETAILS)
++        tc_escape_string(tc_test_failed_DETAILS)
++        list(APPEND _aux_args "details='${tc_test_failed_DETAILS}'")
++    endif()
++    if(tc_test_failed_TYPE)
++        tc_escape_string(tc_test_failed_TYPE)
++        list(APPEND _aux_args "type='${tc_test_failed_TYPE}'")
++    endif()
++    if(tc_test_failed_EXPECTED)
++        tc_escape_string(tc_test_failed_EXPECTED)
++        list(APPEND _aux_args "expected='${tc_test_failed_EXPECTED}'")
++    endif()
++    if(tc_test_failed_ACTUAL)
++        tc_escape_string(tc_test_failed_ACTUAL)
++        list(APPEND _aux_args "actual='${tc_test_failed_ACTUAL}'")
++    endif()
++
++    _tc_get_prop_from_list("TEST" _name)
++    tc_escape_string(MESSAGE)
++    _tc_bare_message("testFailed" "${_name}" "message='${MESSAGE}'" ${_aux_args})
++    unset(_name)
++endfunction()
++
++##teamcity[testIgnored name='testName' message='ignore comment']
++function(tc_test_ignored MESSAGE)
++    _tc_get_prop_from_list("TEST" _name)
++    tc_escape_string(MESSAGE)
++    _tc_bare_message("testIgnored" "${_name}" "message='${MESSAGE}'")
++    unset(_name)
++endfunction()
++
++##teamcity[testStdOut name='className.testName' out='text']
++function(tc_test_output TEXT)
++    tc_escape_string(TEXT)
++    _tc_get_prop_from_list("TEST" _name)
++    _tc_bare_message("testStdOut" "${_name}" "out='${TEXT}'")
++    unset(_name)
++endfunction()
++
++##teamcity[testStdErr name='className.testName' out='error text']
++function(tc_test_error_output TEXT)
++    tc_escape_string(TEXT)
++    _tc_get_prop_from_list("TEST" _name)
++    _tc_bare_message("testStdErr" "${_name}" "out='${TEXT}'")
++    unset(_name)
++endfunction()
++
++##teamcity[publishArtifacts '<path>']
++function(tc_publish_artefacts PATH)
++    tc_escape_string(PATH)
++    _tc_bare_message("publishArtifacts" "'${PATH}'")
++endfunction()
++
++##teamcity[buildProblem description='<description>' identity='<identity>']
++function(tc_build_problem TEXT)
++    tc_escape_string(TEXT)
++    if(ARGV1)
++        tc_escape_string(ARGV1)
++        _tc_bare_message("buildProblem" "description='${TEXT}'" "identity='${ARGV1}'")
++    else()
++        _tc_bare_message("buildProblem" "description='${TEXT}'")
++    endif()
++endfunction()
++
++##teamcity[buildStatus status='<status value>' text='{build.status.text} and some aftertext']
++function(tc_build_status TEXT)
++    if(TEXT STREQUAL "SUCCESS")
++        tc_escape_string(ARGV1)
++        _tc_bare_message("buildStatus" "status='SUCCESS'" "text='${ARGV1}'")
++    else()
++        tc_escape_string(TEXT)
++        _tc_bare_message("buildStatus" "text='${TEXT}'")
++    endif()
++endfunction()
++
++##teamcity[buildNumber '<new build number>']
++function(tc_set_build_number NEW_NUMBER)
++    tc_escape_string(NEW_NUMBER)
++    _tc_bare_message("buildNumber" "'${NEW_NUMBER}'")
++endfunction()
++
++##teamcity[setParameter name='ddd' value='fff']
++function(tc_set_param NAME VALUE)
++    tc_escape_string(NAME)
++    tc_escape_string(VALUE)
++    _tc_bare_message("setParameter" "'name=${NAME}'" "value='${VALUE}'")
++endfunction()
++
++##teamcity[buildStatisticValue key='<valueTypeKey>' value='<value>']
++function(tc_build_stats KEY VALUE)
++    tc_escape_string(KEY)
++    tc_escape_string(VALUE)
++    _tc_bare_message("buildStatisticValue" "'key=${KEY}'" "value='${VALUE}'")
++endfunction()
++
++##teamcity[enableServiceMessages]
++function(tc_enable)
++    _tc_bare_message("enableServiceMessages")
++endfunction()
++
++##teamcity[disableServiceMessages]
++function(tc_disable)
++    _tc_bare_message("disableServiceMessages")
++endfunction()
++
++# X-Chewy-RepoBase: https://raw.githubusercontent.com/mutanabbi/chewy-cmake-rep/master/
++# X-Chewy-Path: TeamCityIntegration.cmake
++# X-Chewy-Version: 1.1
++# X-Chewy-Description: Interact w/ TeamCity via service messages
