@@ -6,6 +6,8 @@ app-crypt/gcr -gtk
 
 dev-vcs/subversion kde
 
+media-sound/pulseaudio -gnome
+
 kde-base/systemsettings -gtk
 
 www-client/firefox -gtk3
