@@ -23,7 +23,7 @@ DEPEND="
     "
 RDEPEND=""
 
-S="teamcity-cpp-release-${PV}"
+S="${WORKDIR}/teamcity-cpp-release-${PV}"
 
 src_configure() {
     local mycmakeargs=(
