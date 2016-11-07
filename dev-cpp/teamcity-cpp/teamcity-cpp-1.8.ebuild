@@ -23,6 +23,8 @@ DEPEND="
     "
 RDEPEND=""
 
+S="teamcity-cpp-release-${PV}"
+
 src_configure() {
     local mycmakeargs=(
         -DCMAKE_INSTALL_PREFIX="${EPREFIX}${PREFIX}/share"
