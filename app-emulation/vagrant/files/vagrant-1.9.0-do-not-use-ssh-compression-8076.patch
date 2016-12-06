@@ -1,0 +1,10 @@
+--- a/lib/vagrant/util/ssh.rb
++++ b/lib/vagrant/util/ssh.rb
+@@ -107,7 +107,6 @@ module Vagrant
+         # Command line options
+         command_options = [
+           "-p", options[:port].to_s,
+-          "-o", "Compression=yes",
+           "-o", "DSAAuthentication=yes",
+           "-o", "LogLevel=#{log_level}"]
+ 

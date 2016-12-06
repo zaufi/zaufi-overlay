@@ -70,6 +70,9 @@ all_ruby_prepare() {
 
 	# fix rvm issue (bug #474476)
 	epatch "${FILESDIR}"/${PN}-1.8.1-rvm.patch
+
+	# workaround for issue https://github.com/mitchellh/vagrant/issues/8076
+	epatch "${FILESDIR}"/${P}-do-not-use-ssh-compression-8076.patch
 }
 
 all_ruby_install() {
