@@ -42,4 +42,4 @@ VAGRANT_EXECUTABLE="${VAGRANT_DIR}/bin/vagrant"
 export VAGRANT_EXECUTABLE
 
 # Call the actual Vagrant bin with our arguments
-exec ruby "$@"
+exec ruby "${VAGRANT_EXECUTABLE}" "$@"
