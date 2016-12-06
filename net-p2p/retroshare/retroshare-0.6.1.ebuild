@@ -61,7 +61,7 @@ RDEPEND="
 	)
 	voip? (
 		qt5? (
-			<media-libs/opencv-3.0.0[-qt4]
+			>=media-libs/opencv-3.0.0[qt5]
 		)
 		qt4? (
 			<media-libs/opencv-3.0.0
