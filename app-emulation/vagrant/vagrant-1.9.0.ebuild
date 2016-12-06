@@ -65,9 +65,6 @@ all_ruby_prepare() {
 	sed -e '/rb-kqueue/d' \
 		-i ${PN}.gemspec || die
 
-	# see https://github.com/mitchellh/vagrant/pull/5877
-	epatch "${FILESDIR}"/${PN}-1.8.4-install-plugins-in-isolation.patch
-
 	# disable embedded CA certs and use system ones
 	epatch "${FILESDIR}"/${PN}-1.8.1-disable-embedded-cacert.patch
 
