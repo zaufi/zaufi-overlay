@@ -81,7 +81,7 @@ all_ruby_install() {
 
 	# provide executable similar to upstream:
 	# https://github.com/mitchellh/vagrant-installers/blob/master/substrate/modules/vagrant_installer/templates/vagrant.erb
-	sed -e "s/@P@${P}/" "${FILESDIR}/${PN}.in" > "${T}/${PN}"
+	sed -e "s/@P@/${P}/" "${FILESDIR}/${PN}.in" > "${T}/${PN}"
 	newbin "${T}/${PN}" "${PN}"
 
 	# directory for plugins.json
