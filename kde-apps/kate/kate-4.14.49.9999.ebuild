@@ -17,7 +17,7 @@ IUSE="debug python"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 DEPEND="
-	$(add_kdebase_dep kactivities)
+	$(add_frameworks_dep kactivities)
 	dev-libs/libxml2
 	dev-libs/libxslt
 	dev-libs/qjson
