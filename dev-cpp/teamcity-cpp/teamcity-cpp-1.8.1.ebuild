@@ -17,9 +17,9 @@ KEYWORDS="~amd64 ~x86"
 
 DEPEND="
     dev-util/cmake
-    boost? ( >=dev-libs/boost-1.42 )
+    boost?   ( >=dev-libs/boost-1.42 )
     cppunit? ( >=dev-utils/cppunit-1.13 )
-    gtest? ( >=dev-cpp/gtest-1.6 )
+    gtest?   ( >=dev-cpp/gtest-1.6 )
     "
 RDEPEND=""
 
