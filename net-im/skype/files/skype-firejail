@@ -1,2 +1,2 @@
 #!/bin/sh
-exec /usr/bin/firejail /opt/bin/skype-bin "$@"
+exec /usr/bin/firejail --profile=/etc/firejail/skype.profile /opt/bin/skype-bin "$@"
