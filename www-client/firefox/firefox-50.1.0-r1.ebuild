@@ -366,7 +366,7 @@ PROFILE_EOF
 	
 	if use firejail; then
 		mv "${ED}"${MOZILLA_FIVE_HOME}/${PN} "${ED}"${MOZILLA_FIVE_HOME}/${PN}-bin
-		insinto "${ED}"${MOZILLA_FIVE_HOME}
+		into "${ED}"${MOZILLA_FIVE_HOME}
 		newbin "${FILESDIR}/${PN}-firejail" ${PN}
 	fi
 
