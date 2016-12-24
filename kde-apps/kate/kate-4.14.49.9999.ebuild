@@ -26,7 +26,7 @@ DEPEND="
 	)
 "
 RDEPEND="${DEPEND}
-	$(add_kdebase_dep katepart)
+	$(add_kdeapps_dep katepart)
 "
 
 KMEXTRA="
