@@ -31,12 +31,7 @@ if [[ -v KDE_GCC_MINIMAL ]]; then
 	EXPORT_FUNCTIONS pkg_pretend
 fi
 
-EXPORT_FUNCTIONS pkg_setup src_unpack src_prepare src_configure src_compile src_test src_install pkg_preinst pkg_postinst pkg_postrm
-
-# @ECLASS-VARIABLE: QT_MINIMAL
-# @DESCRIPTION:
-# Minimal Qt version to require for the package.
-: ${QT_MINIMAL:=5.6.1}
+EXPORT_FUNCTIONS pkg_setup pkg_nofetch src_unpack src_prepare src_configure src_compile src_test src_install pkg_preinst pkg_postinst pkg_postrm
 
 # @ECLASS-VARIABLE: KDE_AUTODEPS
 # @DESCRIPTION:
@@ -118,6 +113,22 @@ fi
 # add a dependency on sec-policy/selinux-${KDE_SELINUX_MODULE} to (R)DEPEND.
 : ${KDE_SELINUX_MODULE:=none}
 
+# @ECLASS-VARIABLE: KDE_SUBSLOT
+# @DESCRIPTION:
+# If set to "false", do nothing.
+# If set to "true", add a subslot to the package, where subslot is either
+# defined as major.minor version for kde-*/ categories or ${PV} if other.
+# For any other value, that value will be used as subslot.
+: ${KDE_SUBSLOT:=false}
+
+# @ECLASS-VARIABLE: KDE_UNRELEASED
+# @INTERNAL
+# @DESCRIPTION
+# An array of $CATEGORY-$PV pairs of packages that are unreleased upstream.
+# Any package matching this will have fetch restriction enabled, and receive
+# a proper error message via pkg_nofetch.
+KDE_UNRELEASED=( )
+
 if [[ ${KDEBASE} = kdevelop ]]; then
 	HOMEPAGE="https://www.kdevelop.org/"
 elif [[ ${KDEBASE} = kdel10n ]]; then
@@ -130,36 +141,40 @@ fi
 
 LICENSE="GPL-2"
 
+SLOT=5
+
 if [[ ${CATEGORY} = kde-frameworks ]]; then
-	SLOT=5/$(get_version_component_range 1-2)
-else
-	SLOT=5
+	KDE_SUBSLOT=true
 fi
+
+case ${KDE_SUBSLOT} in
+	false)  ;;
+	true)
+		case ${CATEGORY} in
+			kde-frameworks | \
+			kde-plasma | \
+			kde-apps)
+				SLOT+="/$(get_version_component_range 1-2)"
+				;;
+			*)
+				SLOT+="/${PV}"
+				;;
+		esac
+		;;
+	*)
+		SLOT+="/${KDE_SUBSLOT}"
+		;;
+esac
 
 case ${KDE_AUTODEPS} in
 	false)	;;
 	*)
-		if [[ ${KDE_BUILD_TYPE} = live ]]; then
-			case ${CATEGORY} in
-				kde-frameworks)
-					FRAMEWORKS_MINIMAL=9999
-				;;
-				kde-plasma)
-					FRAMEWORKS_MINIMAL=9999
-				;;
-				*) ;;
-			esac
-		fi
-
 		DEPEND+=" $(add_frameworks_dep extra-cmake-modules)"
 		RDEPEND+=" >=kde-frameworks/kf-env-3"
 		COMMONDEPEND+=" $(add_qt_dep qtcore)"
 
 		if [[ ${CATEGORY} = kde-frameworks || ${CATEGORY} = kde-plasma && ${PN} != polkit-kde-agent ]]; then
-			RDEPEND+="
-				!kde-apps/kde4-l10n[-minimal(+)]
-				!<kde-apps/kde4-l10n-15.12.3-r1
-			"
+			RDEPEND+=" !<kde-apps/kde4-l10n-15.12.3-r1"
 		fi
 
 		if [[ ${KDE_BLOCK_SLOT4} = true && ${CATEGORY} = kde-apps ]]; then
@@ -225,7 +240,7 @@ if [[ -n ${KMNAME} && ${KMNAME} != ${PN} && ${KDE_BUILD_TYPE} = release ]]; then
 	S=${WORKDIR}/${KMNAME}-${PV}
 fi
 
-# Drop this when kdepim is finally split upstream
+# FIXME: Drop this when kdepim-16.08.x is no more
 if [[ -n ${KMNAME} && ${KMNAME} != ${PN} && ${KMNAME} = kdepim ]]; then
 	S="${S}/${PN}"
 fi
@@ -237,6 +252,17 @@ if [[ -n ${KDEBASE} && ${KDEBASE} = kdevelop && ${KDE_BUILD_TYPE} = release ]]; 
 		S=${WORKDIR}/${PN}-${PV%.0}	# kdevelop missing trailing .0 in first release
 	fi
 fi
+
+_kde_is_unreleased() {
+	local pair
+	for pair in "${KDE_UNRELEASED[@]}" ; do
+		if [[ "${pair}" = "${CATEGORY}-${PV}" ]]; then
+			return 0
+		fi
+	done
+
+	return 1
+}
 
 # Determine fetch location for released tarballs
 _calculate_src_uri() {
@@ -325,6 +351,10 @@ _calculate_src_uri() {
 			esac
 		done
 	fi
+
+	if _kde_is_unreleased ; then
+		RESTRICT+=" fetch"
+	fi
 }
 
 # Determine fetch location for live sources
@@ -392,6 +422,36 @@ kde5_pkg_setup() {
 	_check_gcc_version
 }
 
+# @FUNCTION: kde5_pkg_nofetch
+# @DESCRIPTION:
+# Display package publication status
+kde5_pkg_nofetch() {
+	if ! _kde_is_unreleased ; then
+		return
+	fi
+
+	eerror " _   _ _   _ ____  _____ _     _____    _    ____  _____ ____  "
+	eerror "| | | | \ | |  _ \| ____| |   | ____|  / \  / ___|| ____|  _ \ "
+	eerror "| | | |  \| | |_) |  _| | |   |  _|   / _ \ \___ \|  _| | | | |"
+	eerror "| |_| | |\  |  _ <| |___| |___| |___ / ___ \ ___) | |___| |_| |"
+	eerror " \___/|_| \_|_| \_\_____|_____|_____/_/   \_\____/|_____|____/ "
+	eerror "                                                               "
+	eerror " ____   _    ____ _  __    _    ____ _____ "
+	eerror "|  _ \ / \  / ___| |/ /   / \  / ___| ____|"
+	eerror "| |_) / _ \| |   | ' /   / _ \| |  _|  _|  "
+	eerror "|  __/ ___ \ |___| . \  / ___ \ |_| | |___ "
+	eerror "|_| /_/   \_\____|_|\_\/_/   \_\____|_____|"
+	eerror
+	eerror "${CATEGORY}/${P} has not been released to the public yet"
+	eerror "and is only available to packagers right now."
+	eerror ""
+	eerror "This is not a bug. Please do not file bugs or contact upstream about this."
+	eerror ""
+	eerror "Please consult the upstream release schedule to see when this "
+	eerror "package is scheduled to be released:"
+	eerror "https://community.kde.org/Schedules"
+}
+
 # @FUNCTION: kde5_src_unpack
 # @DESCRIPTION:
 # Function for unpacking KDE 5.
@@ -440,13 +500,17 @@ kde5_src_prepare() {
 			rm -r kde-l10n-sr-${PV} || die "Failed to remove sr parent lingua"
 		fi
 
-		# add all l10n directories to cmake
 		cat <<-EOF > CMakeLists.txt || die
-project(${PN})
-cmake_minimum_required(VERSION 2.8.12)
-$(printf "add_subdirectory( %s )\n" \
-	`find . -mindepth 1 -maxdepth 1 -type d | sed -e "s:^\./::"`)
-EOF
+		project(${PN})
+		cmake_minimum_required(VERSION 2.8.12)
+		EOF
+		# add all l10n directories to cmake
+		if [[ -n ${A} ]]; then
+			cat <<-EOF >> CMakeLists.txt || die
+			$(printf "add_subdirectory( %s )\n" \
+				`find . -mindepth 1 -maxdepth 1 -type d | sed -e "s:^\./::"`)
+			EOF
+		fi
 
 		# for KF5: drop KDE4-based part; for KDE4: drop KF5-based part
 		case ${l10npart} in
@@ -489,7 +553,7 @@ EOF
 				if [[ -e CMakeLists.txt ]] ; then
 					cmake_comment_add_subdirectory ${lang}
 				fi
-			elif ! has ${lang/.po/} ${LINGUAS} ; then
+			elif [[ -f ${lang} ]] && ! has ${lang/.po/} ${LINGUAS} ; then
 				if [[ ${lang} != CMakeLists.txt && ${lang} != ${PN}.pot ]] ; then
 					rm ${lang} || die
 				fi
@@ -648,6 +712,23 @@ kde5_pkg_postinst() {
 
 	gnome2_icon_cache_update
 	xdg_pkg_postinst
+
+	if [[ -z ${I_KNOW_WHAT_I_AM_DOING} ]]; then
+		if [[ ${KDE_BUILD_TYPE} = live ]]; then
+			echo
+			einfo "WARNING! This is an experimental live ebuild of ${CATEGORY}/${PN}"
+			einfo "Use it at your own risk."
+			einfo "Do _NOT_ file bugs at bugs.gentoo.org because of this ebuild!"
+		fi
+		# for kf5-based applications tell user that he SHOULD NOT be using kde-plasma/plasma-workspace:4
+		if [[ ${KDEBASE} != kde-base || ${CATEGORY} = kde-apps ]]  && \
+				has_version 'kde-plasma/plasma-workspace:4'; then
+			echo
+			ewarn "WARNING! Your system configuration still contains \"kde-plasma/plasma-workspace:4\","
+			ewarn "indicating a Plasma 4 setup. With this setting you are unsupported by KDE team."
+			ewarn "Please consider upgrading to Plasma 5."
+		fi
+	fi
 }
 
 # @FUNCTION: kde5_pkg_postrm
@@ -692,7 +773,9 @@ _l10n_variant_subdir_buster() {
 	esac
 
 	for subdir in $(find ${dir} -mindepth 1 -maxdepth 1 -type d | sed -e "s:^\./::"); do
-		echo "add_subdirectory(${subdir##*/})" >> ${dir}/CMakeLists.txt
+		if [[ ${subdir##*/} != "cmake_modules" ]] ; then
+			echo "add_subdirectory(${subdir##*/})" >> ${dir}/CMakeLists.txt || die
+		fi
 	done
 }
 
