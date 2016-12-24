@@ -1,17 +1,18 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_7,3_3,3_4,3_5} )
+PYTHON_COMPAT=( python{2_7,3_4,3_5} )
 PYTHON_REQ_USE="threads"
 OPENGL_REQUIRED="always"
 CMAKE_MAKEFILE_GENERATOR="emake"
+WEBKIT_REQUIRED="always"
 inherit python-r1 portability kde4-base multilib eutils
 
-DESCRIPTION="Python bindings for KDE4"
-KEYWORDS="amd64 ~arm ppc ppc64 x86 ~amd64-linux ~x86-linux"
+DESCRIPTION="Python bindings for KDE SC 4"
+KEYWORDS="amd64 ~arm x86 ~amd64-linux ~x86-linux"
 IUSE="akonadi debug doc examples test"
 HOMEPAGE="https://techbase.kde.org/Development/Languages/Python"
 
@@ -22,12 +23,14 @@ RDEPEND="
 	>=dev-python/PyQt4-4.11.1[${PYTHON_USEDEP},dbus,declarative,script,sql,svg,webkit,X]
 	>=dev-python/sip-4.16.2:=[${PYTHON_USEDEP}]
 	$(add_kdebase_dep kdelibs 'opengl')
-	akonadi? ( $(add_kdebase_dep kdepimlibs) )
+	akonadi? ( $(add_kdeapps_dep kdepimlibs) )
 "
 DEPEND="${RDEPEND}
 	dev-lang/python-exec:2[${PYTHON_USEDEP}]
 	sys-devel/libtool
 "
+
+PATCHES=( "${FILESDIR}/${P}-gcc-5.patch" )
 
 pkg_setup() {
 	kde4-base_pkg_setup
@@ -63,11 +66,10 @@ src_prepare() {
 
 	if ${have_python2}; then
 		mkdir -p "${WORKDIR}/wrapper" || die "failed to copy wrapper"
-		cp "${FILESDIR}/kpythonpluginfactorywrapper.c-r1" "${WORKDIR}/wrapper/kpythonpluginfactorywrapper.c" || die "failed to copy wrapper"
+		cp "${FILESDIR}/kpythonpluginfactorywrapper.c-r2" "${WORKDIR}/wrapper/kpythonpluginfactorywrapper.c" || die "failed to copy wrapper"
 	fi
 	python_copy_sources
 
-	epatch "${FILESDIR}/${PN}-${PV}-fix-link-errors.patch"
 }
 
 src_configure() {

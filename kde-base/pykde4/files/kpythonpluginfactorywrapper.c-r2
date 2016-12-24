@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 #define VERSION_LEN 10
 
@@ -15,9 +16,16 @@ static void get_python_version(char* out) {
 	int pipefd[2];
 	pipe(pipefd);
 	pid_t cpid = fork();
-	if (cpid == 0) {
+	if (cpid > 0) {
 		close(pipefd[1]);
 		read(pipefd[0], out, VERSION_LEN);
+		close(pipefd[0]);
+		waitpid(cpid, NULL, 0);
+	} else if (cpid < 0) {
+		/* fork failed, guess 2.7 */
+		strcpy(out, "2.7\n");
+		close(pipefd[0]);
+		close(pipefd[1]);
 	} else {
 		close(pipefd[0]);
 		close(1);
@@ -26,6 +34,9 @@ static void get_python_version(char* out) {
 		close(0);
 		char *args[] = { "eselect", "python", "show", "--ABI", "--python2", 0 };
 		execv(EPREFIX "/usr/bin/eselect", args);
+		/* exec failed, guess 2.7 */
+		write(1, "2.7\n", 4);
+		exit(0);
 	}
 }
 
