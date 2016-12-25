@@ -366,8 +366,9 @@ PROFILE_EOF
 	
 	if use firejail; then
 		mv "${ED}"${MOZILLA_FIVE_HOME}/${PN} "${ED}"${MOZILLA_FIVE_HOME}/${PN}-bin
-		into "${MOZILLA_FIVE_HOME}"
-		newbin "${FILESDIR}/${PN}-firejail" ${PN}
+		insinto "${MOZILLA_FIVE_HOME}"
+		newins "${FILESDIR}/${PN}-firejail" ${PN}
+		fperms 0755 "${MOZILLA_FIVE_HOME}/${PN}"
 	fi
 
 	# very ugly hack to make firefox not sigbus on sparc

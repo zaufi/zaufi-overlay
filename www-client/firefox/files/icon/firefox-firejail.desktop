@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=@NAME@
 Comment=Web Browser
-Exec=/usr/bin/firejail firefox %u
+Exec=/usr/bin/firejail --profile=/etc/firejail/firefox.profile firefox %u
 Icon=@ICON@
 Terminal=false
 Type=Application
