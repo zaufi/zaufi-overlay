@@ -20,8 +20,8 @@ SLOT="4"
 KEYWORDS="~amd64 ~x86"
 
 DEPEND="
-	$(add_kdebase_dep kate)
-	>=dev-lib/boost-1.49
-	>=dev-lib/xapian-1.2.12
-	>=sys-devel/clang-3.3"
+	$(add_kdeapps_dep kate)
+	>=dev-lib/boost-1.62
+	>=dev-lib/xapian-1.4.0
+	>=sys-devel/clang-3.9"
 RDEPEND="${DEPEND} >=sys-devel/gcc-4.9"
