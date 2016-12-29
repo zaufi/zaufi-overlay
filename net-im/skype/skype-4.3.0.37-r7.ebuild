@@ -38,6 +38,9 @@ RDEPEND="
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-desktop.patch"
+	if use firejail; then
+		epatch "${FILESDIR}/${P}-desktop-firejail.patch"
+	fi
 }
 
 src_compile() {

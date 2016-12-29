@@ -1,0 +1,11 @@
+--- a/skype.desktop
++++ b/skype.desktop
+@@ -1,7 +1,7 @@
+ [Desktop Entry]
+ Name=Skype
+ Comment=Skype Internet Telephony
+-Exec=skype %U
++Exec=/usr/bin/firejail --profile=/etc/firejail/skype.profile skype %U
+ Icon=skype.png
+ Terminal=false
+ Type=Application
