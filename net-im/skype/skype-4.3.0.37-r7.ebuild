@@ -126,7 +126,7 @@ pkg_postinst() {
 		ewarn "Even if running in a jail, after restart some WM/DE"
 		ewarn "may restore skype running without a jail."
 		ewarn "Make sure you've disabled storing skype app in a session"
-		ewarn "and readd it autostart of your WM/DE..."
+		ewarn "and readd it to autostart of your WM/DE..."
 	fi
 }
 
