@@ -121,6 +121,13 @@ pkg_postinst() {
 		ewarn "These packages can be pulled in by setting"
 		ewarn "appropriate USE flags for net-im/skype."
 	fi
+
+	if use firejail; then
+		ewarn "Even if running in a jail, after restart some WM/DE"
+		ewarn "may restore skype running without a jail."
+		ewarn "Make sure you've disabled storing skype app in a session"
+		ewarn "and readd it autostart of your WM/DE..."
+	fi
 }
 
 pkg_postrm() {
