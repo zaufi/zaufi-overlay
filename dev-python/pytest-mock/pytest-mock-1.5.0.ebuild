@@ -9,7 +9,7 @@ inherit distutils-r1
 
 DESCRIPTION="Thin-wrapper around the mock package for easier use with py.test"
 HOMEPAGE="https://github.com/pytest-dev/pytest-mock/"
-SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.zip"
+SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
@@ -24,7 +24,6 @@ RDEPEND="dev-python/pytest[${PYTHON_USEDEP}]
 		dev-python/mock[python_targets_pypy]
 	)"
 DEPEND="${RDEPEND}
-	app-arch/unzip
 	dev-python/setuptools[${PYTHON_USEDEP}]"
 
 python_test() {
