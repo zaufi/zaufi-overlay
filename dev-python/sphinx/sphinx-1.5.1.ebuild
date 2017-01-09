@@ -49,7 +49,7 @@ DEPEND="${RDEPEND}
 		dev-python/html5lib[${PYTHON_USEDEP}]
 	)"
 
-PATCHES=[ "${FILESDIR}/${P}-make-docs-really-offline.patch" "${FILESDIR}/${P}-fix-environment-path.patch" ]
+PATCHES=( "${FILESDIR}/${P}-make-docs-really-offline.patch" "${FILESDIR}/${P}-fix-environment-path.patch" )
 
 S="${WORKDIR}/${MY_P}"
 
