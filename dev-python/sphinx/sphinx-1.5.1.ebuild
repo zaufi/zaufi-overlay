@@ -30,8 +30,7 @@ RDEPEND="
 	>=dev-python/Babel-1.3[${PYTHON_USEDEP}]
 	!=dev-python/Babel-2.0[${PYTHON_USEDEP}]
 	>=dev-python/snowballstemmer-1.1[${PYTHON_USEDEP}]
-	>=dev-python/sphinx_rtd_theme-0.1[${PYTHON_USEDEP}]
-	<dev-python/sphinx_rtd_theme-2.0[${PYTHON_USEDEP}]
+	dev-python/requests[${PYTHON_USEDEP}]
 	dev-python/imagesize[${PYTHON_USEDEP}]
 	latex? (
 		dev-texlive/texlive-latexextra
@@ -50,7 +49,7 @@ DEPEND="${RDEPEND}
 		dev-python/html5lib[${PYTHON_USEDEP}]
 	)"
 
-PATCHES=[ "${FILESDIR}/${P}-make-docs-really-offline.patch" ]
+PATCHES=[ "${FILESDIR}/${P}-make-docs-really-offline.patch" "${FILESDIR}/${P}-fix-environment-path.patch" ]
 
 S="${WORKDIR}/${MY_P}"
 
