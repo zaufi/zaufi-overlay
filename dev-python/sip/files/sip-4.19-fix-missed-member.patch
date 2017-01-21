@@ -1,0 +1,11 @@
+--- a/sipgen/gencode.c
++++ b/sipgen/gencode.c
+@@ -2885,7 +2885,7 @@ static int generateSubClassConvertors(si
+         if (needs_sipClass)
+             prcode(fp,
+ "\n"
+-"    return (sipClass ? sipClass->type : 0);\n"
++"    return (sipClass ? sipClass->wt_td : 0);\n"
+ "}\n"
+                 );
+         else

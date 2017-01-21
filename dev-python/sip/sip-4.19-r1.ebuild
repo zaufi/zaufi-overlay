@@ -25,7 +25,7 @@ REQUIRED_USE="
 	${PYTHON_REQUIRED_USE}
 "
 
-PATCHES=( "${FILESDIR}"/${PN}-4.18-darwin.patch )
+PATCHES=( "${FILESDIR}"/${PN}-4.18-darwin.patch "${FILESDIR}"/${P}-fix-missed-member.patch )
 
 src_prepare() {
 	# Sub-slot sanity check
