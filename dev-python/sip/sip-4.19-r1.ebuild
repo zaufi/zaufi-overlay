@@ -84,5 +84,5 @@ src_install() {
 	python_foreach_impl run_in_build_dir installation
 
 	einstalldocs
-	use doc && dohtml -r doc/html
+	use doc && dohtml -r doc/html/*
 }
