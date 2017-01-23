@@ -1,7 +1,7 @@
 # Copyright 2016 Alex Turbov <i.zaufi@gmail.com>
 # Distributed under the terms of the GNU General Public License v3
 
-EAPI="5"
+EAPI="6"
 
 inherit cmake-utils
 
@@ -16,8 +16,8 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
 DEPEND="
-    dev-util/cmake
-    boost?   ( >=dev-libs/boost-1.42 )
+    >=dev-util/cmake-3.7.2
+    boost?   ( >=dev-libs/boost-1.63 )
     cppunit? ( >=dev-utils/cppunit-1.13 )
     gtest?   ( >=dev-cpp/gtest-1.6 )
     "
