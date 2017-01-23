@@ -28,9 +28,9 @@ S="${WORKDIR}/teamcity-cpp-release-${PV}"
 src_configure() {
     local mycmakeargs=(
         -DCMAKE_INSTALL_PREFIX="${EPREFIX}${PREFIX}/share"
-        $(cmake-utils_use_enable boost BOOST)
-        $(cmake-utils_use_enable cppunit CPPUNIT)
-        $(cmake-utils_use_enable gtest GTEST)
+        -DENABLE_BOOST="$(usex boost)"
+        -DENABLE_CPPUNIT="$(usex cppunit)"
+        -DENABLE_GTEST="$(usex gtest)"
     )
     cmake-utils_src_configure
 }
