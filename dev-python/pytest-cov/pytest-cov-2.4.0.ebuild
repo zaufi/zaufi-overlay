@@ -41,10 +41,6 @@ DEPEND="
 	)
 "
 
-PATCHES=(
-	"${FILESDIR}/fix-for-deprecation-warnings.patch"
-)
-
 python_compile_all() {
 	use doc && sphinx-build -b html docs _build/html
 }
