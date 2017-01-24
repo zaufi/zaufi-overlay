@@ -80,6 +80,7 @@ src_prepare() {
 	sed -i -e "1s/ruby/&${RUBY_VER/./}/" ruby/demos/*.rb || die
 
 	epatch "${FILESDIR}/${PN}-scm-fix-python-detection.patch"
+	epatch "${FILESDIR}/${PN}-fix-build-with-boost-1.63.patch"
 	epatch_user
 	
 	# Regenerate autotools configs

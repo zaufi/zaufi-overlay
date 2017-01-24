@@ -1,0 +1,43 @@
+--- a/python/contents.cc
++++ b/python/contents.cc
+@@ -20,6 +20,7 @@
+ #include <python/paludis_python.hh>
+ #include <paludis/util/wrapped_forward_iterator-impl.hh>
+ #include <paludis/util/fs_path.hh>
++#include <paludis/metadata_key.hh>
+ #include <paludis/contents.hh>
+ 
+ using namespace paludis;
+--- a/python/environment.cc
++++ b/python/environment.cc
+@@ -21,6 +21,9 @@
+ #include <python/exception.hh>
+ #include <python/iterable.hh>
+ 
++#include <paludis/mask.hh>
++#include <paludis/repository.hh>
++
+ #include <paludis/environments/paludis/paludis_environment.hh>
+ #include <paludis/environments/paludis/paludis_config.hh>
+ 
+--- a/python/metadata_key.cc
++++ b/python/metadata_key.cc
+@@ -21,6 +21,8 @@
+ #include <python/exception.hh>
+ #include <python/iterable.hh>
+ 
++#include <paludis/choice.hh>
++#include <paludis/package_id.hh>
+ #include <paludis/metadata_key.hh>
+ #include <paludis/name.hh>
+ #include <paludis/dep_label.hh>
+--- a/python/package_id.cc
++++ b/python/package_id.cc
+@@ -20,6 +20,7 @@
+ #include <python/paludis_python.hh>
+ #include <python/iterable.hh>
+ 
++#include <paludis/contents.hh>
+ #include <paludis/package_id.hh>
+ #include <paludis/repositories/fake/fake_package_id.hh>
+ #include <paludis/metadata_key.hh>
