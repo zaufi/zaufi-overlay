@@ -22,10 +22,8 @@ LICENSE="MIT"
 SLOT="0"
 IUSE="test"
 
-RDEPEND=""
-#	>=dev-python/packaging-16.4[${PYTHON_USEDEP}]
-#	>=dev-python/six-1.10.0[${PYTHON_USEDEP}]
-#	"
+RDEPEND="
+	>=dev-python/appdirs-1.4.0[${PYTHON_USEDEP}]"
 DEPEND="${RDEPEND}
 	app-arch/unzip
 	test? (
