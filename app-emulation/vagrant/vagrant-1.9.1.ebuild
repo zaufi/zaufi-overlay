@@ -29,6 +29,7 @@ RDEPEND="${RDEPEND}
 ruby_add_rdepend "
 	>=dev-ruby/bundler-1.12.5
 	>=dev-ruby/childprocess-0.5.0
+	!>=dev-ruby/childprocess-0.6.0
 	>=dev-ruby/erubis-2.7.0
 	>=dev-ruby/i18n-0.6.0:* <dev-ruby/i18n-0.8.0:*
 	>=dev-ruby/listen-3.1.5
