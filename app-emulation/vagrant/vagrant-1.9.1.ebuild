@@ -29,7 +29,6 @@ RDEPEND="${RDEPEND}
 ruby_add_rdepend "
 	>=dev-ruby/bundler-1.12.5
 	>=dev-ruby/childprocess-0.5.0
-	!>=dev-ruby/childprocess-0.6.0
 	>=dev-ruby/erubis-2.7.0
 	>=dev-ruby/i18n-0.6.0:* <dev-ruby/i18n-0.8.0:*
 	>=dev-ruby/listen-3.1.5
@@ -74,6 +73,11 @@ all_ruby_prepare() {
 
 	# workaround for issue https://github.com/mitchellh/vagrant/issues/8076
 	epatch "${FILESDIR}"/${PN}-1.9.0-do-not-use-ssh-compression-8076.patch
+	
+	# relax `childprocess` dependency to allow 0.6 version
+	# cuz according https://github.com/enkessler/childprocess/blob/master/CHANGELOG.md
+	# it must be backward compatible
+	epatch "${FILESDIR}"/${P}-relax-childprocess-deps.patch
 }
 
 all_ruby_install() {
