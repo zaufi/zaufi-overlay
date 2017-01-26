@@ -1,0 +1,4 @@
+#
+# Paludis has migrated to CMake. The `-scm` ebuild need to be fixed.
+# https://github.com/zaufi/zaufi-overlay/issues/7
+=sys-apps/paludis-scm
