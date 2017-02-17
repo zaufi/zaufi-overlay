@@ -3,7 +3,7 @@
 
 EAPI="6"
 
-inherit cmake-utils
+inherit cmake-utils flag-o-matic
 
 DESCRIPTION="C++ library to integrate various testing libraries/frameworks with JetBrains TeamCity"
 HOMEPAGE="https://github.com/zaufi/teamcity-cpp"
@@ -26,6 +26,9 @@ RDEPEND=""
 S="${WORKDIR}/teamcity-cpp-release-${PV}"
 
 src_configure() {
+    # Use C++14 globally as of 1.62
+    append-cxxflags -std=c++14
+
     local mycmakeargs=(
         -DCMAKE_INSTALL_PREFIX="${EPREFIX}${PREFIX}/share"
         -DENABLE_BOOST="$(usex boost)"
