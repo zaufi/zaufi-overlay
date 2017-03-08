@@ -6,4 +6,5 @@
 
 # GUI Based stuff
 *media-video/vlc
+*net-p2p/ktorrent
 *www-client/firefox

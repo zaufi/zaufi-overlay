@@ -2,17 +2,17 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
+*kde-misc/yakuake
 *kde-plasma/bluedevil
-*kde-plasma/plasma-desktop
 *kde-plasma/kdeplasma-addons
+*kde-plasma/kgamma
 *kde-plasma/khotkeys
+*kde-plasma/kscreen
 *kde-plasma/ksshaskpass
 *kde-plasma/kwallet-pam
 *kde-plasma/kwrited
+*kde-plasma/plasma-desktop
 *kde-plasma/plasma-nm
 *kde-plasma/powerdevil
 *kde-plasma/sddm-kcm
 *kde-plasma/systemsettings
-*kde-plasma/kgamma
-*kde-plasma/kscreen
-*kde-misc/yakuake
