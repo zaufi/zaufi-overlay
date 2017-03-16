@@ -33,6 +33,7 @@ PATCHES=(
 	"${FILESDIR}/${P}-gcc-5.patch"
 	"${FILESDIR}/${P}-noplasma.patch"
 	"${DISTDIR}/${P}-sip419.patch.bz2"
+	"${FILESDIR}/${P}-exclude-kio-mount-clesses.patch"
 )
 
 pkg_setup() {
