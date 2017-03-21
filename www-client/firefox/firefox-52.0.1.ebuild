@@ -353,8 +353,6 @@ PROFILE_EOF
 	newins "${icon_path}/mozicon128.png" "${icon}.png"
 	# Install a 48x48 icon into /usr/share/pixmaps for legacy DEs
 	newicon "${icon_path}/content/icon48.png" "${icon}.png"
-	sed -i -e "s:@NAME@:${name}:" -e "s:@ICON@:${icon}:" \
-		"${ED}/usr/share/applications/${PN}.desktop" || die
 
 	if use firejail; then
 		newmenu "${FILESDIR}/icon/${PN}-firejail.desktop" "${PN}.desktop"
@@ -365,6 +363,9 @@ PROFILE_EOF
 	else
 		newmenu "${FILESDIR}/icon/${PN}.desktop" "${PN}.desktop"
 	fi
+
+	sed -i -e "s:@NAME@:${name}:" -e "s:@ICON@:${icon}:" \
+		"${ED}/usr/share/applications/${PN}.desktop" || die
 
 	# Add StartupNotify=true bug 237317
 	if use startup-notification ; then
