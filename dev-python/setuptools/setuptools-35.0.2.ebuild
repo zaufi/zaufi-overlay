@@ -21,6 +21,7 @@ HOMEPAGE="https://github.com/pypa/setuptools https://pypi.python.org/pypi/setupt
 LICENSE="MIT"
 SLOT="0"
 IUSE="doc test"
+REQUIRED_USE="doc? ( || ( $(python_gen_useflags 'python3*') ) )"
 
 RDEPEND="
 	>=dev-python/packaging-16.8[${PYTHON_USEDEP}]
@@ -30,8 +31,7 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	app-arch/unzip
 	doc? (
-		dev-python/sphinx[${PYTHON_USEDEP}]
-		dev-python/rst-linker[${PYTHON_USEDEP}]
+		$(python_gen_cond_dep 'dev-python/sphinx[${PYTHON_USEDEP}]' ${PYTHON_COMPAT[@]} )
 	)
 	test? (
 		dev-python/pip[${PYTHON_USEDEP}]
@@ -65,7 +65,7 @@ python_prepare_all() {
 }
 
 python_compile_all() {
-	use doc && emake -C doc html
+	use doc && emake -C docs html
 }
 
 python_test() {
@@ -75,7 +75,11 @@ python_test() {
 }
 
 python_install() {
-	use doc && local HTML_DOCS=( "${BUILD_DIR}"/doc/build/html/. )
 	export DISTRIBUTE_DISABLE_VERSIONED_EASY_INSTALL_SCRIPT=1
 	distutils-r1_python_install
+}
+
+python_install_all() {
+	use doc && local HTML_DOCS=( ../docs/build/html/. )
+	distutils-r1_python_install_all
 }
