@@ -31,7 +31,8 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	app-arch/unzip
 	doc? (
-		$(python_gen_cond_dep 'dev-python/sphinx[${PYTHON_USEDEP}]' ${PYTHON_COMPAT[@]} )
+		$(python_gen_cond_dep 'dev-python/sphinx[${PYTHON_USEDEP}]' python3* python2* )
+		$(python_gen_cond_dep 'dev-python/rst-linker[${PYTHON_USEDEP}]' python3* python2* )
 	)
 	test? (
 		dev-python/pip[${PYTHON_USEDEP}]
