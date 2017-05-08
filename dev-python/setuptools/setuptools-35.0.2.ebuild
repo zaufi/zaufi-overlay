@@ -33,6 +33,7 @@ DEPEND="${RDEPEND}
 	doc? (
 		$(python_gen_cond_dep 'dev-python/sphinx[${PYTHON_USEDEP}]' python3* python2* )
 		$(python_gen_cond_dep 'dev-python/rst-linker[${PYTHON_USEDEP}]' python3* python2* )
+		$(python_gen_cond_dep 'dev-python/jaraco-packaging[${PYTHON_USEDEP}]' python3* python2* )
 	)
 	test? (
 		dev-python/pip[${PYTHON_USEDEP}]
@@ -42,8 +43,6 @@ DEPEND="${RDEPEND}
 "
 PDEPEND="
 	>=dev-python/certifi-2016.9.26[${PYTHON_USEDEP}]"
-
-PATCHES=( "${FILESDIR}"/${PN}-dont-use-jaraco-packaging.patch )
 
 # Force in-source build because build system modifies sources.
 DISTUTILS_IN_SOURCE_BUILD=1
