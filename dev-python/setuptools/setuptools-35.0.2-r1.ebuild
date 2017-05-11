@@ -21,7 +21,6 @@ HOMEPAGE="https://github.com/pypa/setuptools https://pypi.python.org/pypi/setupt
 LICENSE="MIT"
 SLOT="0"
 IUSE="doc test"
-REQUIRED_USE="doc? ( || ( $(python_gen_useflags 'python3*') ) )"
 
 RDEPEND="
 	>=dev-python/packaging-16.8[${PYTHON_USEDEP}]
@@ -31,9 +30,9 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	app-arch/unzip
 	doc? (
-		$(python_gen_cond_dep 'dev-python/sphinx[${PYTHON_USEDEP}]' python3* python2* )
-		$(python_gen_cond_dep 'dev-python/rst-linker[${PYTHON_USEDEP}]' python3* python2* )
-		$(python_gen_cond_dep 'dev-python/jaraco-packaging[${PYTHON_USEDEP}]' python3* python2* )
+		dev-python/sphinx[${PYTHON_USEDEP}]
+		dev-python/rst-linker[${PYTHON_USEDEP}]
+		dev-python/jaraco-packaging[${PYTHON_USEDEP}]
 	)
 	test? (
 		dev-python/pip[${PYTHON_USEDEP}]
@@ -65,7 +64,7 @@ python_prepare_all() {
 }
 
 python_compile_all() {
-	use doc && emake -C docs html
+	use doc && esetup.py build_sphinx
 }
 
 python_test() {
@@ -80,6 +79,6 @@ python_install() {
 }
 
 python_install_all() {
-	use doc && local HTML_DOCS=( ../docs/build/html/. )
+	use doc && local HTML_DOCS=( build/sphinx/html/. )
 	distutils-r1_python_install_all
 }
