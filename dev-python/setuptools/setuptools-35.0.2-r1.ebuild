@@ -30,9 +30,11 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	app-arch/unzip
 	doc? (
-		dev-python/sphinx[${PYTHON_USEDEP}]
-		dev-python/rst-linker[${PYTHON_USEDEP}]
-		dev-python/jaraco-packaging[${PYTHON_USEDEP}]
+		|| (
+		    ( dev-python/sphinx[python_targets_python2_7] dev-python/rst-linker[python_targets_python2_7] dev-python/jaraco-packaging[python_targets_python2_7] )
+		    ( dev-python/sphinx[python_targets_python3_5] dev-python/rst-linker[python_targets_python3_5] dev-python/jaraco-packaging[python_targets_python3_5] )
+		    ( dev-python/sphinx[python_targets_python3_6] dev-python/rst-linker[python_targets_python3_6] dev-python/jaraco-packaging[python_targets_python3_6] )
+		)
 	)
 	test? (
 		dev-python/pip[${PYTHON_USEDEP}]
