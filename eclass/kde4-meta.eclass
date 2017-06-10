@@ -1,6 +1,5 @@
 # Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 #
 # @ECLASS: kde4-meta.eclass
 # @MAINTAINER:
@@ -185,9 +184,6 @@ kde4-meta_src_extract() {
 		if [[ ${PV} =~ 4.4.11 ]]; then
 			postfix="bz2"
 			KMTARPARAMS+=" --bzip2"
-		elif [[ ${PV} =~ _pre ]]; then
-			postfix="gz"
-			KMTARPARAMS+=" --gz"
 		else
 			postfix="xz"
 			KMTARPARAMS+=" --xz"
@@ -201,9 +197,6 @@ kde4-meta_src_extract() {
 		# Detect real toplevel dir from tarball name - it will be used upon extraction
 		# and in _list_needed_subdirectories
 		topdir="${tarball%.tar.*}/"
-		if [[ ${topdir} =~ _pre ]]; then
-			topdir="${topdir%-$PV*}/"
-		fi
 
 		ebegin "Unpacking parts of ${tarball} to ${WORKDIR}"
 
