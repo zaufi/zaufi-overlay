@@ -1,2 +1,2 @@
 # Wait a moment before it really dead
-net-im/skype
+-net-im/skype
