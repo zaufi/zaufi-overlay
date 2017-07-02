@@ -2,6 +2,5 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-*sys-apps/microcode-ctl
 *sys-apps/iucode_tool
 *sys-firmware/intel-microcode
