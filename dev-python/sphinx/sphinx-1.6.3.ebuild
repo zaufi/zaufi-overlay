@@ -55,12 +55,12 @@ S="${WORKDIR}/${P^}"
 
 PATCHES=(
 	"${FILESDIR}"/${PN}-1.5.1-fix-pycode-grammar.patch
+	"${FILESDIR}"/${PN}-1.5.1-make-docs-really-offline.patch
 )
 
 python_prepare_all() {
 	# remove tests that fail due to network-sandbox
 	rm tests/test_websupport.py || die "Failed to remove web tests"
-	rm tests/test_searchadapters.py || die "Failed to remove web tests"
 	rm tests/test_build_linkcheck.py || die "Failed to remove web tests"
 
 	distutils-r1_python_prepare_all
