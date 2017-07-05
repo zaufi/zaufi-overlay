@@ -54,7 +54,6 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/${P^}"
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-1.5.1-fix-pycode-grammar.patch
 	"${FILESDIR}"/${PN}-1.5.1-make-docs-really-offline.patch
 )
 
