@@ -54,6 +54,7 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/${P^}"
 
 PATCHES=(
+	"${FILESDIR}"/${P}-fix-environment-path.patch
 	"${FILESDIR}"/${PN}-1.5.1-make-docs-really-offline.patch
 )
 
