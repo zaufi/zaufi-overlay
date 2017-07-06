@@ -16,7 +16,7 @@ if [ -n "${VCS_ECLASS}" ]; then
 else
 	KEYWORDS="amd64 ~ia64 x86"
 	SRC_URI="http://qstardict.ylsoftware.com/files/${P}.tar.bz2"
-	PATCHES="${FILESDIR}/glib.patch"
+	PATCHES=( "${FILESDIR}/glib.patch" )
 fi
 SLOT="0"
 
