@@ -241,7 +241,7 @@ case ${KDE_QTHELP} in
 		COMMONDEPEND+=" doc? ( $(add_qt_dep qt-docs) )"
 		DEPEND+=" doc? (
 			$(add_qt_dep qthelp)
-			>=app-doc/doxygen-1.8.11-r2
+			>=app-doc/doxygen-1.8.13-r1
 		)"
 		;;
 esac
