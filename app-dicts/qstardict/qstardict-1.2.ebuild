@@ -18,6 +18,7 @@ else
 	SRC_URI="https://github.com/a-rodin/qstardict/archive/${P}.tar.gz"
 fi
 SLOT="0"
+S=$(dirname ${S})/${PN}-${P}
 
 PLUGINS="stardict swac web"
 IUSE_PLUGINS=""
