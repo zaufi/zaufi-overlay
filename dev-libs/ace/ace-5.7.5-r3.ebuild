@@ -7,25 +7,17 @@ inherit toolchain-funcs
 
 DESCRIPTION="The Adaptive Communications Environment"
 HOMEPAGE="http://www.cs.wustl.edu/~schmidt/ACE.html"
-SRC_URI="!tao? ( http://download.dre.vanderbilt.edu/previous_versions/ACE-${PV}.tar.bz2 )
-	tao? (
-		!ciao? ( http://download.dre.vanderbilt.edu/previous_versions/ACE+TAO-${PV}.tar.bz2 )
-		ciao? ( http://download.dre.vanderbilt.edu/previous_versions/ACE+TAO+CIAO-${PV}.tar.bz2 )
-	)
+SRC_URI="http://download.dre.vanderbilt.edu/previous_versions/ACE-${PV}.tar.bz2
 	doc? ( http://download.dre.vanderbilt.edu/previous_versions/ACE-html-${PV}.tar.bz2 )"
 
-LICENSE="ACE BSD BSD-4 BSD-2 tao? ( sun-iiop RSA )"
+LICENSE="ACE BSD BSD-4 BSD-2"
 SLOT="0"
 KEYWORDS="amd64 ppc ppc64 x86"
-IUSE="X debug doc ipv6 tao ciao static"
+IUSE="debug doc ipv6 static"
 
 COMMON_DEPEND="dev-libs/openssl"
-# TODO probably more
-RDEPEND="${COMMON_DEPEND}
-	X? ( x11-libs/libXt x11-libs/libXaw )"
-
-DEPEND="${COMMON_DEPEND}
-	X? ( x11-proto/xproto )"
+RDEPEND="${COMMON_DEPEND}"
+DEPEND="${COMMON_DEPEND}"
 
 S="${WORKDIR}/ACE_wrappers"
 
@@ -45,17 +37,31 @@ src_prepare() {
 }
 
 src_configure() {
-	mkdir build
+	ECONF_SOURCE="${S}"
+	mkdir -p build
 	cd build
-	econf_build \
+	econf \
 		--enable-lib-all \
-		$(use_with X) \
 		$(use_enable ipv6) \
 		$(use_enable debug) \
-		$(use_enable debug logging) \
 		$(use_enable !debug optimize) \
 		$(use_enable static) \
+		--disable-ace-examples \
+		--disable-acexml \
+		--disable-gperf \
+		--disable-logging \
+		--disable-ace-tests \
+		--enable-ssl \
+		--enable-symbol-visibility \
+		--with-openssl \
+		--without-tao \
+		--without-x \
 		|| die "econf died"
+}
+
+src_compile() {
+	cd build
+	emake
 }
 
 src_install() {
