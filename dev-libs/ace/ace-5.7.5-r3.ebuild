@@ -1,9 +1,9 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI=6
 
-inherit eutils multilib toolchain-funcs
+inherit toolchain-funcs
 
 DESCRIPTION="The Adaptive Communications Environment"
 HOMEPAGE="http://www.cs.wustl.edu/~schmidt/ACE.html"
@@ -44,13 +44,10 @@ src_prepare() {
 	epatch "${FILESDIR}/openssl-without-sslv2.patch"
 }
 
-src_compile() {
-	export ACE_ROOT="${S}"
+src_configure() {
 	mkdir build
 	cd build
-
-	ECONF_SOURCE="${S}"
-	econf \
+	econf_build \
 		--enable-lib-all \
 		$(use_with X) \
 		$(use_enable ipv6) \
@@ -59,8 +56,6 @@ src_compile() {
 		$(use_enable !debug optimize) \
 		$(use_enable static) \
 		|| die "econf died"
-	# --with-qos needs ACE_HAS_RAPI
-	emake static_libs=1 || die "emake failed"
 }
 
 src_install() {
