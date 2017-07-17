@@ -1,6 +1,8 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
+EAPI=5
+
 inherit eutils multilib toolchain-funcs
 
 DESCRIPTION="The Adaptive Communications Environment"
@@ -27,13 +29,12 @@ DEPEND="${COMMON_DEPEND}
 
 S="${WORKDIR}/ACE_wrappers"
 
-src_unpack() {
-	unpack ${A}
+src_prepare() {
 	cd "${S}"
 	# Let's avoid autotools. http://bugs.gentoo.org/328027.
-	if has_version ">=dev-libs/openssl-1.0.0"; then
-		sed -i -e 's:SSL_METHOD:const SSL_METHOD:' configure || die
-	fi
+	#if has_version ">=dev-libs/openssl-1.0.0"; then
+	#	sed -i -e 's:SSL_METHOD:const SSL_METHOD:' configure || die
+	#fi
 
 	sed -i -e 's/-O3//' configure || die
 	epatch "${FILESDIR}/ACE-5.7.5-add-static-pc-files.patch"
