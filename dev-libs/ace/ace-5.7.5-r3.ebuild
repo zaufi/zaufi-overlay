@@ -36,7 +36,11 @@ src_unpack() {
 	fi
 
 	sed -i -e 's/-O3//' configure || die
+	epatch "${FILESDIR}/ACE-5.7.5-add-static-pc-files.patch"
+	epatch "${FILESDIR}/ace-fix-openssl-detection-without-rebuilding-configure.patch"
+	epatch "${FILESDIR}/do-not-build-useless-crap.patch"
 	epatch "${FILESDIR}/do-not-fail-if-SO_PORTREUSE-unsupported.patch"
+	epatch "${FILESDIR}/openssl-without-sslv2.patch"
 }
 
 src_compile() {

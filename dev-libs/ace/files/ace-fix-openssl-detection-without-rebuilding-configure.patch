@@ -1,0 +1,30 @@
+diff -u -Nrub ACE_wrappers.org/configure ACE_wrappers/configure
+--- ACE_wrappers.org/configure	2009-11-30 09:40:54.000000000 +0700
++++ ACE_wrappers/configure	2015-03-31 21:54:40.000000000 +0700
+@@ -8048,7 +8048,7 @@
+ CRYPTO_set_locking_callback (0);
+ SSLeay_add_ssl_algorithms ();
+ SSL_load_error_strings ();
+-SSL_METHOD * meth = TLSv1_method ();
++const SSL_METHOD * meth = TLSv1_method ();
+ SSL_CTX * ctx = SSL_CTX_new (meth);
+ SSL * ssl = SSL_new (ctx);
+ int fd = 2000;  // Dummy file descriptor value.
+@@ -8122,7 +8122,7 @@
+ CRYPTO_set_locking_callback (0);
+ SSLeay_add_ssl_algorithms ();
+ SSL_load_error_strings ();
+-SSL_METHOD * meth = TLSv1_method ();
++const SSL_METHOD * meth = TLSv1_method ();
+ SSL_CTX * ctx = SSL_CTX_new (meth);
+ SSL * ssl = SSL_new (ctx);
+ int fd = 2000;  // Dummy file descriptor value.
+@@ -8229,7 +8229,7 @@
+ CRYPTO_set_locking_callback (0);
+ SSLeay_add_ssl_algorithms ();
+ SSL_load_error_strings ();
+-SSL_METHOD * meth = TLSv1_method ();
++const SSL_METHOD * meth = TLSv1_method ();
+ SSL_CTX * ctx = SSL_CTX_new (meth);
+ SSL * ssl = SSL_new (ctx);
+ int fd = 2000;  // Dummy file descriptor value.

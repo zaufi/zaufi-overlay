@@ -1,0 +1,155 @@
+--- /dev/null
++++ b/ace/ACE-static.pc.in
+@@ -0,0 +1,10 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: ACE-static
++Description: ADAPTIVE Communication Environment (static libraries)
++Version: @VERSION@
++Libs: ${libdir}/libACE.a @LIBS@
++Cflags: -I${includedir}
+--- a/ace/Makefile.am
++++ b/ace/Makefile.am
+@@ -1253,18 +1253,24 @@ nobase_include_HEADERS += \
+   svc_export.h
+ 
+ pkgconfig_DATA += \
+-  ACE.pc
++  ACE.pc \
++  ACE-static.pc
+ 
+ CLEANFILES += \
+-  ACE.pc
++  ACE.pc \
++  ACE-static.pc
+ 
+ ACE.pc: ${top_builddir}/config.status ${srcdir}/ACE.pc.in
+ 	${top_builddir}/config.status --file $@:${srcdir}/ACE.pc.in
+ 
++ACE-static.pc: ${top_builddir}/config.status ${srcdir}/ACE-static.pc.in
++	${top_builddir}/config.status --file $@:${srcdir}/ACE-static.pc.in
++
+ endif !BUILD_ACE_FOR_TAO
+ 
+ EXTRA_DIST = \
+   ACE.pc.in \
++  ACE-static.pc.in \
+   ace.rc
+ 
+ 
+--- /dev/null
++++ b/ace/SSL/ACE_SSL-static.pc.in
+@@ -0,0 +1,11 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: ACE_SSL-static
++Description: ACE SSL Static Library
++Requires: ACE
++Version: @VERSION@
++Libs: ${libdir}/libACE_SSL.a @ACE_TLS_LDFLAGS@ @ACE_TLS_LIBS@
++Cflags: -I${includedir} @ACE_TLS_CPPFLAGS@
+--- a/ace/SSL/Makefile.am
++++ b/ace/SSL/Makefile.am
+@@ -62,19 +62,25 @@ nobase_include_HEADERS = \
+   sslconf.h
+ 
+ pkgconfig_DATA = \
+-  ACE_SSL.pc
++  ACE_SSL.pc \
++  ACE_SSL-static.pc
+ 
+ CLEANFILES = \
+-  ACE_SSL.pc
++  ACE_SSL.pc \
++  ACE_SSL-static.pc
+ 
+ ACE_SSL.pc: ${top_builddir}/config.status ${srcdir}/ACE_SSL.pc.in
+ 	${top_builddir}/config.status --file $@:${srcdir}/ACE_SSL.pc.in
+ 
++ACE_SSL-static.pc: ${top_builddir}/config.status ${srcdir}/ACE_SSL-static.pc.in
++	${top_builddir}/config.status --file $@:${srcdir}/ACE_SSL-static.pc.in
++
+ endif !BUILD_ACE_FOR_TAO
+ endif BUILD_SSL
+ 
+ EXTRA_DIST = \
+-  ACE_SSL.pc.in
++  ACE_SSL.pc.in \
++  ACE_SSL-static.pc.in
+ 
+ 
+ ## Clean up template repositories, etc.
+--- a/ace/Makefile.in
++++ b/ace/Makefile.in
+@@ -945,10 +945,12 @@ target_triplet = @target@
+ @BUILD_ACE_FOR_TAO_FALSE@  svc_export.h
+ 
+ @BUILD_ACE_FOR_TAO_FALSE@am__append_3 = \
+-@BUILD_ACE_FOR_TAO_FALSE@  ACE.pc
++@BUILD_ACE_FOR_TAO_FALSE@  ACE.pc \
++@BUILD_ACE_FOR_TAO_FALSE@  ACE-static.pc
+ 
+ @BUILD_ACE_FOR_TAO_FALSE@am__append_4 = \
+-@BUILD_ACE_FOR_TAO_FALSE@  ACE.pc
++@BUILD_ACE_FOR_TAO_FALSE@  ACE.pc \
++@BUILD_ACE_FOR_TAO_FALSE@  ACE-static.pc
+ 
+ @BUILD_FL_TRUE@@BUILD_GL_TRUE@@BUILD_X11_TRUE@am__append_5 = libACE_FlReactor.la
+ @BUILD_FL_TRUE@@BUILD_GL_TRUE@@BUILD_X11_TRUE@am__append_6 = \
+@@ -2430,7 +2432,7 @@ nobase_include_HEADERS = $(am__append_2)
+ @BUILD_ACE_FOR_TAO_FALSE@libACE_la_LDFLAGS = \
+ @BUILD_ACE_FOR_TAO_FALSE@ -release @ACE_VERSION_NAME@
+ 
+-EXTRA_DIST = ACE.pc.in ace.rc FlReactor/ACE_FlReactor.pc.in \
++EXTRA_DIST = ACE.pc.in ACE-static.pc.in ace.rc FlReactor/ACE_FlReactor.pc.in \
+ 	QtReactor/ACE_QtReactor.pc.in TkReactor/ACE_TkReactor.pc.in \
+ 	XtReactor/ACE_XtReactor.pc.in
+ @BUILD_FL_TRUE@@BUILD_GL_TRUE@@BUILD_X11_TRUE@libACE_FlReactor_la_CPPFLAGS = \
+@@ -5472,6 +5474,9 @@ uninstall-info: uninstall-info-recursive
+ @BUILD_ACE_FOR_TAO_FALSE@ACE.pc: ${top_builddir}/config.status ${srcdir}/ACE.pc.in
+ @BUILD_ACE_FOR_TAO_FALSE@	${top_builddir}/config.status --file $@:${srcdir}/ACE.pc.in
+ 
++@BUILD_ACE_FOR_TAO_FALSE@ACE-static.pc: ${top_builddir}/config.status ${srcdir}/ACE-static.pc.in
++@BUILD_ACE_FOR_TAO_FALSE@	${top_builddir}/config.status --file $@:${srcdir}/ACE-static.pc.in
++
+ @BUILD_FL_TRUE@@BUILD_GL_TRUE@@BUILD_X11_TRUE@ACE_FlReactor.pc: ${top_builddir}/config.status ${srcdir}/FlReactor/ACE_FlReactor.pc.in
+ @BUILD_FL_TRUE@@BUILD_GL_TRUE@@BUILD_X11_TRUE@	${top_builddir}/config.status --file $@:${srcdir}/FlReactor/ACE_FlReactor.pc.in
+ 
+--- a/ace/SSL/Makefile.in
++++ b/ace/SSL/Makefile.in
+@@ -450,13 +450,16 @@ ACE_ROOT = $(top_srcdir)
+ @BUILD_ACE_FOR_TAO_FALSE@@BUILD_SSL_TRUE@  sslconf.h
+ 
+ @BUILD_ACE_FOR_TAO_FALSE@@BUILD_SSL_TRUE@pkgconfig_DATA = \
+-@BUILD_ACE_FOR_TAO_FALSE@@BUILD_SSL_TRUE@  ACE_SSL.pc
++@BUILD_ACE_FOR_TAO_FALSE@@BUILD_SSL_TRUE@  ACE_SSL.pc \
++@BUILD_ACE_FOR_TAO_FALSE@@BUILD_SSL_TRUE@  ACE_SSL-static.pc
+ 
+ @BUILD_ACE_FOR_TAO_FALSE@@BUILD_SSL_TRUE@CLEANFILES = \
+-@BUILD_ACE_FOR_TAO_FALSE@@BUILD_SSL_TRUE@  ACE_SSL.pc
++@BUILD_ACE_FOR_TAO_FALSE@@BUILD_SSL_TRUE@  ACE_SSL.pc \
++@BUILD_ACE_FOR_TAO_FALSE@@BUILD_SSL_TRUE@  ACE_SSL-static.pc
+ 
+ EXTRA_DIST = \
+-  ACE_SSL.pc.in
++  ACE_SSL.pc.in \
++  ACE_SSL-static.pc.in
+ 
+ all: all-am
+ 
+@@ -829,6 +832,9 @@ uninstall-am: uninstall-info-am uninstal
+ @BUILD_ACE_FOR_TAO_FALSE@@BUILD_SSL_TRUE@ACE_SSL.pc: ${top_builddir}/config.status ${srcdir}/ACE_SSL.pc.in
+ @BUILD_ACE_FOR_TAO_FALSE@@BUILD_SSL_TRUE@	${top_builddir}/config.status --file $@:${srcdir}/ACE_SSL.pc.in
+ 
++@BUILD_ACE_FOR_TAO_FALSE@@BUILD_SSL_TRUE@ACE_SSL-static.pc: ${top_builddir}/config.status ${srcdir}/ACE_SSL-static.pc.in
++@BUILD_ACE_FOR_TAO_FALSE@@BUILD_SSL_TRUE@	${top_builddir}/config.status --file $@:${srcdir}/ACE_SSL-static.pc.in
++
+ clean-local:
+ 	-rm -f *~ *.bak *.rpo *.sym lib*.*_pure_* core core.*
+ 	-rm -f gcctemp.c gcctemp so_locations *.ics
