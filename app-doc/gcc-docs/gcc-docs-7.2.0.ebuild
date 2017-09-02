@@ -5,7 +5,7 @@ EAPI=5
 
 DESCRIPTION="GCC Documentton"
 HOMEPAGE="https://gcc.gnu.org/onlinedocs/"
-SRC_URI="https://gcc.gnu.org/onlinedocs/${P}/gcc-html.tar.gz -> ${P}-html.tar.gz"
+SRC_URI="https://gcc.gnu.org/onlinedocs/${P/-docs/}/gcc-html.tar.gz -> ${P}-html.tar.gz"
 RESTRICT="mirror"
 
 LICENSE=""
