@@ -3,14 +3,11 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit rindeal
 
-GH_RN="github:i-rinat"
-GH_REF="v${PV}"
-
-inherit cmake-utils git-hosting
+inherit cmake-utils
 
 DESCRIPTION="VDPAU driver with OpenGL/VAAPI backend"
+SRC_URI=https://github.com/i-rinat/${PN}/releases/download/v${PV}/${P}.tar.gz
 LICENSE="MIT"
 
 SLOT="0"
