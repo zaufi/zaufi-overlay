@@ -1,7 +1,7 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI=6
 
 DESCRIPTION="GCC Documentton"
 HOMEPAGE="https://gcc.gnu.org/onlinedocs/"
@@ -23,5 +23,6 @@ RDEPEND=""
 #}
 
 src_install() {
-	dohtml -r `ls gcc`
+	cd gcc
+	dohtml *
 }
