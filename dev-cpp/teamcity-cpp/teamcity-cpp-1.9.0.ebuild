@@ -30,7 +30,7 @@ src_configure() {
     append-cxxflags -std=c++14
 
     local mycmakeargs=(
-        -DCMAKE_INSTALL_PREFIX="${EPREFIX}${PREFIX}/share"
+        -DCMAKE_INSTALL_PREFIX="${EPREFIX}/usr/share"
         -DENABLE_BOOST="$(usex boost)"
         -DENABLE_CPPUNIT="$(usex cppunit)"
         -DENABLE_GTEST="$(usex gtest)"
