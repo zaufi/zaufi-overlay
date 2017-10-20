@@ -3,7 +3,7 @@
 # $Id$
 
 EAPI=6
-PYTHON_COMPAT=(python2_7 python3_{2,3,4,5})
+PYTHON_COMPAT=(python2_7 python3_{2,3,4,5,6})
 inherit distutils-r1
 
 DESCRIPTION="Send test results to TeamCity continuous integration server from unittest, nose, py.test, twisted trial (Python 2.4+)"
