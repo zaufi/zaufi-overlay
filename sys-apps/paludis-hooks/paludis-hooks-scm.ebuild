@@ -3,7 +3,7 @@
 
 EAPI="5"
 
-PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3,3_4,3_5} )
+PYTHON_COMPAT=( python{2_7,3_{5,6}} )
 EGIT_REPO_URI="https://github.com/zaufi/paludis-hooks.git"
 # TODO It must be python-single-r1 because of paludis dependency which
 # is a single nowadays...
