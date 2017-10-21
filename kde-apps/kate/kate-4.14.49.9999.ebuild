@@ -5,7 +5,7 @@ EAPI=5
 KDE_HANDBOOK="optional"
 KMNAME="kate"
 KDE_OVERRIDE_MINIMAL="4.11.0"
-PYTHON_COMPAT=( python{2_7,3_2,3_3,3_4,3_5} )
+PYTHON_COMPAT=( python{2_7,3_2,3_3,3_4,3_5,3_6} )
 
 inherit python-single-r1 kde4-meta
 
