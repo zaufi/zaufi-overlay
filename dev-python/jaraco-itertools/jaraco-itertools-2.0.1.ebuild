@@ -3,22 +3,27 @@
 
 EAPI=6
 
-PYTHON_COMPAT=( python{2_7,3_4,3_5} )
+PYTHON_COMPAT=( python{2_7,3_4,3_5,3_6} )
 
 inherit distutils-r1
 
 MY_PN="${PN/-/.}"
-DESCRIPTION="Text utilities used by other projects by developer jaraco"
-HOMEPAGE="https://github.com/jaraco/packaging"
+DESCRIPTION="Additional functions used by other projects by developer jaraco"
+HOMEPAGE="https://github.com/jaraco/jaraco.itertools"
 SRC_URI="mirror://pypi/${PN:0:1}/${MY_PN}/${MY_PN}-${PV}.tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 IUSE="doc test"
 
-RDEPEND=">=dev-python/six-1.4[${PYTHON_USEDEP}]"
-DEPEND="dev-python/setuptools[${PYTHON_USEDEP}]
+RDEPEND="
+	dev-python/six[${PYTHON_USEDEP}]
+	dev-python/inflect[${PYTHON_USEDEP}]
+	dev-python/more-itertools[${PYTHON_USEDEP}]
+"
+DEPEND="
+	dev-python/setuptools[${PYTHON_USEDEP}]
 	>=dev-python/setuptools_scm-1.9[${PYTHON_USEDEP}]
 	doc? (
 		dev-python/sphinx[${PYTHON_USEDEP}]
