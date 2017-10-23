@@ -9,7 +9,6 @@
 *app-laptop/laptop-mode-tools
 
 *net-wireless/crda
-*net-wireless/rfkill
 *net-wireless/iw
 
 *sys-kernel/linux-firmware
