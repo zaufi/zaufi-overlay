@@ -3,7 +3,7 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python3{5,6} )
+PYTHON_COMPAT=( python3_{5,6} )
 PYTHON_REQ_USE="threads"
 OPENGL_REQUIRED="always"
 CMAKE_MAKEFILE_GENERATOR="emake"
