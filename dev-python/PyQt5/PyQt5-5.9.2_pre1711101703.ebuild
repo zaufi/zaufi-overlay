@@ -56,7 +56,7 @@ QT_PV="5.6.0:5"
 
 RDEPEND="
 	${PYTHON_DEPS}
-	>=dev-python/sip-4.19.3:=[${PYTHON_USEDEP}]
+	>=dev-python/sip-4.19.4:=[${PYTHON_USEDEP}]
 	>=dev-qt/qtcore-${QT_PV}
 	>=dev-qt/qtxml-${QT_PV}
 	bluetooth? ( >=dev-qt/qtbluetooth-${QT_PV} )
