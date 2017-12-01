@@ -6,7 +6,7 @@ EAPI=5
 
 PYTHON_COMPAT=( python2_7 )
 
-inherit distutils-r1
+inherit distutils-r1 python-utils-r1
 
 DESCRIPTION="Python module for downloading files"
 HOMEPAGE="http://urlgrabber.baseurl.org"
@@ -25,5 +25,6 @@ python_prepare_all() {
         local PATCHES=(
                 "${FILESDIR}"/${P}-fix-import.patch
         )
+        python_fix_shebang scripts
         distutils-r1_python_prepare_all
 }
