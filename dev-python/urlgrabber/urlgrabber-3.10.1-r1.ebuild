@@ -25,6 +25,7 @@ python_prepare_all() {
         local PATCHES=(
                 "${FILESDIR}"/${P}-fix-import.patch
         )
-        python_fix_shebang scripts
+        python_fix_shebang "${WORKDIR}/scripts"
         distutils-r1_python_prepare_all
 }
+
