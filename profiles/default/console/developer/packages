@@ -5,7 +5,6 @@
 # Must have developer's tools
 *app-doc/doxygen
 *app-misc/jq
-*app-text/pinfo
 *dev-util/abi-compliance-checker
 *dev-util/chewy
 *dev-util/lcov
