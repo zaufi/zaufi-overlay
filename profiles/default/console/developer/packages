@@ -16,11 +16,17 @@
 *dev-util/systemtap
 *dev-util/valgrind
 *media-gfx/mscgen
+*net-analyzer/netcat
+*net-analyzer/nmap
+*net-analyzer/tcpdump
 *sys-block/blktrace
 *sys-devel/autoconf-archive
 *sys-devel/autogen
 *sys-devel/clang
 *sys-devel/gdb
+*sys-fs/fuse
+*sys-process/atop
+*sys-process/latencytop
 
 # Some must have docs
 *app-doc/devmanual

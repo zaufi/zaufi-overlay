@@ -1,10 +1,29 @@
 # Copyright 2004-2016 Gentoo Foundation.
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
-*net-misc/youtube-dl
+# Essential KDE stuff
+*kde-apps/ark:5
+*kde-apps/dolphin-plugins:5
+*kde-apps/dolphin:5
+*kde-apps/ffmpegthumbs:5
+*kde-apps/gwenview:5
+*kde-apps/kcalc:5
+*kde-apps/kcharselect:5
+*kde-apps/kcolorchooser:5
+*kde-apps/kio-extras:5
+*kde-apps/konsole:5
+*kde-apps/kwalletmanager:5
+*kde-apps/okular:5
+*kde-apps/spectacle:5
+*kde-apps/svgpart:5
+*kde-apps/thumbnailers:5
 
-# GUI Based stuff
+*kde-misc/kdeconnect
+*kde-misc/yakuake
+
+# Other GUI Based stuff
+*app-dicts/qstardict
+*app-dicts/stardict-calculate-ru
 *media-video/vlc
 *net-p2p/ktorrent
 *www-client/firefox
