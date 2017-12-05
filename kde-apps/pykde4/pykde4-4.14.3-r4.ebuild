@@ -22,7 +22,7 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 RDEPEND="${PYTHON_DEPS}
 	>=dev-python/PyQt4-4.12[${PYTHON_USEDEP},dbus,declarative,script,sql,svg,X]
 	>=dev-python/sip-4.19:=[${PYTHON_USEDEP}]
-	kde-frameworks/kdelibs:4[opengl]
+	kde-frameworks/kdelibs:4
 "
 DEPEND="${RDEPEND}
 	dev-lang/python-exec:2[${PYTHON_USEDEP}]
