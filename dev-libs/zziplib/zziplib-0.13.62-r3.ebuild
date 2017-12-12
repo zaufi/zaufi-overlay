@@ -39,11 +39,7 @@ src_prepare() {
 	sed -i -e '/^zzip-postinstall:/s|$|\ndisable-this:|' Makefile.in || die
 	sed -i -e '/^install-exec-hook:/s|$|\ndisable-this:|' zzip/Makefile.in || die
 
-	_elibtoolize -cfi
-	eaclocal -I m4 --force --install
-	eautomake -acf
-	eautoconf -f
-	eautoheader -f
+	eautoreconf
 
 	# Do an out-of-tree build as their configure will do it automatically
 	# otherwise and that can lead to funky errors. #492816
