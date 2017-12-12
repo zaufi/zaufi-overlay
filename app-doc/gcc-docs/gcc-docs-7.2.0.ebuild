@@ -16,11 +16,11 @@ IUSE=""
 DEPEND=""
 RDEPEND=""
 
-#src_unpack() {
-#	mkdir -p "${S}"
-#	cd "${S}"
-#	default_src_unpack
-#}
+src_unpack() {
+	mkdir -p "${S}"
+	cd "${S}"
+	default_src_unpack
+}
 
 src_install() {
 	cd gcc
