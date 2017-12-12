@@ -2,7 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
+*kde-apps/kdebugsettings:5
+*kde-apps/kdialog:5
+*kde-apps/kompare:5
+
 # GUI Based stuff
-app-editors/kile:4
 *net-analyzer/wireshark
-*net-misc/rdesktop
