@@ -1,4 +1,4 @@
-# Copyright 2004-2016 Gentoo Foundation.
+# Copyright 2004-2017 Gentoo Foundation.
 # Distributed under the terms of the GNU General Public License v2
 
 # Essential KDE stuff
@@ -18,12 +18,7 @@
 *kde-apps/svgpart:5
 *kde-apps/thumbnailers:5
 
-*kde-misc/kdeconnect
-*kde-misc/yakuake
+*kde-misc/kdeconnect:5
+*kde-misc/yakuake:5
 
-# Other GUI Based stuff
-*app-dicts/qstardict
-*app-dicts/stardict-calculate-ru
-*media-video/vlc
-*net-p2p/ktorrent
-*www-client/firefox
+*net-p2p/ktorrent:5
