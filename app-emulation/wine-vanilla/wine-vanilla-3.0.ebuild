@@ -507,7 +507,7 @@ multilib_src_install_all() {
 	done
 	
 	# Restore `failglob` option state
-	shopt -s ${glob_state}
+	${glob_state}
 }
 
 pkg_postinst() {
