@@ -1,59 +1,68 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-inherit eutils multilib toolchain-funcs
+EAPI=6
+
+inherit toolchain-funcs
 
 DESCRIPTION="The Adaptive Communications Environment"
 HOMEPAGE="http://www.cs.wustl.edu/~schmidt/ACE.html"
-SRC_URI="!tao? ( http://download.dre.vanderbilt.edu/previous_versions/ACE-${PV}.tar.bz2 )
-	tao? (
-		!ciao? ( http://download.dre.vanderbilt.edu/previous_versions/ACE+TAO-${PV}.tar.bz2 )
-		ciao? ( http://download.dre.vanderbilt.edu/previous_versions/ACE+TAO+CIAO-${PV}.tar.bz2 )
-	)
+SRC_URI="http://download.dre.vanderbilt.edu/previous_versions/ACE-${PV}.tar.bz2
 	doc? ( http://download.dre.vanderbilt.edu/previous_versions/ACE-html-${PV}.tar.bz2 )"
 
-LICENSE="ACE BSD BSD-4 BSD-2 tao? ( sun-iiop RSA )"
+LICENSE="ACE BSD BSD-4 BSD-2"
 SLOT="0"
 KEYWORDS="amd64 ppc ppc64 x86"
-IUSE="X debug doc ipv6 tao ciao"
+IUSE="debug doc ipv6 static"
 
 COMMON_DEPEND="dev-libs/openssl"
-# TODO probably more
-RDEPEND="${COMMON_DEPEND}
-	X? ( x11-libs/libXt x11-libs/libXaw )"
-
-DEPEND="${COMMON_DEPEND}
-	X? ( x11-proto/xproto )"
+RDEPEND="${COMMON_DEPEND}"
+DEPEND="${COMMON_DEPEND}"
 
 S="${WORKDIR}/ACE_wrappers"
 
-src_unpack() {
-	unpack ${A}
+src_prepare() {
 	cd "${S}"
 	# Let's avoid autotools. http://bugs.gentoo.org/328027.
-	if has_version ">=dev-libs/openssl-1.0.0"; then
-		sed -i -e 's:SSL_METHOD:const SSL_METHOD:' configure || die
-	fi
+	#if has_version ">=dev-libs/openssl-1.0.0"; then
+	#	sed -i -e 's:SSL_METHOD:const SSL_METHOD:' configure || die
+	#fi
 
 	sed -i -e 's/-O3//' configure || die
+	epatch "${FILESDIR}/ACE-5.7.5-add-static-pc-files.patch"
+	epatch "${FILESDIR}/ace-fix-openssl-detection-without-rebuilding-configure.patch"
+	epatch "${FILESDIR}/do-not-build-useless-crap.patch"
+	epatch "${FILESDIR}/do-not-fail-if-SO_PORTREUSE-unsupported.patch"
+	epatch "${FILESDIR}/openssl-without-sslv2.patch"
+	epatch "${FILESDIR}/conflitcting_cpuset_t.patch"
+}
+
+src_configure() {
+	ECONF_SOURCE="${S}"
+	mkdir -p build
+	cd build
+	econf \
+		--enable-lib-all \
+		$(use_enable ipv6) \
+		$(use_enable debug) \
+		$(use_enable !debug optimize) \
+		$(use_enable static) \
+		--disable-ace-examples \
+		--disable-acexml \
+		--disable-gperf \
+		--disable-logging \
+		--disable-ace-tests \
+		--enable-ssl \
+		--enable-symbol-visibility \
+		--with-openssl \
+		--without-tao \
+		--without-x \
+		|| die "econf died"
 }
 
 src_compile() {
-	export ACE_ROOT="${S}"
-	mkdir build
 	cd build
-
-	ECONF_SOURCE="${S}"
-	econf \
-		--enable-lib-all \
-		$(use_with X) \
-		$(use_enable ipv6) \
-		$(use_enable debug) \
-		$(use_enable debug logging) \
-		$(use_enable !debug optimize) \
-		|| die "econf died"
-	# --with-qos needs ACE_HAS_RAPI
-	emake static_libs=1 || die "emake failed"
+	emake
 }
 
 src_install() {
