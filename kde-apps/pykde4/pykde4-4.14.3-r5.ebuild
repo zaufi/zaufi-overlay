@@ -35,6 +35,7 @@ PATCHES=(
 	"${DISTDIR}/${P}-sip419.patch.bz2"
 	"${FILESDIR}/${P}-exclude-kio-mount-clesses.patch"
 	"${FILESDIR}/${P}-python3-DLFCN-replacement.patch"
+	"${FILESDIR}/${P}-checkstate-sip-4.19.5.patch"
 )
 
 pkg_setup() {
