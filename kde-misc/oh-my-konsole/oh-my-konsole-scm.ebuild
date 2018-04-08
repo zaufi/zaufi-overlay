@@ -18,5 +18,5 @@ DEPEND=""
 RDEPEND="kde-apps/konsole"
 
 src_install() {
-    "${WORKDIR}/install.sh" -s
+    DESTDIR="${D}" "${WORKDIR}/${P}/install.sh" -s
 }
