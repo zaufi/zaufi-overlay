@@ -1,2 +1,0 @@
-#!/bin/sh
-exec /usr/bin/firejail --profile=/etc/firejail/firefox.profile /usr/lib64/firefox/firefox-bin "$@"
