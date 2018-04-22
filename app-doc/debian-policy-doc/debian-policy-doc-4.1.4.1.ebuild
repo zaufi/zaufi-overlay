@@ -23,9 +23,10 @@ src_unpack() {
 }
 
 src_install() {
-	dohtml -r ${WORKDIR}/usr/share/doc/${DEB_NAME}/{menu-policy,perl-policy,policy,upgrading-checklist,copyright-format-1.0,debconf_specification,menu-policy-1,perl-policy,policy-1,Process,README}.html
+	dohtml -r ${WORKDIR}/usr/share/doc/${DEB_NAME}/{menu-policy,perl-policy,policy,autopkgtest,copyright-format-1.0,debconf_specification,menu-policy-1,perl-policy,policy-1,README}.html
 	dohtml -r ${WORKDIR}/usr/share/doc/${DEB_NAME}/fhs
 
-	dodoc ${WORKDIR}/usr/share/doc/${DEB_NAME}/{changelog.gz,copyright,{copyright-format-1.0,debconf_specification,menu-policy,perl-policy,policy,Process,README,upgrading-checklist,virtual-package-names-list}.txt.gz}
+	dodoc ${WORKDIR}/usr/share/doc/${DEB_NAME}/{changelog.gz,copyright,{autopkgtest,copyright-format-1.0,debconf_specification,menu-policy,perl-policy,policy,README,upgrading-checklist,virtual-package-names-list}.txt.gz}
+	dodoc ${WORKDIR}/usr/share/doc/${DEB_NAME}/policy.pdf.gz
 	dodoc ${WORKDIR}/usr/share/doc/${DEB_NAME}/fhs/fhs-2.3.{txt.gz,pdf.gz,ps.gz}
 }
