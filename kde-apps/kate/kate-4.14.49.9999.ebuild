@@ -19,7 +19,6 @@ REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 DEPEND="
 	dev-libs/libxml2
 	dev-libs/libxslt
-	dev-libs/qjson
 	python? (
 		${PYTHON_DEPS}
 		$(add_kdeapps_dep pykde4 "${PYTHON_USEDEP}" 4.14.3-r1)
