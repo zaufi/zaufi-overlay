@@ -23,5 +23,4 @@ S=${WORKDIR}
 
 src_unpack() {
 	unpack_deb ${A}
-	unpack ${S}/data.tar.gz
 }
