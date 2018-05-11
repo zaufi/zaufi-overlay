@@ -24,3 +24,7 @@ S=${WORKDIR}
 src_unpack() {
 	unpack_deb ${A}
 }
+
+src_install() {
+	dodir ${S}/usr/ ${S}/share/
+}
