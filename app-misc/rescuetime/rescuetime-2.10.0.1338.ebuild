@@ -26,5 +26,5 @@ src_unpack() {
 }
 
 src_install() {
-	dobin /usr/bin/rescuetime
+	dobin ${S}/usr/bin/rescuetime
 }
