@@ -18,7 +18,9 @@ RDEPEND="
 	dev-qt/qtcore:4
 	dev-qt/qtgui:4"
 
+S=${WORKDIR}
 
 src_unpack() {
-	unpacker_src_unpack
+	unpack_deb ${A}
+	unpack ${S}/data.tar.gz
 }
