@@ -26,5 +26,5 @@ src_unpack() {
 }
 
 src_install() {
-	dodir ${S}/usr/ ${S}/share/
+	dobin /usr/bin/rescuetime
 }
