@@ -135,6 +135,7 @@ PATCHES=(
 	"${FILESDIR}/${PN}-4.14.35-3dnow.patch"
 	"${FILESDIR}/${PN}-4.14.35-kde3support.patch"
 	"${FILESDIR}/${PN}-4.14.35-plasma4.patch"
+	"${FILESDIR}/${PN}-${PV}-disable-phonon.patch"
 )
 
 src_prepare() {
