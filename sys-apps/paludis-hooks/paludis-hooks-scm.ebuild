@@ -14,7 +14,7 @@ HOMEPAGE="https://github.com/zaufi/paludis-hooks"
 
 # TODO Introduce USE flags to select what to install?
 # I think it covers all variants of installation
-IUSE="+autopatch +fs-manager +workdir-tmpfs +package-env"
+IUSE="autopatch fs-manager workdir-tmpfs package-env +python"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~hppa ~ppc ~sparc ~x86"
@@ -22,7 +22,7 @@ KEYWORDS="~alpha ~amd64 ~hppa ~ppc ~sparc ~x86"
 COMMON_DEPEND="sys-apps/paludis[python,${PYTHON_USEDEP}]"
 
 DEPEND="${COMMON_DEPEND} >=dev-util/cmake-3.4 sys-apps/util-linux"
-RDEPEND="${PYTHON_DEPS}
+RDEPEND="python? ( ${PYTHON_DEPS} )
     ${COMMON_DEPEND}
     sys-apps/coreutils
     sys-apps/grep
@@ -37,6 +37,7 @@ src_configure() {
 		$(cmake-utils_use_with autopatch AUTOPATCH)
 		$(cmake-utils_use_with fs-manager FS_MANAGER)
 		$(cmake-utils_use_with package-env PACKAGE_ENV)
+		$(cmake-utils_use_with python WITH_PYTHON_EXTENSIONS)
 		$(cmake-utils_use_with workdir-tmpfs WORKDIR_TMPFS)
 	)
 	cmake-utils_src_configure
