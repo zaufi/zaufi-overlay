@@ -85,7 +85,9 @@ src_install() {
 		dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/install_fail
 	fi
 
-	python_fix_shebang "${D}"/usr/libexec/cave/commands/print-ebuild-path
+	if use python; then
+		python_fix_shebang "${D}"/usr/libexec/cave/commands/print-ebuild-path
+	fi
 }
 
 pkg_postinst() {
