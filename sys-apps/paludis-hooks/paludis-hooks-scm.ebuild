@@ -1,4 +1,4 @@
-# Copyright 2011 Alex Turbov <i.zaufi@gmail.com>
+# Copyright 2011-2018 Alex Turbov <i.zaufi@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="5"
@@ -35,76 +35,76 @@ RDEPEND="python? ( ${PYTHON_DEPS} )
   "
 
 src_configure() {
-	local mycmakeargs=(
-		$(cmake-utils_use_with autopatch AUTOPATCH)
-		$(cmake-utils_use_with fs-manager FS_MANAGER)
-		$(cmake-utils_use_with package-env PACKAGE_ENV)
-		$(cmake-utils_use_with python WITH_PYTHON_EXTENSIONS)
-		$(cmake-utils_use_with workdir-tmpfs WORKDIR_TMPFS)
-	)
-	cmake-utils_src_configure
+    local mycmakeargs=(
+        $(cmake-utils_use_with autopatch AUTOPATCH)
+        $(cmake-utils_use_with fs-manager FS_MANAGER)
+        $(cmake-utils_use_with package-env PACKAGE_ENV)
+        $(cmake-utils_use_with python WITH_PYTHON_EXTENSIONS)
+        $(cmake-utils_use_with workdir-tmpfs WORKDIR_TMPFS)
+    )
+    cmake-utils_src_configure
 }
 
 src_install() {
-	cmake-utils_src_install
+    cmake-utils_src_install
 
-	# Rename non-versioned doc dir
-	mv "${D}"/usr/share/doc/${PN} "${D}"/usr/share/doc/${P}
+    # Rename non-versioned doc dir
+    mv "${D}"/usr/share/doc/${PN} "${D}"/usr/share/doc/${P}
 
-	einfo "Installing hooks into paludis configuration dir..."
+    einfo "Installing hooks into paludis configuration dir..."
 
-	# Create all necessary directories
-	keepdir "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_{compile,configure,init,install,tidyup,unpack}_{pre,post}
-	keepdir "${PALUDIS_CONFIG_DIR}"/hooks/install_{all_post,fail}
-	# Create 'empty' directories for autopatch hook
-	keepdir "${EPREFIX}"/var/db/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre,unpack_post}
+    # Create all necessary directories
+    keepdir "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_{compile,configure,init,install,tidyup,unpack}_{pre,post}
+    keepdir "${PALUDIS_CONFIG_DIR}"/hooks/install_{all_post,fail}
+    # Create 'empty' directories for autopatch hook
+    keepdir "${EPREFIX}"/var/db/paludis/autopatches/ebuild_{compile_{post,pre},configure_{post,pre},install_pre,unpack_post}
 
-	# Symlink hooks into configuration dirs
+    # Symlink hooks into configuration dirs
 
-	if use autopatch; then
-		local -r auto_patch="${EPREFIX}"/usr/share/${PN}/auto-patch.bash
-		dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_compile_pre
-		dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_compile_post
-		dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_configure_post
-		dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_configure_pre
-		dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_install_pre
-		dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_unpack_post
-		dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/install_all_post
-	fi
+    if use autopatch; then
+        local -r auto_patch="${EPREFIX}"/usr/share/${PN}/auto-patch.bash
+        dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_compile_pre
+        dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_compile_post
+        dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_configure_post
+        dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_configure_pre
+        dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_install_pre
+        dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_unpack_post
+        dosym "${auto_patch}" "${PALUDIS_CONFIG_DIR}"/hooks/install_all_post
+    fi
 
-	if use fs-manager; then
-		local -r filesystem_manager="${EPREFIX}"/usr/share/${PN}/filesystem-manager.bash
-		dosym "${filesystem_manager}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_install_post
-	fi
+    if use fs-manager; then
+        local -r filesystem_manager="${EPREFIX}"/usr/share/${PN}/filesystem-manager.bash
+        dosym "${filesystem_manager}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_install_post
+    fi
 
-	if use workdir-tmpfs; then
-		local -r workdir_tmpfs="${EPREFIX}"/usr/share/${PN}/workdir-tmpfs.bash
-		dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_init_post
-		dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_tidyup_post
-		dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_tidyup_pre
-		dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/install_fail
-	fi
+    if use workdir-tmpfs; then
+        local -r workdir_tmpfs="${EPREFIX}"/usr/share/${PN}/workdir-tmpfs.bash
+        dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_init_post
+        dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_tidyup_post
+        dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/ebuild_tidyup_pre
+        dosym "${workdir_tmpfs}" "${PALUDIS_CONFIG_DIR}"/hooks/install_fail
+    fi
 
-	if use python; then
-		python_fix_shebang "${D}"/usr/libexec/cave/commands/print-ebuild-path
-	fi
+    if use python; then
+        python_fix_shebang "${D}"/usr/libexec/cave/commands/print-ebuild-path
+    fi
 }
 
 pkg_postinst() {
-	if use workdir-tmpfs; then
-		if ! mountpoint /dev/shm; then
-			eerror ""
-			eerror "There is no tmpfs mounted on /dev/shm on your system. That mountpoint is necessary for workdir-tmpfs extension's normal work."
-			eerror "Or you can disable the extension by setting IN_MEMORY_BUILD_ENABLED=false in /etc/paludis/hooks/configs/workdir-tmpfs.conf."
-			eerror "ATTENTION! You might not be able to resolve packages otherwise."
-			eerror ""
-		else if [[ -n "`/bin/mount | grep 'on /dev/shm .*noexec'`" ]]; then
-			eerror ""
-			eerror "tmpfs mounted on /dev/shm with noexec option. You need to switch the option and remount /dev/shm for workdir-tmpfs extension's normal work."
-			eerror "Or you can disable the extension by setting IN_MEMORY_BUILD_ENABLED=false in /etc/paludis/hooks/configs/workdir-tmpfs.conf."
-			eerror "ATTENTION! You might not be able to resolve packages otherwise."
-			eerror ""
-		fi
-		fi
-	fi
+    if use workdir-tmpfs; then
+        if ! mountpoint /dev/shm; then
+            eerror ""
+            eerror "There is no tmpfs mounted on /dev/shm on your system. That mountpoint is necessary for workdir-tmpfs extension's normal work."
+            eerror "Or you can disable the extension by setting IN_MEMORY_BUILD_ENABLED=false in /etc/paludis/hooks/configs/workdir-tmpfs.conf."
+            eerror "ATTENTION! You might not be able to resolve packages otherwise."
+            eerror ""
+        else if [[ -n "`/bin/mount | grep 'on /dev/shm .*noexec'`" ]]; then
+            eerror ""
+            eerror "tmpfs mounted on /dev/shm with noexec option. You need to switch the option and remount /dev/shm for workdir-tmpfs extension's normal work."
+            eerror "Or you can disable the extension by setting IN_MEMORY_BUILD_ENABLED=false in /etc/paludis/hooks/configs/workdir-tmpfs.conf."
+            eerror "ATTENTION! You might not be able to resolve packages otherwise."
+            eerror ""
+        fi
+        fi
+    fi
 }
