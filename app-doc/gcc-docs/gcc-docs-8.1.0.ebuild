@@ -9,7 +9,7 @@ SRC_URI="https://gcc.gnu.org/onlinedocs/${P/-docs/}/gcc-html.tar.gz -> ${P}-html
 RESTRICT="mirror"
 
 LICENSE=""
-SLOT="7.2.0"
+SLOT="8.1.0"
 KEYWORDS="amd64 x86"
 IUSE=""
 
