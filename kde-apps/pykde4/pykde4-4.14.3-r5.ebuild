@@ -31,7 +31,7 @@ DEPEND="${RDEPEND}
 
 PATCHES=(
 	"${FILESDIR}/${P}-gcc-5.patch"
-	"${FILESDIR}/${P}-noplasma.patch"
+	"${FILESDIR}/${P}-no-khtml-phonon-plasma.patch"
 	"${DISTDIR}/${P}-sip419.patch.bz2"
 	"${FILESDIR}/${P}-exclude-kio-mount-clesses.patch"
 	"${FILESDIR}/${P}-python3-DLFCN-replacement.patch"
