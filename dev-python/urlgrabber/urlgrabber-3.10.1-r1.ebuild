@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
 PYTHON_COMPAT=( python2_7 )
 
@@ -25,7 +25,7 @@ python_prepare_all() {
         local PATCHES=(
                 "${FILESDIR}"/${P}-fix-import.patch
         )
-        python_fix_shebang "${WORKDIR}/scripts"
+        #python_fix_shebang "${WORKDIR}/scripts"
         distutils-r1_python_prepare_all
 }
 
