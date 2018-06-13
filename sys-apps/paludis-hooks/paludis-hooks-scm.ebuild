@@ -39,7 +39,7 @@ src_configure() {
         $(cmake-utils_use_with autopatch AUTOPATCH)
         $(cmake-utils_use_with fs-manager FS_MANAGER)
         $(cmake-utils_use_with package-env PACKAGE_ENV)
-        $(cmake-utils_use_with python WITH_PYTHON_EXTENSIONS)
+        $(cmake-utils_use_with python PYTHON_EXTENSIONS)
         $(cmake-utils_use_with workdir-tmpfs WORKDIR_TMPFS)
     )
     cmake-utils_src_configure
