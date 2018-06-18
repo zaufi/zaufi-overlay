@@ -3,8 +3,8 @@
 
 EAPI=6
 
-EGIT_REPO_URI="https://github.com/pop-os/system76-dkms"
-EGIT_COMMIT="4dca191"
+EGIT_REPO_URI="https://github.com/zaufi/system76-dkms"
+EGIT_COMMIT="e8a821c"
 
 inherit git-r3 linux-mod
 
@@ -18,14 +18,10 @@ IUSE=""
 
 RDEPEND=""
 
-S=${WORKDIR}
+S="${WORKDIR}/${P}"
 
 MODULE_NAMES="system76(system76)"
-
-pkg_setup() {
-	linux-mod_pkg_setup
-	BUILD_PARAMS="CC=$(tc-getBUILD_CC) KERN_DIR=${KV_DIR} KERN_VER=${KV_FULL} O=${KV_OUT_DIR} V=1 KBUILD_VERBOSE=1"
-}
+BUILD_TARGETS="clean all"
 
 src_install() {
 	linux-mod_src_install
