@@ -21,7 +21,7 @@ RDEPEND="${COMMON_DEPEND}
     dev-util/dialog
     docker? ( app-emulation/docker )
     git? ( dev-vcs/git )
-    pauldis? ( sys-apps/paludis )
+    paludis? ( sys-apps/paludis )
     portage? ( sys-apps/portage )
     schroot? ( dev-util/schroot )
     subversion? ( dev-vcs/subversion )
