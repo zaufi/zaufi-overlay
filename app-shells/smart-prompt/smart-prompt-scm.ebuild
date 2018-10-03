@@ -29,6 +29,7 @@ RDEPEND="${COMMON_DEPEND}
 
 src_configure() {
     local mycmakeargs=(
+        -DCMAKE_INSTALL_SYSCONFDIR=/etc
         $(cmake-utils_use_with docker)
         $(cmake-utils_use_with git)
         $(cmake-utils_use_with openrc)
